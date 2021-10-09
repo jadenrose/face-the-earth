@@ -91,7 +91,11 @@ const reasons = (UserSchema.statics.failedLogin = {
     MAX_ATTEMPTS: 2,
 })
 
-UserSchema.statics.getAuthenticated = function (email, password, callback) {
+UserSchema.statics.getAuthenticated = async function (
+    email,
+    password,
+    callback
+) {
     this.findOne({ email }, function (err, user) {
         if (err) return callback(err)
 

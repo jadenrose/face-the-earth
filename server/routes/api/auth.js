@@ -12,12 +12,18 @@ router.get('/', (req, res) => {
             if (err) throw err
 
             if (user) {
+                const obj = { ...user }
+
+                delete obj.password
+
+                console.log(obj)
+
                 const payload = {
                     user,
                 }
 
                 const token = jwt.sign(payload, config.get('jwtSecret'), {
-                    expiresIn: 3600,
+                    expiresIn: 36000,
                 })
 
                 return res.json({ token })
