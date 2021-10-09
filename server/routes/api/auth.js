@@ -1,7 +1,6 @@
 const router = require('express').Router()
-const jwt = require('jsonwebtoken')
-const config = require('config')
 
+const getToken = require('../../functions/getToken')
 const User = require('../../models/User')
 
 // @path	GET /api/auth
@@ -16,13 +15,7 @@ router.get('/', async (req, res) => {
         if (!user)
             return res.status(401).json({ errors: [{ msg: 'login failed' }] })
 
-        const payload = { user: user._doc }
-
-        delete payload.user.password
-
-        const token = jwt.sign(payload, config.get('jwtSecret'), {
-            expiresIn: 36000,
-        })
+        const token = getToken(user)
 
         res.json({ token })
     } catch (err) {
