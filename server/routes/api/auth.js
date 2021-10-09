@@ -4,35 +4,27 @@ const config = require('config')
 
 const User = require('../../models/User')
 
+// @path	GET /api/auth
+// @desc	get login token
+// @access	public
 router.get('/', async (req, res) => {
     try {
         const { email, password } = req.body
 
-        User.getAuthenticated(email, password, function (err, user, reason) {
-            if (err) throw err
+        const user = await User.getAuthenticated(email, password)
 
-            if (user) {
-                const obj = { ...user }
-
-                delete obj.password
-
-                console.log(obj)
-
-                const payload = {
-                    user,
-                }
-
-                const token = jwt.sign(payload, config.get('jwtSecret'), {
-                    expiresIn: 36000,
-                })
-
-                return res.json({ token })
-            }
-
-            console.log(`failure reason: ${reason}`)
-
+        if (!user)
             return res.status(401).json({ errors: [{ msg: 'login failed' }] })
+
+        const payload = { user: user._doc }
+
+        delete payload.user.password
+
+        const token = jwt.sign(payload, config.get('jwtSecret'), {
+            expiresIn: 36000,
         })
+
+        res.json({ token })
     } catch (err) {
         console.error(err)
         res.status(500).send('server error')

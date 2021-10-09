@@ -41,40 +41,42 @@ UserSchema.virtual('isLocked').get(function () {
     return this.lockUntil && this.lockUntil > Date.now()
 })
 
-UserSchema.pre('save', function (next) {
-    const user = this
+UserSchema.pre('save', async function (next) {
+    try {
+        const user = this
 
-    if (!user.isModified('password')) return next()
+        if (!user.isModified('password')) return next()
 
-    bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
-        if (err) return next(err)
+        const salt = await bcrypt.genSalt(SALT_WORK_FACTOR)
+        const hash = await bcrypt.hash(user.password, salt)
 
-        bcrypt.hash(user.password, salt, function (err, hash) {
-            if (err) return next(err)
+        user.password = hash
 
-            user.password = hash
-
-            next()
-        })
-    })
+        next()
+    } catch (err) {
+        console.error(err)
+        return null
+    }
 })
 
-UserSchema.methods.comparePassword = function (candidatePassword, callback) {
-    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-        if (err) return callback(err)
-        callback(null, isMatch)
-    })
+UserSchema.methods.comparePassword = async function (password) {
+    try {
+        const isMatch = await bcrypt.compare(password, this.password)
+        return isMatch
+    } catch (error) {
+        console.error(err)
+        return null
+    }
 }
 
-UserSchema.methods.incLoginAttempts = function (callback) {
+UserSchema.methods.incLoginAttempts = async function () {
     if (this.lockUntil && this.lockUntil < Date.now()) {
-        return this.update(
-            {
-                $set: { loginAttempts: 1 },
-                $unset: { lockUntil: 1 },
-            },
-            callback
-        )
+        await this.updateOne({
+            $set: { loginAttempts: 1 },
+            $unset: { lockUntil: 1 },
+        })
+
+        return this
     }
 
     const updates = { $inc: { loginAttempts: 1 } }
@@ -82,55 +84,40 @@ UserSchema.methods.incLoginAttempts = function (callback) {
     if (this.loginAttempts + 1 >= MAX_LOGIN_ATTEMPTS && !this.isLocked)
         updates.$set = { lockUntil: Date.now() + LOCK_TIME }
 
-    return this.update(updates, callback)
+    await this.updateOne(updates)
+    return this
 }
 
-const reasons = (UserSchema.statics.failedLogin = {
-    NOT_FOUND: 0,
-    PASSWORD_INCORRECT: 1,
-    MAX_ATTEMPTS: 2,
-})
+UserSchema.statics.getAuthenticated = async function (email, password) {
+    try {
+        const user = await this.findOne({ email })
 
-UserSchema.statics.getAuthenticated = async function (
-    email,
-    password,
-    callback
-) {
-    this.findOne({ email }, function (err, user) {
-        if (err) return callback(err)
+        if (!user) return null
 
-        if (!user) return callback(null, null, reasons.NOT_FOUND)
+        if (user.isLocked) return null
 
-        if (user.isLocked)
-            return user.incLoginAttempts(function (err) {
-                if (err) return callback(err)
-                return callback(null, null, reasons.MAX_ATTEMPTS)
-            })
+        const isMatch = await user.comparePassword(password)
 
-        user.comparePassword(password, function (err, isMatch) {
-            if (err) return callback(err)
+        if (isMatch) {
+            if (!user.loginAttempts && !user.lockUntil) return user
 
-            if (isMatch) {
-                if (!user.loginAttempts && !user.lockUntil)
-                    return callback(null, user)
-
-                const updates = {
-                    $set: { loginAttempts: 0 },
-                    $unset: { lockUntil: 1 },
-                }
-
-                return user.update(updates, function (err) {
-                    if (err) return callback(err)
-                    return callback(null, user)
-                })
+            const updates = {
+                $set: { loginAttempts: 0 },
+                $unset: { lockUntil: 1 },
             }
 
-            user.incLoginAttempts(function (err) {
-                if (err) return callback(err)
-                return callback(null, null, reasons.PASSWORD_INCORRECT)
-            })
-        })
-    })
+            await user.updateOne(updates)
+
+            return user
+        }
+
+        await user.incLoginAttempts()
+
+        return null
+    } catch (err) {
+        console.error(err)
+        return null
+    }
 }
 
 module.exports = User = model('user', UserSchema)

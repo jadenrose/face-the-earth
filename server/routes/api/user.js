@@ -4,9 +4,16 @@ const auth = require('../../middleware/auth')
 
 const User = require('../../models/User')
 
-router.post('/', auth, (req, res) => {
+// @path	POST /api/user
+// @desc	create new user
+// @access	private
+router.post('/', auth, async (req, res) => {
     try {
-        res.json({ msg: 'hello' })
+        const user = new User(req.body)
+
+        await user.save()
+
+        res.json({ user })
     } catch (err) {
         console.error(err)
         res.status(500).send('server error')
