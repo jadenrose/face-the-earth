@@ -4,7 +4,7 @@ const config = require('config')
 
 const User = require('../../models/User')
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const { email, password } = req.body
 
