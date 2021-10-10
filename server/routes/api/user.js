@@ -18,8 +18,8 @@ router.post(
             check('email', 'please enter a valid email').isEmail(),
             check(
                 'password',
-                'password must be at least 6 characters long'
-            ).isLength({ min: 6 }),
+                'password must be between 6 and 14 characters long'
+            ).isLength({ min: 6, max: 14 }),
         ],
         hash,
     ],
@@ -54,8 +54,8 @@ router.put(
         [
             check(
                 'password',
-                'password must be at least 6 characters long'
-            ).isLength({ min: 6 }),
+                'password must be between 6 and 14 characters long'
+            ).isLength({ min: 6, max: 14 }),
         ],
         hash,
     ],

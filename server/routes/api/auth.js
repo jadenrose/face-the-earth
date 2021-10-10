@@ -10,10 +10,9 @@ router.get('/', async (req, res) => {
     try {
         const { email, password } = req.body
 
-        const user = await User.getAuthenticated(email, password)
+        const [err, user] = await User.getAuthenticated(email, password)
 
-        if (!user)
-            return res.status(401).json({ errors: [{ msg: 'login failed' }] })
+        if (!user) return res.status(err.code).json({ errors: err.array })
 
         const token = getToken(user)
 

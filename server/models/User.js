@@ -1,8 +1,27 @@
 const { Schema, model } = require('mongoose')
 const { isEmail } = require('validator')
+const bcrypt = require('bcryptjs')
 
 const MAX_LOGIN_ATTEMPTS = 5
 const LOCK_TIME = 2 * 1000 * 3600
+
+const LOGIN_ERROR = {
+    code: 401,
+    array: [
+        {
+            msg: 'login failed',
+        },
+    ],
+}
+
+const SERVER_ERROR = {
+    code: 500,
+    array: [
+        {
+            msg: 'internal server error',
+        },
+    ],
+}
 
 const UserSchema = new Schema({
     name: {
@@ -43,7 +62,7 @@ UserSchema.methods.comparePassword = async function (password) {
     try {
         const isMatch = await bcrypt.compare(password, this.password)
         return isMatch
-    } catch (error) {
+    } catch (err) {
         console.error(err)
         return null
     }
@@ -72,14 +91,14 @@ UserSchema.statics.getAuthenticated = async function (email, password) {
     try {
         const user = await this.findOne({ email })
 
-        if (!user) return null
+        if (!user) return [LOGIN_ERROR, null]
 
-        if (user.isLocked) return null
+        if (user.isLocked) return [LOGIN_ERROR, null]
 
         const isMatch = await user.comparePassword(password)
 
         if (isMatch) {
-            if (!user.loginAttempts && !user.lockUntil) return user
+            if (!user.loginAttempts && !user.lockUntil) return [null, user]
 
             const updates = {
                 $set: { loginAttempts: 0 },
@@ -88,15 +107,15 @@ UserSchema.statics.getAuthenticated = async function (email, password) {
 
             await user.updateOne(updates)
 
-            return user
+            return [null, user]
         }
 
         await user.incLoginAttempts()
 
-        return null
+        return [LOGIN_ERROR, null]
     } catch (err) {
         console.error(err)
-        return null
+        return [SERVER_ERROR, null]
     }
 }
 
