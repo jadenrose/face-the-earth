@@ -15,6 +15,8 @@ module.exports = async function (req, res, next) {
                 .status(401)
                 .json({ errors: [{ msg: 'not authenticated' }] })
 
+        console.log(user.id)
+
         next()
     } catch (err) {
         if (err.name === 'JsonWebTokenError')

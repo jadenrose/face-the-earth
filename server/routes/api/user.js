@@ -63,6 +63,11 @@ router.put(
         try {
             const user = await User.findById(req.params.user_id)
 
+            if (!user)
+                return res
+                    .status(404)
+                    .json({ errors: [{ msg: 'user not found' }] })
+
             await user.updateOne({
                 $set: {
                     name: req.body.name,
@@ -74,10 +79,35 @@ router.put(
 
             res.json({ token })
         } catch (err) {
-            console.log(err)
+            if (err.kind === 'ObjectId')
+                return res
+                    .status(404)
+                    .json({ errors: [{ msg: 'user not found' }] })
+
+            console.error(err)
             res.status(500).send('server error')
         }
     }
 )
+
+// @path	DELETE /api/user
+// @desc	delete user
+// @access	private
+router.delete('/:user_id', auth, async (req, res) => {
+    try {
+        const user = await User.findByIdAndRemove(req.params.user_id)
+
+        if (!user)
+            return res.status(404).json({ errors: [{ msg: 'user not found' }] })
+
+        res.json({ msg: 'user removed' })
+    } catch (err) {
+        if (err.kind === 'ObjectId')
+            return res.status(404).json({ errors: [{ msg: 'user not found' }] })
+
+        console.error(err)
+        res.status(500).send('server error')
+    }
+})
 
 module.exports = router
