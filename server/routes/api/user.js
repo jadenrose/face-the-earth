@@ -95,6 +95,13 @@ router.put(
 // @access	private
 router.delete('/:user_id', auth, async (req, res) => {
     try {
+        if (req.db.user.id === req.params.user_id)
+            return res
+                .status(400)
+                .json({
+                    errors: [{ msg: 'user cannot delete their own account' }],
+                })
+
         const user = await User.findByIdAndRemove(req.params.user_id)
 
         if (!user)

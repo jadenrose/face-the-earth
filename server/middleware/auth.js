@@ -15,7 +15,7 @@ module.exports = async function (req, res, next) {
                 .status(401)
                 .json({ errors: [{ msg: 'not authenticated' }] })
 
-        console.log(user.id)
+        req.db = { user }
 
         next()
     } catch (err) {
