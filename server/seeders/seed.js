@@ -1,14 +1,33 @@
 const fs = require('fs').promises
 const path = require('path')
+const prompt = require('prompt')
 
 const connectDB = require('../config/db')
-const User = require('../models/User')
 
-const seed = async (Model, options) => {
+const Video = require('../models/Video')
+const Show = require('../models/Show')
+const Artist = require('../models/Artist')
+
+const models = [
+    {
+        Model: Video,
+        path: path.join(__dirname, 'videos.json'),
+    },
+    {
+        Model: Show,
+        path: path.join(__dirname, 'shows.json'),
+    },
+    {
+        Model: Artist,
+        path: path.join(__dirname, 'artists.json'),
+    },
+]
+
+const seed = async (Model, path, options = {}) => {
     try {
         const connection = await connectDB()
 
-        const { path, encoding } = options
+        const { encoding = 'UTF-8' } = options
 
         const data = await fs.readFile(path, encoding)
 
@@ -27,16 +46,55 @@ const seed = async (Model, options) => {
 
         await connection.disconnect()
 
-        return console.log(
-            `successfully inserted ${count} ${modelName}${count > 1 ? 's' : ''}`
-        )
+        if (count)
+            return console.log(
+                `successfully inserted ${count} ${modelName}${
+                    count > 1 ? 's' : ''
+                }`
+            )
+
+        return console.log('no data found, nothing inserted')
     } catch (err) {
         console.error(err)
         process.exit(1)
     }
 }
 
-seed(User, {
-    path: path.join(__dirname, 'users.json'),
-    encoding: 'utf-8',
-})
+const run = async () => {
+    console.log('Collections:')
+    console.log(
+        models
+            .map(
+                (model, i) =>
+                    `  ${i + 1}) ${model.Model.collection.collectionName}`
+            )
+            .join('\n')
+    )
+    console.log('------------------')
+    console.log('  a) ALL')
+    console.log('  c) CANCEL\n')
+
+    const { selection } = await prompt.get({
+        properties: {
+            selection: {
+                description: `Seed which collection? (1-${models.length})`,
+            },
+        },
+    })
+
+    if (selection.toLowerCase() === 'c') return
+
+    if (Number(selection) && Number(selection) <= models.length) {
+        const collection = models[Number(selection) - 1]
+        return await seed(collection.Model, collection.path)
+    }
+
+    if (selection.toLowerCase() === 'a') {
+        for (const model of models) await seed(model.Model, model.path)
+        return
+    }
+
+    return console.log('Invalid choice entered. Aborting.')
+}
+
+run()
