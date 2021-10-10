@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { check, validationResult } = require('express-validator')
 
 const auth = require('../../middleware/auth')
+const hash = require('../../middleware/hash')
 const getToken = require('../../functions/getToken')
 
 const User = require('../../models/User')
@@ -20,6 +21,7 @@ router.post(
                 'password must be at least 6 characters long'
             ).isLength({ min: 6 }),
         ],
+        hash,
     ],
     async (req, res) => {
         try {
@@ -55,17 +57,18 @@ router.put(
                 'password must be at least 6 characters long'
             ).isLength({ min: 6 }),
         ],
+        hash,
     ],
     async (req, res) => {
         try {
-            const user = await User.findByIdAndUpdate(req.params.user_id, {
+            const user = await User.findById(req.params.user_id)
+
+            await user.updateOne({
                 $set: {
                     name: req.body.name,
                     password: req.body.password,
                 },
             })
-
-            await user.save()
 
             const token = getToken(user)
 

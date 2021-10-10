@@ -1,8 +1,6 @@
 const { Schema, model } = require('mongoose')
 const { isEmail } = require('validator')
-const bcrypt = require('bcryptjs')
 
-const SALT_WORK_FACTOR = 10
 const MAX_LOGIN_ATTEMPTS = 5
 const LOCK_TIME = 2 * 1000 * 3600
 
@@ -39,24 +37,6 @@ const UserSchema = new Schema({
 
 UserSchema.virtual('isLocked').get(function () {
     return this.lockUntil && this.lockUntil > Date.now()
-})
-
-UserSchema.pre('save', async function (next) {
-    try {
-        const user = this
-
-        if (!user.isModified('password')) return next()
-
-        const salt = await bcrypt.genSalt(SALT_WORK_FACTOR)
-        const hash = await bcrypt.hash(user.password, salt)
-
-        user.password = hash
-
-        next()
-    } catch (err) {
-        console.error(err)
-        return null
-    }
 })
 
 UserSchema.methods.comparePassword = async function (password) {
