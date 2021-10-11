@@ -6,15 +6,19 @@ const ShowSchema = new Schema({
         type: String,
         required: true,
     },
-    artists: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'artist',
-        },
-    ],
+    artists: {
+        type: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'artist',
+            },
+        ],
+        required: true,
+    },
     venue: {
         type: Schema.Types.ObjectId,
         ref: 'venue',
+        required: true,
     },
     desc: {
         type: String,
@@ -25,6 +29,7 @@ const ShowSchema = new Schema({
             validator: isDate,
             message: 'must be a valid date',
         },
+        required: true,
     },
 })
 

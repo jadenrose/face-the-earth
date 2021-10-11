@@ -23,9 +23,12 @@ router.get('/', auth, async (req, res) => {
 // @access	public
 router.get('/:artist_id', async (req, res) => {
     try {
-        const artist = await Artist.findById(req.params.artist_id).select(
-            '-password -loginAttempts'
-        )
+        const artist = await Artist.findById(req.params.artist_id)
+
+        if (!artist)
+            return res
+                .status(404)
+                .json({ errors: [{ msg: 'artist not found' }] })
 
         res.json({ artist })
     } catch (err) {
@@ -63,6 +66,16 @@ router.post(
 
             res.json({ artist })
         } catch (err) {
+            if (err.code === 11000) {
+                return res.status(400).json({
+                    errors: Object.entries(err.keyValue).map(([key, value]) => {
+                        return {
+                            msg: `the ${key} "${value}" is already taken`,
+                        }
+                    }),
+                })
+            }
+
             console.error(err)
             res.status(500).send('server error')
         }
@@ -104,6 +117,21 @@ router.patch(
 
             res.json(artist)
         } catch (err) {
+            if (err.kind === 'ObjectId')
+                return res
+                    .status(404)
+                    .json({ errors: [{ msg: 'artist not found' }] })
+
+            if (err.code === 11000) {
+                return res.status(400).json({
+                    errors: Object.entries(err.keyValue).map(([key, value]) => {
+                        return {
+                            msg: `the ${key} "${value}" is already taken`,
+                        }
+                    }),
+                })
+            }
+
             console.error(err)
             res.status(500).send('server error')
         }
@@ -124,6 +152,11 @@ router.delete('/:artist_id', auth, async (req, res) => {
 
         res.json({ msg: 'artist removed' })
     } catch (err) {
+        if (err.kind === 'ObjectId')
+            return res
+                .status(404)
+                .json({ errors: [{ msg: 'artist not found' }] })
+
         console.error(err)
         res.status(500).send('server error')
     }
@@ -156,6 +189,11 @@ router.delete('/:artist_id/:field_name', auth, async (req, res) => {
 
         res.json(artist)
     } catch (err) {
+        if (err.kind === 'ObjectId')
+            return res
+                .status(404)
+                .json({ errors: [{ msg: 'artist not found' }] })
+
         console.error(err)
         res.status(500).send('server error')
     }

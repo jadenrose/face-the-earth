@@ -69,10 +69,15 @@ router.post(
 
             res.json({ token })
         } catch (err) {
-            if (err.code === 11000)
+            if (err.code === 11000) {
                 return res.status(400).json({
-                    errors: [{ msg: 'duplicate email' }],
+                    errors: Object.entries(err.keyValue).map(([key, value]) => {
+                        return {
+                            msg: `the ${key} "${value}" is already taken`,
+                        }
+                    }),
                 })
+            }
 
             // console.error(err)
             res.status(500).send('server error')
@@ -87,10 +92,10 @@ router.patch(
     '/:user_id',
     [
         check('email', 'email cannot be empty').optional().notEmpty(),
-        check('email', 'please enter a valid email').isEmail(),
+        check('email', 'please enter a valid email').optional().isEmail(),
         check('password', 'password must be between 6 and 14 characters long')
-            .isLength({ min: 6, max: 14 })
-            .optional(),
+            .optional()
+            .isLength({ min: 6, max: 14 }),
     ],
     async (req, res) => {
         const errors = validationResult(req)
@@ -121,13 +126,23 @@ router.patch(
                     .status(404)
                     .json({ errors: [{ msg: 'user not found' }] })
 
+            if (err.code === 11000) {
+                return res.status(400).json({
+                    errors: Object.entries(err.keyValue).map(([key, value]) => {
+                        return {
+                            msg: `the ${key} "${value}" is already taken`,
+                        }
+                    }),
+                })
+            }
+
             console.error(err)
             res.status(500).send('server error')
         }
     }
 )
 
-// @path	DELETE /api/user
+// @path	DELETE /api/user/:user_id
 // @desc	delete user
 // @access	private
 router.delete('/:user_id', auth, async (req, res) => {
@@ -177,6 +192,9 @@ router.delete('/:user_id/:field_name', auth, async (req, res) => {
 
         res.json(user)
     } catch (err) {
+        if (err.kind === 'ObjectId')
+            return res.status(404).json({ errors: [{ msg: 'user not found' }] })
+
         console.error(err)
         res.status(500).send('server error')
     }

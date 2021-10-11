@@ -8,7 +8,7 @@ const VenueSchema = new Schema({
             unique: true,
         },
     },
-    location: {
+    loc: {
         type: String,
         required: true,
         index: {

@@ -2,11 +2,11 @@
     "items": [
         {
             "name": "Bo's Bar and Stage",
-            "location": "2310 50 Ave, Red Deer, AB T4R 1C5"
+            "loc": "2310 50 Ave, Red Deer, AB T4R 1C5"
         },
         {
             "name": "Neighbours Pub",
-            "location": "4810 50 St #101, Athabasca, AB T9S 1C9"
+            "loc": "4810 50 St #101, Athabasca, AB T9S 1C9"
         }
     ]
 }
