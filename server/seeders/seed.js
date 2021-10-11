@@ -4,22 +4,26 @@ const prompt = require('prompt')
 
 const connectDB = require('../config/db')
 
-const Video = require('../models/Video')
-const Show = require('../models/Show')
-const Artist = require('../models/Artist')
-
-const models = [
+const collections = [
     {
-        Model: Video,
+        Model: require('../models/User'),
+        path: path.join(__dirname, 'users.json'),
+    },
+    {
+        Model: require('../models/Video'),
         path: path.join(__dirname, 'videos.json'),
     },
     {
-        Model: Show,
+        Model: require('../models/Show'),
         path: path.join(__dirname, 'shows.json'),
     },
     {
-        Model: Artist,
+        Model: require('../models/Artist'),
         path: path.join(__dirname, 'artists.json'),
+    },
+    {
+        Model: require('../models/Venue'),
+        path: path.join(__dirname, 'venues.json'),
     },
 ]
 
@@ -63,10 +67,10 @@ const seed = async (Model, path, options = {}) => {
 const run = async () => {
     console.log('Collections:')
     console.log(
-        models
+        collections
             .map(
-                (model, i) =>
-                    `  ${i + 1}) ${model.Model.collection.collectionName}`
+                (collections, i) =>
+                    `  ${i + 1}) ${collections.Model.collection.collectionName}`
             )
             .join('\n')
     )
@@ -77,20 +81,21 @@ const run = async () => {
     const { selection } = await prompt.get({
         properties: {
             selection: {
-                description: `Seed which collection? (1-${models.length})`,
+                description: `Seed which collection? (1-${collections.length})`,
             },
         },
     })
 
     if (selection.toLowerCase() === 'c') return
 
-    if (Number(selection) && Number(selection) <= models.length) {
-        const collection = models[Number(selection) - 1]
+    if (Number(selection) && Number(selection) <= collections.length) {
+        const collection = collections[Number(selection) - 1]
         return await seed(collection.Model, collection.path)
     }
 
     if (selection.toLowerCase() === 'a') {
-        for (const model of models) await seed(model.Model, model.path)
+        for (const collection of collections)
+            await seed(collection.Model, collection.path)
         return
     }
 

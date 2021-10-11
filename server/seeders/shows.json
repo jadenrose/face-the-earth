@@ -3,18 +3,16 @@
         {
             "title": "Face the Earth feat. TEN 02",
             "artists": ["616348e2745ec869ad5e55e4", "616348e3745ec869ad5e55e6"],
-            "venue": "Bo's Bar and Stage",
+            "venue": "61638d9ff74232d5af1e13c8",
             "desc": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus voluptate corporis ut atque maiores ullam odio quis cupiditate cum eius.",
-            "date": "07-31-21",
-            "loc": "2310 50 Ave, Red Deer, AB T4R 1C5"
+            "date": "07-31-21"
         },
         {
             "title": "Face the Earth w/ special guests Bonnie & Réal",
-            "artists": ["616348e2745ec869ad5e55e4", "61634ae67fd525a15aa7bde0"],
-            "venue": "Neighbours Pub",
+            "artists": ["616348e2745ec869ad5e55e4", "61635fb48d1baf8f7ee3e122"],
+            "venue": "61638da0f74232d5af1e13cc",
             "desc": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus voluptate corporis ut atque maiores ullam odio quis cupiditate cum eius.",
-            "date": "09-04-21",
-            "loc": "4810 50 St #101, Athabasca, AB T9S 1C9"
+            "date": "09-04-21"
         }
     ]
 }

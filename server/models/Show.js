@@ -13,8 +13,8 @@ const ShowSchema = new Schema({
         },
     ],
     venue: {
-        type: String,
-        required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'venue',
     },
     desc: {
         type: String,
@@ -25,9 +25,6 @@ const ShowSchema = new Schema({
             validator: isDate,
             message: 'must be a valid date',
         },
-    },
-    loc: {
-        type: String,
     },
 })
 

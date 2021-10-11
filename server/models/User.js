@@ -32,7 +32,7 @@ const UserSchema = new Schema({
         required: true,
         validate: [
             {
-                validator: (value) => isEmail(value),
+                validator: isEmail,
                 message: 'invalid email',
             },
         ],

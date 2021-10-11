@@ -5,6 +5,9 @@ const ArtistSchema = new Schema({
     name: {
         type: String,
         required: true,
+        index: {
+            unique: true,
+        },
     },
     link: {
         type: String,
