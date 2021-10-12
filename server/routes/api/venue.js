@@ -142,9 +142,9 @@ router.patch(
 // @path	DELETE /api/venue/:venue_id
 // @desc	delete venue
 // @access	public
-router.delete('/:venue_id', auth, (req, res) => {
+router.delete('/:venue_id', auth, async (req, res) => {
     try {
-        const venue = Venue.findByIdAndRemove(req.params.venue_id)
+        const venue = await Venue.findByIdAndRemove(req.params.venue_id)
 
         if (!venue)
             return res

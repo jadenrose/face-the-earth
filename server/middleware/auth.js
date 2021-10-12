@@ -19,7 +19,10 @@ module.exports = async function (req, res, next) {
 
         next()
     } catch (err) {
-        if (err.name === 'JsonWebTokenError')
+        if (
+            err.name === 'JsonWebTokenError' ||
+            err.name === 'TokenExpiredError'
+        )
             return res
                 .status(401)
                 .json({ errors: [{ msg: 'not authenticated' }] })

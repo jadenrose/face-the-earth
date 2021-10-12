@@ -6,10 +6,6 @@ const connectDB = require('../config/db')
 
 const collections = [
     {
-        Model: require('../models/User'),
-        path: path.join(__dirname, 'users.json'),
-    },
-    {
         Model: require('../models/Video'),
         path: path.join(__dirname, 'videos.json'),
     },
