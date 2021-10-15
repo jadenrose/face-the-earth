@@ -1,5 +1,6 @@
 const express = require('express')
 const connectDB = require('./config/db')
+const cors = require('cors')
 
 connectDB()
 
@@ -11,13 +12,14 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json())
+app.use(cors())
 
 app.use('/api/auth', require('./routes/api/auth'))
-app.use('/api/user', require('./routes/api/user'))
-app.use('/api/artist', require('./routes/api/artist'))
-app.use('/api/show', require('./routes/api/show'))
-app.use('/api/venue', require('./routes/api/venue'))
-app.use('/api/video', require('./routes/api/video'))
+app.use('/api/users', require('./routes/api/users'))
+app.use('/api/artists', require('./routes/api/artists'))
+app.use('/api/shows', require('./routes/api/shows'))
+app.use('/api/venues', require('./routes/api/venues'))
+app.use('/api/videos', require('./routes/api/videos'))
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {

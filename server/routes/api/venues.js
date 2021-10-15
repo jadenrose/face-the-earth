@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
     try {
         const venues = await Venue.find()
 
-        res.json({ venues })
+        res.json(venues)
     } catch (err) {
         console.error(err)
         res.status(500).send('server error')
@@ -30,7 +30,7 @@ router.get('/:venue_id', async (req, res) => {
                 .status(404)
                 .json({ errors: [{ msg: 'venue not found' }] })
 
-        res.json({ venue })
+        res.json(venue)
     } catch (err) {
         if (err.kind === 'ObjectId') {
             return res
@@ -66,7 +66,7 @@ router.post(
 
             await venue.save()
 
-            res.json({ venue })
+            res.json(venue)
         } catch (err) {
             if (err.code === 11000) {
                 return res.status(400).json({
@@ -116,7 +116,7 @@ router.patch(
                     .status(404)
                     .json({ errors: [{ msg: 'venue not found' }] })
 
-            res.json({ venue })
+            res.json(venue)
         } catch (err) {
             if (err.kind === 'ObjectId')
                 return res

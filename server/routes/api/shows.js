@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     try {
         const shows = await Show.find().populate('artists venue')
 
-        res.json({ shows })
+        res.json(shows)
     } catch (err) {
         console.error(err)
         res.status(500).send('server error')
@@ -31,7 +31,7 @@ router.get('/:show_id', async (req, res) => {
         if (!show)
             return res.status(404).json({ errors: [{ msg: 'show not found' }] })
 
-        res.json({ show })
+        res.json(show)
     } catch (err) {
         console.error(err)
         res.status(500).send('server error')
@@ -70,7 +70,7 @@ router.post(
 
             await show.populate('artists venue')
 
-            res.json({ show })
+            res.json(show)
         } catch (err) {
             console.error(err)
             res.status(500).send('server error')
@@ -121,7 +121,7 @@ router.patch(
 
             await show.populate('artists venue')
 
-            res.json({ show })
+            res.json(show)
         } catch (err) {
             console.error(err)
             res.status(500).send('server error')

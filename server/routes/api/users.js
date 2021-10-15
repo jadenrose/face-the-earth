@@ -14,7 +14,7 @@ router.get('/', auth, async (req, res) => {
     try {
         const users = await User.find().select('-password -loginAttempts')
 
-        res.json({ users })
+        res.json(users)
     } catch (err) {
         console.error(err)
         res.status(500).send('server error')
@@ -30,7 +30,7 @@ router.get('/:user_id', auth, async (req, res) => {
             '-password -loginAttempts'
         )
 
-        res.json({ user })
+        res.json(user)
     } catch (err) {
         console.error(err)
         res.status(500).send('server error')
@@ -67,7 +67,7 @@ router.post(
 
             const token = getToken(user)
 
-            res.json({ token })
+            res.json(token)
         } catch (err) {
             if (err.code === 11000) {
                 return res.status(400).json({
@@ -119,7 +119,7 @@ router.patch(
 
             const token = getToken(user)
 
-            res.json({ token })
+            res.json(token)
         } catch (err) {
             if (err.kind === 'ObjectId')
                 return res

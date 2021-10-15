@@ -2,57 +2,52 @@ const router = require('express').Router()
 const { check, validationResult } = require('express-validator')
 
 const auth = require('../../middleware/auth')
-const Video = require('../../models/Video')
+const Artist = require('../../models/Artist')
 
-// @path	GET /api/video
-// @desc	get all videos
+// @path	GET /api/artist
+// @desc	get all artists
 // @access	public
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
-        const videos = await Video.find()
+        const artists = await Artist.find().select('-password -loginAttempts')
 
-        res.json({ videos })
+        res.json(artists)
     } catch (err) {
         console.error(err)
         res.status(500).send('server error')
     }
 })
 
-// @path	GET /api/video/:video_id
-// @desc	get video by id
+// @path	GET /api/artist/:artist_id
+// @desc	get artist by id
 // @access	public
-router.get('/:video_id', async (req, res) => {
+router.get('/:artist_id', async (req, res) => {
     try {
-        const video = await Video.findById(req.params.video_id)
+        const artist = await Artist.findById(req.params.artist_id)
 
-        if (!video)
+        if (!artist)
             return res
                 .status(404)
-                .json({ errors: [{ msg: 'video not found' }] })
+                .json({ errors: [{ msg: 'artist not found' }] })
 
-        res.json({ video })
+        res.json(artist)
     } catch (err) {
-        if (err.kind === 'ObjectId') {
-            return res
-                .status(404)
-                .json({ errors: [{ msg: 'video not found' }] })
-        }
-
         console.error(err)
         res.status(500).send('server error')
     }
 })
 
-// @path	POST /api/video
-// @desc	create new video
+// @path	POST /api/artist
+// @desc	create new artist
 // @access	private
 router.post(
     '/',
     [
         auth,
         [
-            check('url', 'invalid URL').isURL(),
-            check('title', 'title is required').notEmpty(),
+            check('name', 'name is required').notEmpty(),
+            check('link', 'URL cannot be empty').optional().notEmpty(),
+            check('link', 'please enter a valid URL').optional().isURL(),
         ],
     ],
     async (req, res) => {
@@ -62,11 +57,14 @@ router.post(
             return res.status(400).json({ errors: errors.array() })
 
         try {
-            const video = new Video(req.body)
+            const artist = new Artist({
+                name: req.body.name,
+                link: req.body.link,
+            })
 
-            await video.save()
+            await artist.save()
 
-            res.json({ video })
+            res.json(artist)
         } catch (err) {
             if (err.code === 11000) {
                 return res.status(400).json({
@@ -84,16 +82,17 @@ router.post(
     }
 )
 
-// @path	PATCH /api/video/:video_id
-// @desc	modify video
-// @access	public
+// @path	PATCH /api/artist/:artist_id
+// @desc	modify artist
+// @access	private
 router.patch(
-    '/:video_id',
+    '/:artist_id',
     [
         auth,
         [
-            check('url', 'invalid URL').optional().isURL(),
-            check('title', 'title is required').optional().notEmpty(),
+            check('name', 'name is required').optional().notEmpty(),
+            check('link', 'URL cannot be empty').optional().notEmpty(),
+            check('link', 'please enter a valid URL').optional().isURL(),
         ],
     ],
     async (req, res) => {
@@ -103,25 +102,25 @@ router.patch(
             return res.status(400).json({ errors: errors.array() })
 
         try {
-            const video = await Video.findByIdAndUpdate(
-                req.params.video_id,
+            const artist = await Artist.findByIdAndUpdate(
+                req.params.artist_id,
                 {
                     $set: { ...req.body },
                 },
                 { new: true }
             )
 
-            if (!video)
+            if (!artist)
                 return res
                     .status(404)
-                    .json({ errors: [{ msg: 'video not found' }] })
+                    .json({ errors: [{ msg: 'artist not found' }] })
 
-            res.json({ video })
+            res.json(artist)
         } catch (err) {
             if (err.kind === 'ObjectId')
                 return res
                     .status(404)
-                    .json({ errors: [{ msg: 'video not found' }] })
+                    .json({ errors: [{ msg: 'artist not found' }] })
 
             if (err.code === 11000) {
                 return res.status(400).json({
@@ -139,61 +138,61 @@ router.patch(
     }
 )
 
-// @path	DELETE /api/video/:video_id
-// @desc	delete video
-// @access	public
-router.delete('/:video_id', auth, async (req, res) => {
+// @path	DELETE /api/artist/:artist_id
+// @desc	delete artist
+// @access	private
+router.delete('/:artist_id', auth, async (req, res) => {
     try {
-        const video = await Video.findByIdAndRemove(req.params.video_id)
+        const artist = await Artist.findByIdAndRemove(req.params.artist_id)
 
-        if (!video)
+        if (!artist)
             return res
                 .status(404)
-                .json({ errors: [{ msg: 'video not found' }] })
+                .json({ errors: [{ msg: 'artist not found' }] })
 
-        res.json({ msg: 'video removed' })
+        res.json({ msg: 'artist removed' })
     } catch (err) {
         if (err.kind === 'ObjectId')
             return res
                 .status(404)
-                .json({ errors: [{ msg: 'video not found' }] })
+                .json({ errors: [{ msg: 'artist not found' }] })
 
         console.error(err)
         res.status(500).send('server error')
     }
 })
 
-// @path	DELETE /api/video/:video_id/:field_name
-// @desc	delete field from video
+// @path	DELETE /api/artist/:artist_id/:field_name
+// @desc	delete field from artist
 // @access	private
-router.delete('/:video_id/:field_name', auth, async (req, res) => {
+router.delete('/:artist_id/:field_name', auth, async (req, res) => {
     try {
-        const reqFields = Video.schema.requiredPaths()
+        const reqFields = Artist.schema.requiredPaths()
 
         if (reqFields.indexOf(req.params.field_name) > -1)
             return res
                 .status(400)
                 .json({ errors: [{ msg: 'cannot delete a required field' }] })
 
-        const video = await Video.findByIdAndUpdate(
-            req.params.video_id,
+        const artist = await Artist.findByIdAndUpdate(
+            req.params.artist_id,
             {
                 $unset: { [req.params.field_name]: '' },
             },
             { new: true }
         )
 
-        if (!video)
+        if (!artist)
             return res
                 .status(404)
-                .json({ errors: [{ msg: 'video not found' }] })
+                .json({ errors: [{ msg: 'artist not found' }] })
 
-        res.json(video)
+        res.json(artist)
     } catch (err) {
         if (err.kind === 'ObjectId')
             return res
                 .status(404)
-                .json({ errors: [{ msg: 'video not found' }] })
+                .json({ errors: [{ msg: 'artist not found' }] })
 
         console.error(err)
         res.status(500).send('server error')

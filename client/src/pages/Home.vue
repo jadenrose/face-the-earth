@@ -1,5 +1,12 @@
 <template>
-    <h1>Home Works</h1>
+    <section class="hero-section">
+        <Container>
+            <HeroLogo :sx="{ marginBottom: '6em' }" />
+            <Button>
+                <Typography>check out our music</Typography>
+            </Button>
+        </Container>
+    </section>
 </template>
 
 <script>

@@ -12,7 +12,7 @@ export default {
 
 <style lang="scss">
 .Container {
-    width: 90%;
+    width: $container-width;
     max-width: 1200px;
     margin: 0 auto;
 }

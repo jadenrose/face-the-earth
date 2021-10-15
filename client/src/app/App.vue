@@ -1,13 +1,21 @@
 <template>
-    <Navbar />
-    <Container>
+    <header>
+        <Navbar />
+    </header>
+    <main>
         <router-view />
-    </Container>
+    </main>
 </template>
 
 <script>
+import store from '../store/store'
+import { provide } from 'vue'
+
 export default {
     name: 'App',
+    setup () {
+        provide('store', store)
+    }
 }
 </script>
 
@@ -30,6 +38,14 @@ body {
 
     font-family: $family;
     font-weight: $normal;
+}
+
+.hero-section {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 h1,
