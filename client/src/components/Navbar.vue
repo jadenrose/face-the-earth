@@ -37,19 +37,19 @@ export default {
 
         const extLinks = ref([
             {
-                icon: 'fa-facebook',
+                icon: 'fab fa-facebook',
                 href: 'https://www.facebook.com/FacetheEarth'
             },
             {
-                icon: 'fa-instagram',
+                icon: 'fab fa-instagram',
                 href: 'https://www.instagram.com/facetheearth'
             },
             {
-                icon: 'fa-youtube',
+                icon: 'fab fa-youtube',
                 href: 'https://www.youtube.com/channel/UCynYkCrwJCfNNLc7Z03yhKA/featured'
             },
             {
-                icon: 'fa-spotify',
+                icon: 'fab fa-spotify',
                 href: 'https://open.spotify.com/artist/3B8dM8jspZ4ADCUXvVszi6'
             },
         ])

@@ -1,26 +1,19 @@
 <template>
-    <section class="Shows">
-        <Container>
-            <Typography variant="h1">Shows</Typography>
-        </Container>
-    </section>
+    <suspense>
+        <template #default>
+            <ShowsList />
+        </template>
+        <template #fallback>
+            <Typography variant="h2">loading...</Typography>
+        </template>
+    </suspense>
 </template>
 
 <script>
-import store from '../store/store'
-
 export default {
     name: 'Shows',
-    mounted () {
-        store.storeAllShows()
-    }
 }
 </script>
 
 <style lang="scss">
-.Shows {
-    .Container {
-        padding-top: 12em;
-    }
-}
 </style>

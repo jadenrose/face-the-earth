@@ -9,7 +9,7 @@
                 <Typography bold hover :size="1.2" v-if="item.label">{{
                     item.label
                 }}</Typography>
-                <i v-if="item.icon" :class="`fab ${item.icon}`"></i>
+                <AwesomeIcon v-if="item.icon" :icon="item.icon" />
             </router-link>
             <a
                 :class="{ linkText: item.label, linkIcon: item.icon }"
@@ -18,7 +18,7 @@
                 target="_blank"
             >
                 <Typography bold v-if="item.label">{{ item.label }}</Typography>
-                <i v-if="item.icon" :class="`fab ${item.icon}`"></i>
+                <AwesomeIcon v-if="item.icon" :icon="item.icon" />
             </a>
         </li>
     </ul>
@@ -54,7 +54,7 @@ a {
     }
 
     &.router-link-exact-active {
-        opacity: 0.5;
+        color: $color-deact;
         cursor: default;
 
         &:hover {
@@ -63,7 +63,7 @@ a {
     }
 }
 
-i {
+.fab {
     font-size: 2.5em;
 }
 

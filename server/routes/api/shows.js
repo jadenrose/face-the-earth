@@ -10,7 +10,7 @@ const Show = require('../../models/Show')
 // @access	public
 router.get('/', async (req, res) => {
     try {
-        const shows = await Show.find().populate('artists venue')
+        const shows = await Show.find().populate('artists').populate('venue')
 
         res.json(shows)
     } catch (err) {
@@ -24,9 +24,9 @@ router.get('/', async (req, res) => {
 // @access	public
 router.get('/:show_id', async (req, res) => {
     try {
-        const show = await Show.findById(req.params.show_id).populate(
-            'artists venue'
-        )
+        const show = await Show.findById(req.params.show_id)
+            .populate('artists')
+            .populate('venue')
 
         if (!show)
             return res.status(404).json({ errors: [{ msg: 'show not found' }] })

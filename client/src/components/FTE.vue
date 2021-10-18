@@ -13,15 +13,11 @@ export default {
 </script>
 
 <style lang="scss">
-a.FTE {
-    opacity: 1;
+.FTE {
     cursor: pointer;
 
-    &:hover {
-        color: inherit;
-    }
-
     svg {
+        color: $color-main;
         width: 6em;
         height: 4em;
     }
