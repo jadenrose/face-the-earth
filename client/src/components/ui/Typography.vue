@@ -5,7 +5,9 @@
         class="Typography"
         :style="{ fontSize: `${2.5 * size}em`, ...sx }"
     >
-        <slot />
+        <span>
+            <slot />
+        </span>
     </h1>
     <h2
         @click="$emit('click')"
@@ -13,7 +15,9 @@
         class="Typography"
         :style="{ fontSize: `${2 * size}em`, ...sx }"
     >
-        <slot />
+        <span>
+            <slot />
+        </span>
     </h2>
     <h3
         @click="$emit('click')"
@@ -21,7 +25,9 @@
         class="Typography"
         :style="{ fontSize: `${1.5 * size}em`, ...sx }"
     >
-        <slot />
+        <span>
+            <slot />
+        </span>
     </h3>
     <h4
         @click="$emit('click')"
@@ -29,16 +35,20 @@
         class="Typography"
         :style="{ fontSize: `${1.2 * size}em`, ...sx }"
     >
-        <slot />
+        <span>
+            <slot />
+        </span>
     </h4>
-    <span
+    <p
         @click="$emit('click')"
         v-else
         class="Typography"
         :style="{ fontSize: `${size}em`, ...sx }"
     >
-        <slot />
-    </span>
+        <span>
+            <slot />
+        </span>
+    </p>
 </template>
 
 <script>
@@ -58,7 +68,12 @@ export default {
 
 <style lang="scss">
 .Typography {
+    margin: 0;
     letter-spacing: 1px;
+
+    &[color="accent"] {
+        color: $accent-main;
+    }
 
     &[bold] {
         font-weight: $bold;
@@ -68,13 +83,17 @@ export default {
         cursor: pointer;
         text-decoration: underline;
         text-decoration-thickness: 0.2em;
-        text-decoration-color: $color-deact;
+        text-decoration-color: $accent-main;
+
+        .text-decoration {
+            color: $accent-main;
+        }
 
         &:hover {
-            text-decoration-color: inherit;
+            text-decoration-color: $accent-hover;
 
             .text-decoration {
-                color: inherit;
+                color: $accent-hover;
             }
         }
     }

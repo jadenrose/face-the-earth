@@ -7,6 +7,6 @@ module.exports = (user) => {
     if (payload.user.password) delete payload.user.password
 
     return jwt.sign(payload, config.get('jwtSecret'), {
-        expiresIn: 36000,
+        expiresIn: config.get('jwtLife'),
     })
 }

@@ -54,10 +54,20 @@ export default {
     background: $accent-main;
     color: $background;
     font-family: inherit;
-    font-size: 1.4rem;
+    font-size: 1rem;
     font-weight: $bold;
     text-transform: uppercase;
-    padding: 2em 3em;
+    padding: 1em 2em;
+
+    &[medium] {
+        font-size: 1.2rem;
+        padding: 1.5em 2.5em;
+    }
+
+    &[big] {
+        font-size: 1.4rem;
+        padding: 2em 3em;
+    }
 
     &:hover,
     &:focus {

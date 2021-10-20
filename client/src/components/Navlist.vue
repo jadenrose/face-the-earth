@@ -6,7 +6,7 @@
                 v-if="item.to"
                 :to="item.to"
             >
-                <Typography bold hover :size="1.2" v-if="item.label">{{
+                <Typography bold hover v-if="item.label">{{
                     item.label
                 }}</Typography>
                 <AwesomeIcon v-if="item.icon" :icon="item.icon" />
@@ -17,7 +17,9 @@
                 :href="item.href"
                 target="_blank"
             >
-                <Typography bold v-if="item.label">{{ item.label }}</Typography>
+                <Typography bold hover v-if="item.label">{{
+                    item.label
+                }}</Typography>
                 <AwesomeIcon v-if="item.icon" :icon="item.icon" />
             </a>
         </li>
@@ -38,15 +40,16 @@ export default {
 }
 
 a {
+    display: block;
     color: inherit;
     text-decoration: none;
 
     &.linkText {
-        padding: 1.3em 1.8em;
+        padding: 1.3em;
     }
 
     &.linkIcon {
-        padding: 1.3em;
+        padding: 1em;
     }
 
     &:hover {

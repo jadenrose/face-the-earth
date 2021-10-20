@@ -10,8 +10,13 @@
 </template>
 
 <script>
+import ShowsList from '../components/ShowsList.vue'
+
 export default {
     name: 'Shows',
+    components: {
+        ShowsList
+    }
 }
 </script>
 

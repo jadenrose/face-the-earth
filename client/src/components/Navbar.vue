@@ -13,8 +13,17 @@
 <script>
 import { ref } from 'vue'
 
+import FTE from '../components/FTE.vue'
+import Nav from '../components/Nav.vue'
+import Navlist from '../components/Navlist.vue'
+
 export default {
     name: 'Navbar',
+    components: {
+        FTE,
+        Nav,
+        Navlist
+    },
     setup () {
         const routerLinks = ref([
             {

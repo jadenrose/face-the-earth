@@ -1,5 +1,5 @@
 <template>
-    <Container class="ShowsList">
+    <section class="ShowsList">
         <Card class="Show" v-for="show in shows" :key="show._id">
             <div class="card-top">
                 <div class="show-info">
@@ -39,7 +39,10 @@
                 <Typography variant="h4" :sx="{ margin: '0' }">
                     {{ new Date(show.date).toDateString() }}
                 </Typography>
-                <Typography variant="h4" :sx="{ margin: '0 0.4em' }"
+                <Typography
+                    color="accent"
+                    variant="h4"
+                    :sx="{ margin: '0 0.4em' }"
                     >@</Typography
                 >
                 <Typography
@@ -56,7 +59,7 @@
                 </Typography>
             </div>
         </Card>
-    </Container>
+    </section>
 </template>
 
 <script>
@@ -99,8 +102,6 @@ export default {
 
 <style lang="scss">
 .ShowsList {
-    padding-top: 12em;
-
     .Card {
         position: relative;
         overflow: hidden;
@@ -172,9 +173,8 @@ export default {
         z-index: 0;
     }
 
-    .fa {
+    .text-decoration {
         margin-left: 0.3em;
-        color: $color-deact;
     }
 }
 </style>

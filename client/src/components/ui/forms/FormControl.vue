@@ -1,0 +1,118 @@
+<template>
+    <label v-if="category === 'input'" :for="name" class="FormControl">
+        <Typography :sx="{ marginBottom: '1em' }">
+            {{ labelText }}
+        </Typography>
+        <input
+            :type="type"
+            :id="name"
+            :value="modelValue"
+            @input="$emit('update:modelValue', $event.target.value)"
+        />
+    </label>
+
+    <label
+        v-if="category === 'select'"
+        :for="name"
+        class="FormControl"
+        @input="$emit('update:modelValue', $event.target.value)"
+    >
+        <Typography :sx="{ marginBottom: '1em' }">
+            {{ labelText }}
+        </Typography>
+        <select :value="modelValue" :id="name" :name="name">
+            <option value="" disabled>make a selection...</option>
+
+            <option
+                v-for="option in options"
+                :value="option.value"
+                :key="option.value"
+            >
+                {{ option.label }}
+            </option>
+
+            <option value="other">other:</option>
+        </select>
+    </label>
+
+    <Button v-if="category === 'submit'">
+        <Typography>submit</Typography>
+    </Button>
+</template>
+
+<script>
+export default {
+    name: 'FormControl',
+    props: {
+        label: String,
+        name: String,
+        category: String,
+        type: String,
+        required: Boolean,
+        options: {
+            type: Array,
+            default: () => [],
+        },
+        modelValue: String
+    },
+    computed: {
+        labelText: function () {
+            return `${this.label}${this.required ? ' *' : ''}`
+        }
+    }
+}
+</script>
+
+<style lang="scss">
+.FormControl {
+    margin-right: 1em;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+label,
+input,
+select {
+    display: block;
+    width: 100%;
+}
+
+label {
+    letter-spacing: 1px;
+    font-weight: $bold;
+    cursor: pointer;
+    text-align: left;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+select {
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    appearance: none;
+    padding: 1.25em 1em;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: $normal;
+    color: $background;
+    letter-spacing: 1px;
+    background-color: $color-main;
+
+    &:focus {
+        box-shadow: 0 0 1px 3px $accent-main inset;
+    }
+}
+
+select {
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position-x: 95%;
+    background-position-y: 50%;
+    background-size: 1.5em;
+}
+</style>

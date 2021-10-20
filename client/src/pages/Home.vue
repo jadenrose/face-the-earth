@@ -1,16 +1,17 @@
 <template>
-    <section class="hero-section">
-        <Container>
-            <HeroLogo :sx="{ marginBottom: '6em' }" />
-            <Button>
-                <Typography>check out our music</Typography>
-            </Button>
-        </Container>
-    </section>
+    <HeroLogo :sx="{ marginBottom: '6em' }" />
+    <Button big>
+        <Typography>check out our music</Typography>
+    </Button>
 </template>
 
 <script>
+import HeroLogo from '../components/HeroLogo.vue'
+
 export default {
-    name: 'Home'
+    name: 'Home',
+    components: {
+        HeroLogo
+    }
 }
 </script>

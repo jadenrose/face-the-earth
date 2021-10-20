@@ -16,10 +16,14 @@ const state = reactive({
         errors: [],
         list: [],
     },
-    user: {},
+    user: {
+        status: null,
+        errors: [],
+        token: null,
+    },
 })
 
-const storeAllShows = async function() {
+const storeAllShows = async () => {
     state.shows.status = PENDING
 
     try {
@@ -43,7 +47,29 @@ const storeAllShows = async function() {
     }
 }
 
+const login = async (email, password) => {
+    try {
+        const token = await axios.get('http://localhost:5000/api/auth', {
+            body: {
+                email,
+                password,
+            },
+        })
+
+        if (!token) throw 'login failed'
+
+        return token
+    } catch (err) {
+        state.user = {
+            status: FAILED,
+            errors: [...state.user.errors, err],
+            token: null,
+        }
+    }
+}
+
 export default {
     state: readonly(state),
     storeAllShows,
+    login,
 }

@@ -24,7 +24,7 @@ export default {
 
     .logo {
         display: block;
-        width: 25em;
+        width: 15em;
         height: auto;
     }
 }

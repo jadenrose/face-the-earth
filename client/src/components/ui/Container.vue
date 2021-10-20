@@ -1,12 +1,15 @@
 <template>
-    <div class="Container">
+    <div class="Container" :style="{ ...sx }">
         <slot />
     </div>
 </template>
 
 <script>
 export default {
-    name: 'Container'
+    name: 'Container',
+    props: {
+        sx: Object
+    }
 }
 </script>
 

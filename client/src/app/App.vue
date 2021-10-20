@@ -3,7 +3,10 @@
         <Navbar />
     </header>
     <main>
-        <router-view />
+        <Container :sx="{ paddingTop: '15em' }">
+            <router-view v-if="token" name="admin" />
+            <router-view v-else />
+        </Container>
     </main>
 </template>
 
@@ -11,10 +14,21 @@
 import store from '../store/store'
 import { provide } from 'vue'
 
+import Navbar from '../components/Navbar.vue'
+
 export default {
     name: 'App',
+    components: {
+        Navbar
+    },
     setup () {
         provide('store', store)
+
+        const { token } = store.state.user
+
+        return {
+            token
+        }
     }
 }
 </script>
