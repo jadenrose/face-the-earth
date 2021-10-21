@@ -19,6 +19,5 @@ export default {
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
-    padding: $spacing-small;
 }
 </style>

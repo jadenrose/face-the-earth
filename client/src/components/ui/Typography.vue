@@ -71,6 +71,10 @@ export default {
     margin: 0;
     letter-spacing: 1px;
 
+    &[center] {
+        text-align: center;
+    }
+
     &[color="accent"] {
         color: $accent-main;
     }

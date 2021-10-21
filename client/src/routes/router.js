@@ -40,8 +40,6 @@ const publicRoutes = [
         component: Login,
         editable: false,
     },
-
-    // fallback routes
 ]
 
 const routes = publicRoutes.map((route) => {

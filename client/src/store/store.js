@@ -49,16 +49,24 @@ const storeAllShows = async () => {
 
 const login = async (email, password) => {
     try {
-        const token = await axios.get('http://localhost:5000/api/auth', {
-            body: {
+        const res = await axios.get('http://localhost:5000/api/auth', {
+            headers: {
                 email,
                 password,
             },
         })
 
+        const token = res.data
+
         if (!token) throw 'login failed'
 
-        return token
+        state.user = {
+            status: SUCCESS,
+            errors: [],
+            token,
+        }
+
+        localStorage.setItem('user', token)
     } catch (err) {
         state.user = {
             status: FAILED,

@@ -8,7 +8,8 @@ const User = require('../../models/User')
 // @access	public
 router.get('/', async (req, res) => {
     try {
-        const { email, password } = req.body
+        const email = req.header('email')
+        const password = req.header('password')
 
         const [err, user] = await User.getAuthenticated(email, password)
 
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
 
         const token = getToken(user)
 
-        res.json({ token })
+        res.json(token)
     } catch (err) {
         console.error(err)
         res.status(500).send('server error')
