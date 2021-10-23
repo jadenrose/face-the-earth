@@ -31,7 +31,7 @@ export default {
     background-color: $accent-main;
     color: $background;
     z-index: 999;
-    padding: 0.1em 1em;
+    padding: 0.3em 1em;
     font-weight: bold;
 }
 </style>

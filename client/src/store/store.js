@@ -86,9 +86,38 @@ const logout = () => {
     localStorage.removeItem('user')
 }
 
+const refreshToken = async () => {
+    try {
+        const storedToken = localStorage.getItem('user')
+
+        if (!storedToken) throw 'no token'
+
+        const res = await axios.get('http://localhost:5000/api/auth/token', {
+            headers: {
+                'x-auth-token': storedToken,
+            },
+        })
+
+        const token = res.data
+
+        state.user = {
+            status: SUCCESS,
+            errors: [],
+            token,
+        }
+    } catch (err) {
+        state.user = {
+            status: null,
+            errors: [],
+            token: null,
+        }
+    }
+}
+
 export default {
     state: readonly(state),
     storeAllShows,
     login,
     logout,
+    refreshToken,
 }

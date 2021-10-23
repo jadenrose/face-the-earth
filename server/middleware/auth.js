@@ -8,7 +8,7 @@ module.exports = async function (req, res, next) {
         const token = req.header('x-auth-token')
         const decoded = jwt.verify(token, config.get('jwtSecret'))
 
-        const user = await User.findById(decoded.user._id)
+        const user = await User.findById(decoded._id).lean()
 
         if (!user)
             return res

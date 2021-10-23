@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Route from './Route.vue'
+// import Route from './Route.vue'
 import Editable from './Editable.vue'
 
 import Home from '../pages/Home'
@@ -52,23 +52,17 @@ const routes = publicRoutes.map((route) => {
         if (editable) {
             return (
                 <Editable>
-                    <Route>
-                        <Component />
-                    </Route>
+                    <Component />
                 </Editable>
             )
         }
 
-        return (
-            <Route>
-                <Component />
-            </Route>
-        )
+        return <Component />
     }
 
     return {
         ...route,
-        component: Template,
+        component: Template(),
     }
 })
 

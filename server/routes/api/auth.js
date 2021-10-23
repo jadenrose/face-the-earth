@@ -1,21 +1,35 @@
 const router = require('express').Router()
 
-const getToken = require('../../functions/getToken')
-const User = require('../../models/User')
+const login = require('../../middleware/login')
+const auth = require('../../middleware/auth')
+const token = require('../../middleware/token')
 
 // @path	GET /api/auth
-// @desc	get login token
+// @desc	get token with login
 // @access	public
-router.get('/', async (req, res) => {
+router.get('/', [login, token], async (req, res) => {
     try {
-        const email = req.header('email')
-        const password = req.header('password')
+        const token = res.db.token
 
-        const [err, user] = await User.getAuthenticated(email, password)
+        if (!token)
+            res.status(404).json({ errors: [{ msg: 'user not found' }] })
 
-        if (!user) return res.status(err.code).json({ errors: err.array })
+        res.json(token)
+    } catch (err) {
+        console.error(err)
+        res.status(500).send('server error')
+    }
+})
 
-        const token = getToken(user)
+// @path	GET /api/auth/token
+// @desc	get a fresh token
+// @access	private
+router.get('/token', [auth, token], async (req, res) => {
+    try {
+        const token = res.db.token
+
+        if (!token)
+            res.status(404).json({ errors: [{ msg: 'user not found' }] })
 
         res.json(token)
     } catch (err) {

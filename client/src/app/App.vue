@@ -1,5 +1,6 @@
 <template>
     <header v-if="route.name !== 'Login'">
+        <AdminBar v-if="user" :user="user" />
         <Navbar />
     </header>
     <main>
@@ -13,19 +14,33 @@
 import store from '../store/store'
 import { provide, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import jwt_decode from 'jwt-decode'
 
 import Navbar from '../components/Navbar.vue'
+import AdminBar from '../components/AdminBar.vue'
 
 
 export default {
     name: 'App',
     components: {
-        Navbar
+        Navbar,
+        AdminBar,
     },
     setup () {
         provide('store', store)
 
-        const user = computed(() => store.state.user)
+        store.refreshToken()
+
+        const user = computed(() => {
+            try {
+                const token = store.state.user.token
+
+                return jwt_decode(token)
+            } catch (err) {
+                return null
+            }
+        })
+
 
         const route = useRoute()
 

@@ -1,8 +1,9 @@
 <template>
     <Container center>
         <Card>
+            <FTE />
             <Typography center variant="h2" :sx="{ marginBottom: '1em' }"
-                >FTE Admin Login</Typography
+                >Admin Login</Typography
             >
             <Form @submit="(e) => handleSubmit(e)">
                 <FormGroup>
@@ -36,9 +37,13 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import store from '../store/store'
+import FTE from '../components/FTE.vue'
 
 export default {
     name: 'Login',
+    components: {
+        FTE,
+    },
     setup () {
         const router = useRouter()
         const emailValue = ref('')
@@ -73,5 +78,6 @@ export default {
     max-width: 450px;
     margin: 0 auto;
     padding: $spacing-small;
+    text-align: center;
 }
 </style>
