@@ -3,7 +3,7 @@
         @click="$emit('click')"
         v-if="variant === 'h1'"
         class="Typography"
-        :style="{ fontSize: `${2.5 * size}em`, ...sx }"
+        :style="{ ...sx }"
     >
         <span>
             <slot />
@@ -13,7 +13,7 @@
         @click="$emit('click')"
         v-else-if="variant === 'h2'"
         class="Typography"
-        :style="{ fontSize: `${2 * size}em`, ...sx }"
+        :style="{ ...sx }"
     >
         <span>
             <slot />
@@ -23,7 +23,7 @@
         @click="$emit('click')"
         v-else-if="variant === 'h3'"
         class="Typography"
-        :style="{ fontSize: `${1.5 * size}em`, ...sx }"
+        :style="{ ...sx }"
     >
         <span>
             <slot />
@@ -33,18 +33,13 @@
         @click="$emit('click')"
         v-else-if="variant === 'h4'"
         class="Typography"
-        :style="{ fontSize: `${1.2 * size}em`, ...sx }"
+        :style="{ ...sx }"
     >
         <span>
             <slot />
         </span>
     </h4>
-    <p
-        @click="$emit('click')"
-        v-else
-        class="Typography"
-        :style="{ fontSize: `${size}em`, ...sx }"
-    >
+    <p @click="$emit('click')" v-else class="Typography" :style="{ ...sx }">
         <span>
             <slot />
         </span>
@@ -103,7 +98,7 @@ export default {
     }
 
     &[small] {
-        font-size: 0.8em;
+        font-size: 80%;
     }
 }
 </style>

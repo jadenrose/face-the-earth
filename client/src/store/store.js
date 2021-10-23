@@ -76,8 +76,19 @@ const login = async (email, password) => {
     }
 }
 
+const logout = () => {
+    state.user = {
+        status: null,
+        errors: [],
+        token: null,
+    }
+
+    localStorage.removeItem('user')
+}
+
 export default {
     state: readonly(state),
     storeAllShows,
     login,
+    logout,
 }

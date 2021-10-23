@@ -3,16 +3,15 @@
         <Navbar />
     </header>
     <main>
-        <Container :sx="{ paddingTop: route.name !== 'Login' ? '15em' : 0 }">
-            <router-view v-if="token" name="admin" />
-            <router-view v-else />
+        <Container :sx="{ paddingTop: route.name !== 'Login' ? '20em' : 0 }">
+            <router-view />
         </Container>
     </main>
 </template>
 
 <script>
 import store from '../store/store'
-import { provide } from 'vue'
+import { provide, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 import Navbar from '../components/Navbar.vue'
@@ -26,12 +25,12 @@ export default {
     setup () {
         provide('store', store)
 
-        const { token } = store.state.user
+        const user = computed(() => store.state.user)
 
         const route = useRoute()
 
         return {
-            token,
+            user,
             route
         }
     }

@@ -59,6 +59,11 @@ export default {
     text-transform: uppercase;
     padding: 1em 2em;
 
+    &[small] {
+        font-size: 0.8em;
+        padding: 0.5em;
+    }
+
     &[medium] {
         font-size: 1.2rem;
         padding: 1.5em 2.5em;

@@ -98,7 +98,7 @@ UserSchema.statics.getAuthenticated = async function (email, password) {
         const isMatch = await user.comparePassword(password)
 
         if (isMatch) {
-            if (!user.loginAttempts && !user.lockUntil) return [null, user]
+            if (!user.loginAttempts && !user.lockUntil) return [null, user._doc]
 
             const updates = {
                 $set: { loginAttempts: 0 },
@@ -107,7 +107,7 @@ UserSchema.statics.getAuthenticated = async function (email, password) {
 
             await user.updateOne(updates)
 
-            return [null, user]
+            return [null, user._doc]
         }
 
         await user.incLoginAttempts()

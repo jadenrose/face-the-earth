@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import Route from './Route.vue'
+import Editable from './Editable.vue'
+
 import Home from '../pages/Home'
 import Shows from '../pages/Shows'
 import Contact from '../pages/Contact'
@@ -43,22 +46,30 @@ const publicRoutes = [
 ]
 
 const routes = publicRoutes.map((route) => {
-    const { path, name, component: Component, editable } = route
+    const { component: Component, editable } = route
 
-    if (editable)
-        return {
-            path,
-            name,
-            components: {
-                default: Component,
-                admin: Component,
-            },
-            props: {
-                admin: { mode: 'view' },
-            },
+    const Template = () => {
+        if (editable) {
+            return (
+                <Editable>
+                    <Route>
+                        <Component />
+                    </Route>
+                </Editable>
+            )
         }
 
-    return route
+        return (
+            <Route>
+                <Component />
+            </Route>
+        )
+    }
+
+    return {
+        ...route,
+        component: Template,
+    }
 })
 
 const router = createRouter({

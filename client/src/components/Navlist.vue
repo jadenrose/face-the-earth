@@ -61,7 +61,7 @@ a {
         cursor: default;
 
         &:hover {
-            color: inherit;
+            color: $color-deact;
         }
     }
 }
