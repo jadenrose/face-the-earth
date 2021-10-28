@@ -13,9 +13,13 @@ export default {
 <style lang="scss">
 .FormGroup {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     cursor: pointer;
     width: 100%;
     margin-bottom: $spacing-small;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 </style>

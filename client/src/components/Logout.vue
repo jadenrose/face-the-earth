@@ -3,7 +3,11 @@
         <Button small @click="enableConfirm">
             <Typography>Logout</Typography>
         </Button>
-        <div v-if="state.showConfirm" class="backdrop" @click="disableConfirm">
+        <div
+            v-if="state.showConfirm"
+            class="backdrop"
+            @click.self="disableConfirm"
+        >
             <div class="confirm">
                 <Typography :sx="{ marginBottom: '1em' }"
                     >Are you sure? Any unsaved changes may be lost.</Typography
@@ -11,7 +15,7 @@
                 <Button @click="handleLogout">
                     <Typography>Yes</Typography>
                 </Button>
-                <Button>
+                <Button @click="disableConfirm">
                     <Typography>No</Typography>
                 </Button>
             </div>
@@ -33,17 +37,9 @@ export default {
 
         provide('store', store)
 
-        const enableConfirm = () => {
-            state.showConfirm = true
-        }
-
-        const disableConfirm = () => {
-            state.showConfirm = false
-        }
-
-        const handleLogout = () => {
-            store.logout()
-        }
+        const enableConfirm = () => state.showConfirm = true
+        const disableConfirm = () => state.showConfirm = false
+        const handleLogout = () => store.logout()
 
         return {
             enableConfirm,
@@ -76,7 +72,6 @@ export default {
         text-align: center;
         background: $accent-main;
         padding: 1em;
-        border-radius: 4px;
         box-shadow: 1px 1px 10px rgba($background, 0.35);
     }
 }

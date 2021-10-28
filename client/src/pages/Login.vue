@@ -6,6 +6,11 @@
                 >Admin Login</Typography
             >
             <Form @submit="(e) => handleSubmit(e)">
+                <Alert
+                    v-if="error"
+                    severity="danger"
+                    label="login failed, please try again"
+                />
                 <FormGroup>
                     <FormControl
                         category="input"
@@ -33,7 +38,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, provide, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import store from '../store/store'
@@ -45,6 +50,8 @@ export default {
         FTE,
     },
     setup () {
+        provide('store', store)
+
         const router = useRouter()
         const emailValue = ref('')
         const passwordValue = ref('')
@@ -55,7 +62,7 @@ export default {
             try {
                 await store.login(emailValue.value, passwordValue.value)
 
-                router.push('/')
+                if (store.state.user.status === 'success') router.push('/')
             } catch (err) {
                 console.error(err)
             }
@@ -63,10 +70,13 @@ export default {
 
         }
 
+        const error = computed(() => store.state.user.error)
+
         return {
             emailValue,
             passwordValue,
-            handleSubmit
+            handleSubmit,
+            error
         }
     }
 }

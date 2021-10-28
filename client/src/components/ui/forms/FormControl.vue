@@ -11,6 +11,17 @@
         />
     </label>
 
+    <label v-if="category === 'textarea'" :for="name" class="FormControl">
+        <Typography :sx="{ marginBottom: '1em' }">
+            {{ labelText }}
+        </Typography>
+        <textarea
+            :id="name"
+            :value="modelValue"
+            @input="$emit('update:modelValue', $event.target.value)"
+        />
+    </label>
+
     <label
         v-if="category === 'select'"
         :for="name"
@@ -44,11 +55,25 @@
 export default {
     name: 'FormControl',
     props: {
-        label: String,
+        label: {
+            type: String,
+            default: 'input'
+        },
+
         name: String,
-        category: String,
-        type: String,
+
+        category: {
+            type: String,
+            default: 'input'
+        },
+
+        type: {
+            type: String,
+            default: 'text'
+        },
+
         required: Boolean,
+
         options: {
             type: Array,
             default: () => [],
@@ -90,7 +115,10 @@ input[type="text"],
 input[type="email"],
 input[type="tel"],
 input[type="password"],
+textarea,
 select {
+    display: block;
+    width: 100%;
     border-radius: 4px;
     border: none;
     outline: none;
@@ -100,11 +128,25 @@ select {
     font-size: 0.9rem;
     font-weight: $normal;
     color: $background;
+    background: $color-main;
     letter-spacing: 1px;
-    background-color: $color-main;
+    resize: none;
 
     &:focus {
         box-shadow: 0 0 1px 3px $accent-main inset;
+    }
+}
+
+[inverted] {
+    input,
+    select,
+    textarea {
+        color: $color-main;
+        background: $background;
+    }
+
+    label {
+        color: $background;
     }
 }
 
@@ -114,5 +156,9 @@ select {
     background-position-x: 95%;
     background-position-y: 50%;
     background-size: 1.5em;
+}
+
+textarea {
+    height: 200px;
 }
 </style>

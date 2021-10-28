@@ -4,7 +4,14 @@
         <Navbar />
     </header>
     <main>
-        <Container :sx="{ paddingTop: route.name !== 'Login' ? '20em' : 0 }">
+        <Container
+            :sx="{
+                paddingTop:
+                    route.name !== 'Login' && route.name !== 'Home'
+                        ? '15em'
+                        : 0,
+            }"
+        >
             <router-view />
         </Container>
     </main>
