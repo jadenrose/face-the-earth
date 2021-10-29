@@ -65,13 +65,13 @@
 <script>
 import { reactive, computed } from 'vue'
 
+import { storeAllShows } from '../store/shows'
 import store from '../store/store'
-
 
 export default {
     name: 'ShowsList',
     async setup () {
-        const shows = await store.storeAllShows()
+        await storeAllShows()
 
         const mapsApiKey = process.env.VUE_APP_MAPS_KEY
 
@@ -83,6 +83,7 @@ export default {
             localState.showMap = !localState.showMap
         }
 
+        const shows = computed(() => store.shows.list)
         const showMap = computed(() => localState.showMap)
 
         const mapURL = (loc) =>

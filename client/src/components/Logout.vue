@@ -26,6 +26,8 @@
 <script>
 import { provide, reactive } from 'vue'
 
+import { logout } from '../store/user'
+
 import store from '../store/store'
 
 export default {
@@ -39,7 +41,7 @@ export default {
 
         const enableConfirm = () => state.showConfirm = true
         const disableConfirm = () => state.showConfirm = false
-        const handleLogout = () => store.logout()
+        const handleLogout = () => logout()
 
         return {
             enableConfirm,

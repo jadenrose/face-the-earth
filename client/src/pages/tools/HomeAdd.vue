@@ -35,6 +35,8 @@
 <script>
 import { provide, ref } from 'vue'
 
+import { postArticle } from '../../store/articles'
+import { setMode } from '../../store/ui'
 import store from '../../store/store'
 
 export default {
@@ -48,13 +50,13 @@ export default {
         const handleSave = (e) => {
             e.preventDefault()
 
-            store.postArticle(headerValue.value, bodyValue.value)
+            postArticle(headerValue.value, bodyValue.value)
         }
 
         const handleCancel = (e) => {
             e.preventDefault()
 
-            store.setMode('readonly')
+            setMode('readonly')
         }
 
         return {

@@ -4,7 +4,19 @@ const { check, validationResult } = require('express-validator')
 const auth = require('../../middleware/auth')
 
 const Article = require('../../models/Article')
-const User = require('../../models/User')
+
+// @path	GET /api/article
+// @desc	get all articles
+// @access	public
+router.get('/', async (req, res) => {
+    try {
+        const articles = await Article.find().lean()
+
+        res.json(articles)
+    } catch (err) {
+        res.status(500).send('server error')
+    }
+})
 
 // @path	POST /api/article
 // @desc	create new article

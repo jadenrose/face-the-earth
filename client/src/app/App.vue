@@ -23,6 +23,7 @@ import { provide, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import jwt_decode from 'jwt-decode'
 
+import { refreshToken } from '../store/user'
 import Navbar from '../components/Navbar.vue'
 import AdminBar from '../components/AdminBar.vue'
 
@@ -36,11 +37,11 @@ export default {
     setup () {
         provide('store', store)
 
-        store.refreshToken()
+        refreshToken()
 
         const user = computed(() => {
             try {
-                const token = store.state.user.token
+                const token = store.user.token
 
                 return jwt_decode(token)
             } catch (err) {

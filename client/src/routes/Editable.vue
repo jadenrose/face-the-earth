@@ -35,6 +35,7 @@
 <script>
 import { provide, computed } from 'vue'
 
+import { setMode } from '../store/ui'
 import store from '../store/store'
 
 export default {
@@ -42,10 +43,10 @@ export default {
     setup () {
         provide('store', store)
 
-        const token = computed(() => store.state.user.token)
+        const token = computed(() => store.user.token)
 
         const handleClick = (mode) => {
-            store.setMode(mode)
+            setMode(mode)
         }
 
         return {

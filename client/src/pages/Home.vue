@@ -8,6 +8,14 @@
             </Button>
         </div>
     </section>
+    <suspense>
+        <template #default>
+            <ArticlesList />
+        </template>
+        <template #fallback>
+            <Typography variant="h2">loading...</Typography>
+        </template>
+    </suspense>
 </template>
 
 <script>
@@ -16,17 +24,19 @@ import { provide, computed } from 'vue'
 import store from '../store/store'
 import HeroLogo from '../components/HeroLogo.vue'
 import HomeAdd from './tools/HomeAdd.vue'
+import ArticlesList from '../components/ArticlesList.vue'
 
 export default {
     name: 'Home',
     components: {
         HeroLogo,
         HomeAdd,
+        ArticlesList
     },
     setup () {
         provide('store', store)
 
-        const mode = computed(() => store.state.ui.mode)
+        const mode = computed(() => store.ui.mode)
 
         return {
             mode,

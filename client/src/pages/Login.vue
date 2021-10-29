@@ -41,6 +41,7 @@
 import { ref, provide, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { login } from '../store/user'
 import store from '../store/store'
 import FTE from '../components/FTE.vue'
 
@@ -60,9 +61,9 @@ export default {
             e.preventDefault()
 
             try {
-                await store.login(emailValue.value, passwordValue.value)
+                await login(emailValue.value, passwordValue.value)
 
-                if (store.state.user.status === 'success') router.push('/')
+                if (store.user.status === 'success') router.push('/')
             } catch (err) {
                 console.error(err)
             }
@@ -70,7 +71,7 @@ export default {
 
         }
 
-        const error = computed(() => store.state.user.error)
+        const error = computed(() => store.user.error)
 
         return {
             emailValue,
