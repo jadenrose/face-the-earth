@@ -38,15 +38,20 @@
                         v-model="linkURLValue"
                     />
                 </FormGroup>
-                <FormGroup class="buttons">
-                    <div class="button-wrapper">
-                        <SaveButton @save="handleSave" />
-                    </div>
-                    <div class="button-wrapper">
-                        <CancelButton @cancel="() => setMode(null)" />
-                    </div>
-                </FormGroup>
+                <SaveCancel @save="handleSave" @cancel="() => setMode(null)" />
             </Form>
+        </div>
+
+        <div v-else-if="token && mode === 'remove'" class="remove-content">
+            <div class="confirm-remove">
+                <Typography variant="h2"
+                    >Really remove this article?</Typography
+                >
+                <div class="button-wrapper">
+                    <Button big @click="handleRemove">Yes</Button>
+                    <Button big @click="() => setMode(null)">No</Button>
+                </div>
+            </div>
         </div>
 
         <div v-else class="readonly-content">
@@ -54,7 +59,12 @@
             <Typography>
                 <pre>{{ article.body }}</pre>
             </Typography>
-            <a v-if="article.linkURL" :href="article.linkURL" target="_blank">
+            <a
+                class="article-link"
+                v-if="article.linkURL"
+                :href="article.linkURL"
+                target="_blank"
+            >
                 <Button medium class="CTA">
                     <Typography>{{ article.linkLabel }}</Typography>
                 </Button>
@@ -67,7 +77,7 @@
 import { computed, reactive, ref } from 'vue'
 
 import store from '../store/store'
-import { editArticle } from '../store/articles'
+import { editArticle, removeArticle } from '../store/articles'
 
 export default {
     name: 'Article',
@@ -101,6 +111,12 @@ export default {
             setMode(null)
         }
 
+        const handleRemove = async () => {
+            await removeArticle(props.article._id)
+
+            setMode(null)
+        }
+
         return {
             titleValue,
             bodyValue,
@@ -109,7 +125,8 @@ export default {
             token,
             setMode,
             mode,
-            handleSave
+            handleSave,
+            handleRemove
         }
     }
 }
@@ -138,6 +155,10 @@ export default {
     //     background-size: cover;
     // }
 
+    .article-link {
+        display: inline-block;
+    }
+
     .EditButton {
         position: absolute;
         top: 0;
@@ -164,6 +185,38 @@ export default {
 
     .CTA {
         margin-top: $spacing-med;
+    }
+
+    .remove-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 350px;
+        width: 50%;
+        background: $danger;
+        border-radius: 8px;
+    }
+
+    .confirm-remove {
+        color: $background;
+        text-align: center;
+
+        .button-wrapper {
+            display: flex;
+            justify-content: space-between;
+            margin: 0;
+            padding: 0;
+        }
+
+        .Button {
+            background: $background;
+            color: $color-main;
+            display: block;
+
+            &:hover {
+                background: $background-light;
+            }
+        }
     }
 }
 </style>

@@ -25,6 +25,10 @@ const ArticleSchema = new Schema({
 			message: 'must be a valid URL',
 		},
 	},
+	displayPosition: {
+		type: Number,
+		required: true,
+	},
 	createdAt: {
 		type: Date,
 		default: new Date(),

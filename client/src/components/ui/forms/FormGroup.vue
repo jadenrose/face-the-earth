@@ -12,8 +12,10 @@ export default {
 
 <style lang="scss">
 .FormGroup {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     cursor: pointer;
     width: 100%;
     margin-bottom: $spacing-small;

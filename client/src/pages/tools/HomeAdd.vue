@@ -30,17 +30,11 @@
                     v-model="linkURLValue"
                 />
             </FormGroup>
-            <FormGroup class="buttons">
-                <div class="button-wrapper">
-                    <Button @click="(e) => handleSave(e)">
-                        <Typography>save</Typography>
-                    </Button>
-                </div>
-                <div class="button-wrapper">
-                    <Button @click="(e) => handleCancel(e)">
-                        <Typography>cancel</Typography>
-                    </Button>
-                </div>
+            <FormGroup>
+                <SaveCancel
+                    @save="handleSave"
+                    @cancel="() => $emit('cancel')"
+                />
             </FormGroup>
         </Form>
     </div>
@@ -50,34 +44,31 @@
 import { provide, ref } from 'vue'
 
 import { postArticle } from '../../store/articles'
-import { setMode } from '../../store/ui'
 import store from '../../store/store'
 
 export default {
     name: 'HomeAdd',
-    setup () {
+    emits: ['cancel', 'close'],
+    setup (_, { emit }) {
         provide('store', store)
+
+        const articles = store.articles.list
 
         const titleValue = ref('')
         const bodyValue = ref('')
         const linkLabelValue = ref('')
         const linkURLValue = ref('')
 
-        const handleSave = (e) => {
-            e.preventDefault()
-
-            postArticle({
+        const handleSave = async () => {
+            await postArticle({
                 title: titleValue.value,
                 body: bodyValue.value,
                 linkLabel: linkLabelValue.value,
-                linkURL: linkURLValue.value
+                linkURL: linkURLValue.value,
+                displayPosition: articles.length
             })
-        }
 
-        const handleCancel = (e) => {
-            e.preventDefault()
-
-            setMode('readonly')
+            emit('close')
         }
 
         return {
@@ -86,7 +77,6 @@ export default {
             linkLabelValue,
             linkURLValue,
             handleSave,
-            handleCancel,
         }
     }
 }

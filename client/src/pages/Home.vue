@@ -1,5 +1,10 @@
 <template>
-    <HomeAdd v-if="mode === 'add'" />
+    <AddButton v-if="token" @click="() => setMode('add')" />
+    <HomeAdd
+        v-if="token && mode === 'add'"
+        @cancel="() => setMode(null)"
+        @close="() => setMode(null)"
+    />
     <section class="Home">
         <div class="hero">
             <HeroLogo />
@@ -25,7 +30,7 @@
 </template>
 
 <script>
-import { provide, computed } from 'vue'
+import { reactive, computed } from 'vue'
 
 import store from '../store/store'
 import HeroLogo from '../components/HeroLogo.vue'
@@ -40,11 +45,18 @@ export default {
         ArticlesList
     },
     setup () {
-        provide('store', store)
+        const state = reactive({
+            mode: null
+        })
 
-        const mode = computed(() => store.ui.mode)
+        const setMode = (mode) => state.mode = mode
+
+        const token = computed(() => store.user.token)
+        const mode = computed(() => state.mode)
 
         return {
+            setMode,
+            token,
             mode,
         }
     }

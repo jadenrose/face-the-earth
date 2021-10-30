@@ -45,10 +45,10 @@ export default {
     text-align: left;
 
     &.warning {
-        background: #e7d04b;
+        background: $warning;
     }
     &.danger {
-        background: #eb5858;
+        background: $danger;
     }
 }
 </style>

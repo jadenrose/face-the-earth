@@ -25,7 +25,13 @@ const storeAllArticles = async () => {
 	}
 }
 
-const postArticle = async ({ title, body, linkLabel, linkURL }) => {
+const postArticle = async ({
+	title,
+	body,
+	linkLabel,
+	linkURL,
+	displayPosition,
+}) => {
 	const token = store.user.token
 
 	if (!token)
@@ -35,14 +41,15 @@ const postArticle = async ({ title, body, linkLabel, linkURL }) => {
 		}
 
 	try {
+		let req = { body, displayPosition }
+
+		if (title) req = { ...req, title }
+		if (linkLabel) req = { ...req, linkLabel }
+		if (linkURL) req = { ...req, linkURL }
+
 		const res = await axios.post(
 			'http://localhost:5000/api/articles/',
-			{
-				title,
-				body,
-				linkLabel,
-				linkURL,
-			},
+			req,
 			{
 				headers: {
 					'x-auth-token': token,
@@ -69,14 +76,15 @@ const editArticle = async (articleId, { title, body, linkLabel, linkURL }) => {
 		}
 
 	try {
-		await axios.patch(
+		let req = { body }
+
+		if (title) req = { ...req, title }
+		if (linkLabel) req = { ...req, linkLabel }
+		if (linkURL) req = { ...req, linkURL }
+
+		const res = await axios.patch(
 			`http://localhost:5000/api/articles/${articleId}`,
-			{
-				title,
-				body,
-				linkLabel,
-				linkURL,
-			},
+			req,
 			{
 				headers: {
 					'x-auth-token': token,
@@ -84,13 +92,45 @@ const editArticle = async (articleId, { title, body, linkLabel, linkURL }) => {
 			}
 		)
 
-		await storeAllArticles()
+		const newArticle = res.data
+
+		const articleIndex = state.list.findIndex(
+			(article) => article._id === newArticle._id
+		)
+
+		state.list[articleIndex] = newArticle
 	} catch (err) {
 		state.status = 'failed'
 		state.error = err
 	}
 }
 
+const removeArticle = async (articleId) => {
+	const token = store.user.token
+
+	if (!token)
+		return {
+			article: {},
+			error: 'not authorized',
+		}
+
+	try {
+		await axios.delete(`http://localhost:5000/api/articles/${articleId}`, {
+			headers: {
+				'x-auth-token': token,
+			},
+		})
+
+		const articleIndex = state.list.findIndex(
+			(article) => article._id === articleId
+		)
+
+		state.list.splice(articleIndex, 1)
+	} catch (err) {
+		return console.error('could not delete article')
+	}
+}
+
 export default readonly(state)
 
-export { storeAllArticles, postArticle, editArticle }
+export { storeAllArticles, postArticle, editArticle, removeArticle }

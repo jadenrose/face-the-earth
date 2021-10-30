@@ -46,7 +46,10 @@ router.post(
 		[
 			check('title', 'title cannot be empty').optional().notEmpty(),
 			check('body', 'body is required').notEmpty(),
-			check('link', 'must be a valid URL').optional().isURL(),
+			check('linkLabel', 'link label cannot be empty')
+				.optional()
+				.notEmpty(),
+			check('linkURL', 'must be a valid URL').optional().isURL(),
 		],
 	],
 	async (req, res) => {
@@ -77,7 +80,8 @@ router.patch(
 		[
 			check('title', 'title cannot be empty').optional().notEmpty(),
 			check('body', 'body is required').optional().notEmpty(),
-			check('link', 'must be a valid URL').optional().isURL(),
+			check('linkLabel', 'must be a valid URL').optional().notEmpty(),
+			check('linkURL', 'must be a valid URL').optional().isURL(),
 		],
 	],
 	async (req, res) => {

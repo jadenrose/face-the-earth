@@ -1,5 +1,5 @@
 <template>
-    <Button @click="(e) => handleSave(e)">
+    <Button class="SaveButton" @click="(e) => handleSave(e)">
         <Typography>save</Typography>
     </Button>
 </template>

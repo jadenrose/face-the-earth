@@ -1,13 +1,17 @@
 <template>
     <div class="CancelButton">
         <div v-if="confirm" class="confirm">
-            <Typography>Discard any changes and cancel?</Typography>
-            <Button @click="(e) => handleCancel(e)">
-                <Typography>yes</Typography>
-            </Button>
-            <Button @click="(e) => toggleConfirm(e)">
-                <Typography>no</Typography>
-            </Button>
+            <div class="buttons">
+                <Button @click="(e) => handleCancel(e)">
+                    <Typography>yes</Typography>
+                </Button>
+                <Button @click="(e) => toggleConfirm(e)">
+                    <Typography>no</Typography>
+                </Button>
+            </div>
+            <Typography class="confirm-text"
+                >Discard any changes and cancel?</Typography
+            >
         </div>
         <Button v-else @click="(e) => toggleConfirm(e)">
             <Typography>cancel</Typography>
@@ -52,14 +56,14 @@ export default {
 .CancelButton {
     position: relative;
 
-    .confirm {
-        display: flex;
-        align-items: center;
+    .confirm-text {
+        line-height: 1;
+        margin-top: 1em;
     }
 
-    .Typography {
-        max-width: 15ch;
-        line-height: 1;
+    .buttons {
+        display: flex;
+        justify-content: space-between;
     }
 
     .Typography,
