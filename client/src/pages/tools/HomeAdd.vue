@@ -5,7 +5,7 @@
                 <FormControl
                     label="Article Header"
                     name="header"
-                    v-model="headerValue"
+                    v-model="titleValue"
                 />
             </FormGroup>
             <FormGroup>
@@ -14,6 +14,20 @@
                     label="Article Body"
                     name="body"
                     v-model="bodyValue"
+                />
+            </FormGroup>
+            <FormGroup>
+                <FormControl
+                    label="button label"
+                    name="linkLabel"
+                    v-model="linkLabelValue"
+                />
+            </FormGroup>
+            <FormGroup>
+                <FormControl
+                    label="button link"
+                    name="linkURL"
+                    v-model="linkURLValue"
                 />
             </FormGroup>
             <FormGroup class="buttons">
@@ -44,13 +58,20 @@ export default {
     setup () {
         provide('store', store)
 
-        const headerValue = ref('')
+        const titleValue = ref('')
         const bodyValue = ref('')
+        const linkLabelValue = ref('')
+        const linkURLValue = ref('')
 
         const handleSave = (e) => {
             e.preventDefault()
 
-            postArticle(headerValue.value, bodyValue.value)
+            postArticle({
+                title: titleValue.value,
+                body: bodyValue.value,
+                linkLabel: linkLabelValue.value,
+                linkURL: linkURLValue.value
+            })
         }
 
         const handleCancel = (e) => {
@@ -60,8 +81,10 @@ export default {
         }
 
         return {
-            headerValue,
+            titleValue,
             bodyValue,
+            linkLabelValue,
+            linkURLValue,
             handleSave,
             handleCancel,
         }
@@ -90,15 +113,6 @@ export default {
         padding: 3em;
         border-radius: 4px;
         box-shadow: 10px 10px 100px $background;
-    }
-
-    .buttons {
-        align-self: center;
-        justify-content: center;
-    }
-
-    .button-wrapper {
-        padding: 1em 2em 0;
     }
 }
 </style>

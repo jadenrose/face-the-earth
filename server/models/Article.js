@@ -14,7 +14,11 @@ const ArticleSchema = new Schema({
 		ref: 'user',
 		required: true,
 	},
-	link: {
+	linkLabel: {
+		type: String,
+		default: 'click here',
+	},
+	linkURL: {
 		type: String,
 		validate: {
 			validator: isURL,

@@ -58,6 +58,7 @@ export default {
     font-weight: $bold;
     text-transform: uppercase;
     padding: 1em 2em;
+    cursor: pointer;
 
     &[small] {
         font-size: 0.8em;
