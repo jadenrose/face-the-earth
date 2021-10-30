@@ -1,5 +1,5 @@
 <template>
-    <router-link class="FTE" to="/">
+    <router-link class="FTE" to="/" :style="sx">
         <svg alt="face the earth logo" aria-label="face the earth logo">
             <use href="@/assets/img/fte.svg#img"></use>
         </svg>
@@ -8,7 +8,13 @@
 
 <script>
 export default {
-    name: 'FTE'
+    name: 'FTE',
+    props: {
+        sx: {
+            type: Object,
+            default: () => { },
+        }
+    }
 }
 </script>
 

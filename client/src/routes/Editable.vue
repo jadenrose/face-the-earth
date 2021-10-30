@@ -60,6 +60,7 @@ export default {
 <style lang="scss">
 .tools {
     position: fixed;
+    z-index: 999;
     right: 0;
     top: 50%;
     transform: translateY(-50%);

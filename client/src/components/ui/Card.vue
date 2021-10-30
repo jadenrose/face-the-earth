@@ -21,5 +21,9 @@ export default {
     &[clickable]:hover {
         background: $background-hover;
     }
+
+    &[no-background] {
+        background: none;
+    }
 }
 </style>

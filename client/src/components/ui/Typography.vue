@@ -65,6 +65,8 @@ export default {
 .Typography {
     margin: 0;
     letter-spacing: 1px;
+    max-width: 80ch;
+    line-height: 1.6;
 
     &[center] {
         text-align: center;
@@ -99,6 +101,16 @@ export default {
 
     &[small] {
         font-size: 80%;
+    }
+
+    pre {
+        font-size: inherit;
+        font-family: inherit;
+        color: inherit;
+        font-weight: inherit;
+        white-space: pre-wrap;
+        letter-spacing: inherit;
+        line-height: inherit;
     }
 }
 </style>

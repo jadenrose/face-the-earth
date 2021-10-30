@@ -1,8 +1,10 @@
 <template>
     <section class="ArticlesList">
-        <h2 v-for="article in articles" :key="article._id">
-            {{ article.title }}
-        </h2>
+        <Article
+            v-for="article in articles"
+            :key="article._id"
+            :article="article"
+        />
     </section>
 </template>
 
@@ -11,9 +13,13 @@ import { computed } from 'vue'
 
 import { storeAllArticles } from '../store/articles'
 import store from '../store/store'
+import Article from './Article.vue'
 
 export default {
     name: 'ArticlesList',
+    components: {
+        Article
+    },
     async setup () {
         await storeAllArticles()
 

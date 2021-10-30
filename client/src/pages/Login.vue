@@ -1,39 +1,35 @@
 <template>
-    <Container center>
-        <Card>
-            <FTE />
-            <Typography center variant="h2" :sx="{ marginBottom: '1em' }"
-                >Admin Login</Typography
-            >
-            <Form @submit="(e) => handleSubmit(e)">
-                <Alert
-                    v-if="error"
-                    severity="danger"
-                    label="login failed, please try again"
+    <Container class="Login" center>
+        <FTE />
+        <Typography center variant="h2">Admin Login</Typography>
+        <Form @submit="(e) => handleSubmit(e)">
+            <Alert
+                v-if="error"
+                severity="danger"
+                label="login failed, please try again"
+            />
+            <FormGroup>
+                <FormControl
+                    category="input"
+                    type="email"
+                    label="email address"
+                    name="email"
+                    v-model="emailValue"
                 />
-                <FormGroup>
-                    <FormControl
-                        category="input"
-                        type="email"
-                        label="email address"
-                        name="email"
-                        v-model="emailValue"
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <FormControl
-                        category="input"
-                        type="password"
-                        label="password"
-                        name="password"
-                        v-model="passwordValue"
-                    />
-                </FormGroup>
-                <Button>
-                    <Typography>login</Typography>
-                </Button>
-            </Form>
-        </Card>
+            </FormGroup>
+            <FormGroup>
+                <FormControl
+                    category="input"
+                    type="password"
+                    label="password"
+                    name="password"
+                    v-model="passwordValue"
+                />
+            </FormGroup>
+            <Button>
+                <Typography>login</Typography>
+            </Button>
+        </Form>
     </Container>
 </template>
 
@@ -84,11 +80,23 @@ export default {
 </script>
 
 <style lang="scss">
-.Card {
-    width: 100%;
-    max-width: 450px;
+.Login {
     margin: 0 auto;
     padding: $spacing-small;
     text-align: center;
+
+    .Form {
+        width: 400px;
+        align-self: stretch;
+        justify-self: stretch;
+    }
+
+    .FTE {
+        margin-bottom: $spacing-small;
+    }
+
+    h2 {
+        margin-bottom: $spacing-small;
+    }
 }
 </style>

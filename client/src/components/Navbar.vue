@@ -70,6 +70,7 @@ export default {
 
 <style lang="scss">
 .Navbar {
+    background: $background;
     position: fixed;
     top: 0;
     left: 0;
@@ -77,7 +78,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 2em 0;
+    padding: $spacing-small 0;
     z-index: 888;
 
     .Container {
