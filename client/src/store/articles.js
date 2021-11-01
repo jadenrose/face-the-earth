@@ -7,9 +7,22 @@ const initialState = {
 	status: null,
 	error: null,
 	list: [],
+	sorted: false,
 }
 
 const state = reactive(initialState)
+
+const sortStoredArticles = () => {
+	state.list.sort((a, b) =>
+		a.displayPosition < b.displayPosition
+			? -1
+			: a.displayPosition > b.displayPosition
+			? 1
+			: 0
+	)
+
+	state.sorted = true
+}
 
 const storeAllArticles = async () => {
 	try {
@@ -18,6 +31,8 @@ const storeAllArticles = async () => {
 		state.status = 'success'
 		state.error = null
 		state.list = res.data
+
+		sortStoredArticles()
 	} catch (err) {
 		state.status = 'failed'
 		state.error = err
@@ -25,13 +40,7 @@ const storeAllArticles = async () => {
 	}
 }
 
-const postArticle = async ({
-	title,
-	body,
-	linkLabel,
-	linkURL,
-	displayPosition,
-}) => {
+const postArticle = async ({ title, body, linkLabel, linkURL }) => {
 	const token = store.user.token
 
 	if (!token)
@@ -41,7 +50,7 @@ const postArticle = async ({
 		}
 
 	try {
-		let req = { body, displayPosition }
+		let req = { body, displayPosition: 0 }
 
 		if (title) req = { ...req, title }
 		if (linkLabel) req = { ...req, linkLabel }
@@ -59,7 +68,21 @@ const postArticle = async ({
 
 		state.status = 'success'
 		state.error = null
-		state.list = [...state.list, res.data]
+		state.list = [res.data, ...state.list]
+
+		for (const [index, article] of state.list.entries()) {
+			state.list.displayPosition = index
+
+			axios.patch(
+				`http://localhost:5000/api/articles/${article._id}`,
+				{ displayPosition: index },
+				{
+					headers: {
+						'x-auth-token': token,
+					},
+				}
+			)
+		}
 	} catch (err) {
 		state.status = 'failed'
 		state.error = err
@@ -76,9 +99,8 @@ const editArticle = async (articleId, { title, body, linkLabel, linkURL }) => {
 		}
 
 	try {
-		let req = { body }
+		let req = { body, title }
 
-		if (title) req = { ...req, title }
 		if (linkLabel) req = { ...req, linkLabel }
 		if (linkURL) req = { ...req, linkURL }
 
@@ -126,11 +148,77 @@ const removeArticle = async (articleId) => {
 		)
 
 		state.list.splice(articleIndex, 1)
+
+		for (const [index, article] of state.list.entries()) {
+			state.list.displayPosition = index
+
+			axios.patch(
+				`http://localhost:5000/api/articles/${article._id}`,
+				{ displayPosition: index },
+				{
+					headers: {
+						'x-auth-token': token,
+					},
+				}
+			)
+		}
 	} catch (err) {
 		return console.error('could not delete article')
 	}
 }
 
+const moveArticle = (displayPosition, direction) => {
+	const token = store.user.token
+
+	const indexToMove = state.list.findIndex(
+		(article) => article.displayPosition === displayPosition
+	)
+
+	const otherIndex = state.list.findIndex(
+		(article) => article.displayPosition === displayPosition + direction
+	)
+
+	state.list[indexToMove].displayPosition = displayPosition + direction
+	state.list[otherIndex].displayPosition = displayPosition
+
+	try {
+		axios.patch(
+			`http://localhost:5000/api/articles/${state.list[indexToMove]._id}`,
+			{
+				displayPosition: displayPosition + direction,
+			},
+			{
+				headers: {
+					'x-auth-token': token,
+				},
+			}
+		)
+
+		axios.patch(
+			`http://localhost:5000/api/articles/${state.list[otherIndex]._id}`,
+			{
+				displayPosition,
+			},
+			{
+				headers: {
+					'x-auth-token': token,
+				},
+			}
+		)
+
+		sortStoredArticles()
+	} catch (err) {
+		state.status = 'failed'
+		state.error = err
+	}
+}
+
 export default readonly(state)
 
-export { storeAllArticles, postArticle, editArticle, removeArticle }
+export {
+	storeAllArticles,
+	postArticle,
+	editArticle,
+	removeArticle,
+	moveArticle,
+}

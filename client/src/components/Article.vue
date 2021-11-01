@@ -1,5 +1,5 @@
 <template>
-    <article :class="`Article${token ? ' bordered' : ''}`">
+    <article :class="`Article${token ? ' edit' : ''}`">
         <AdminTools
             v-if="token"
             @edit="() => setMode('edit')"
@@ -7,7 +7,7 @@
             @move="() => setMode('move')"
         />
 
-        <div v-if="token && mode === 'edit'" class="edit-content">
+        <div v-if="token && articleMode === 'edit'" class="edit-content">
             <Form>
                 <FormGroup>
                     <FormControl
@@ -22,6 +22,7 @@
                         label="body"
                         name="body"
                         v-model="bodyValue"
+                        :error="errors.body"
                     />
                 </FormGroup>
                 <FormGroup>
@@ -29,6 +30,7 @@
                         label="button label"
                         name="linkLabel"
                         v-model="linkLabelValue"
+                        :error="errors.linkLabel"
                     />
                 </FormGroup>
                 <FormGroup>
@@ -36,13 +38,17 @@
                         label="button link"
                         name="linkURL"
                         v-model="linkURLValue"
+                        :error="errors.linkURL"
                     />
                 </FormGroup>
-                <SaveCancel @save="handleSave" @cancel="() => setMode(null)" />
+                <SaveCancel confirm @save="handleSave" @cancel="handleCancel" />
             </Form>
         </div>
 
-        <div v-else-if="token && mode === 'remove'" class="remove-content">
+        <div
+            v-else-if="token && articleMode === 'remove'"
+            class="remove-content"
+        >
             <div class="confirm-remove">
                 <Typography variant="h2"
                     >Really remove this article?</Typography
@@ -54,8 +60,30 @@
             </div>
         </div>
 
+        <div v-else-if="token && articleMode === 'move'" class="move-content">
+            <div
+                v-if="article.displayPosition > 0"
+                class="move-button"
+                @click="moveUp"
+            >
+                <i class="fas fa-arrow-up" />
+            </div>
+            <div
+                v-if="article.displayPosition < lastIndex"
+                class="move-button"
+                @click="moveDown"
+            >
+                <i class="fas fa-arrow-down" />
+            </div>
+            <div class="move-button" @click="() => setMode(null)">
+                <Typography small bold>cancel</Typography>
+            </div>
+        </div>
+
         <div v-else class="readonly-content">
-            <Typography variant="h2">{{ article.title }}</Typography>
+            <Typography v-if="article.title" variant="h2">{{
+                article.title
+            }}</Typography>
             <Typography>
                 <pre>{{ article.body }}</pre>
             </Typography>
@@ -75,44 +103,124 @@
 
 <script>
 import { computed, reactive, ref } from 'vue'
+import { isURL } from 'validator'
+import { scrollTo } from 'vue-scrollto'
 
 import store from '../store/store'
-import { editArticle, removeArticle } from '../store/articles'
+import { postArticle, editArticle, removeArticle, moveArticle } from '../store/articles'
 
 export default {
     name: 'Article',
     props: {
-        article: Object
+        article: Object,
+        mode: {
+            type: String,
+            default: null
+        },
+        new: {
+            type: Boolean,
+            default: false,
+        }
     },
-    setup (props) {
-        const titleValue = ref(props.article.title)
-        const bodyValue = ref(props.article.body)
-        const linkLabelValue = ref(props.article.linkLabel)
-        const linkURLValue = ref(props.article.linkURL)
+    emits: ['posted', 'canceled'],
+    setup (props, { emit }) {
+        if (props.new) scrollTo('.Article', 0, {
+            easing: 'none',
+            offset: -200,
+        })
 
         const token = computed(() => store.user.token)
 
+        const initialErrors = {
+            body: '',
+            linkLabel: '',
+            linkURL: '',
+        }
+
         const state = reactive({
-            mode: null
+            mode: props.mode,
+            errors: initialErrors,
+            title: props.article ? props.article.title : '',
+            body: props.article ? props.article.body : '',
+            linkLabel: props.article ? props.article.linkLabel : '',
+            linkURL: props.article ? props.article.linkURL : '',
         })
+
+        const titleValue = ref(state.title)
+        const bodyValue = ref(state.body)
+        const linkLabelValue = ref(state.linkLabel)
+        const linkURLValue = ref(state.linkURL)
+
+        const articleMode = computed(() => state.mode)
+        const errors = computed(() => state.errors)
+        const lastIndex = computed(() => store.articles.list.length - 1)
 
         const setMode = (mode) => state.mode = mode
 
-        const mode = computed(() => state.mode)
-
         const handleSave = async () => {
-            await editArticle(props.article._id, {
-                title: titleValue.value,
-                body: bodyValue.value,
-                linkLabel: linkLabelValue.value,
-                linkURL: linkURLValue.value
-            })
+            try {
+                const errors = {}
+
+                if (!bodyValue.value) errors.body = 'body cannot be empty'
+                if (linkLabelValue.value && !linkURLValue.value) errors.linkURL = 'button must have a URL if a label is included'
+                if (linkURLValue.value && !isURL(linkURLValue.value)) errors.linkURL = 'must be a valid URL'
+
+                if (Object.entries(errors).length) throw errors
+
+                if (props.new) {
+                    await postArticle({
+                        title: titleValue.value,
+                        body: bodyValue.value,
+                        linkLabel: linkLabelValue.value,
+                        linkURL: linkURLValue.value,
+                    })
+
+                    emit('posted')
+                } else {
+                    await editArticle(props.article._id, {
+                        title: titleValue.value,
+                        body: bodyValue.value,
+                        linkLabel: linkLabelValue.value,
+                        linkURL: linkURLValue.value
+                    })
+                }
+
+                state.errors = initialErrors
+
+                setMode(null)
+            } catch (err) {
+                console.log(err)
+                state.errors = { ...state.errors, ...err }
+            }
+        }
+
+        const handleCancel = () => {
+            state.errors = initialErrors
+
+            if (props.new) emit('canceled')
+
+            titleValue.value = state.title
+            bodyValue.value = state.body
+            linkLabelValue.value = state.linkLabel
+            linkURLValue.value = state.linkURL
 
             setMode(null)
         }
 
         const handleRemove = async () => {
             await removeArticle(props.article._id)
+
+            setMode(null)
+        }
+
+        const moveUp = () => {
+            moveArticle(props.article.displayPosition, -1)
+
+            setMode(null)
+        }
+
+        const moveDown = () => {
+            moveArticle(props.article.displayPosition, 1)
 
             setMode(null)
         }
@@ -124,9 +232,14 @@ export default {
             linkURLValue,
             token,
             setMode,
-            mode,
+            articleMode,
+            errors,
+            lastIndex,
             handleSave,
-            handleRemove
+            handleCancel,
+            handleRemove,
+            moveUp,
+            moveDown
         }
     }
 }
@@ -165,9 +278,9 @@ export default {
         right: 0;
     }
 
-    &.bordered {
+    &.edit {
         padding: $spacing-small;
-        border: 3px solid;
+        background: $background-light;
         border-radius: 8px;
 
         &:before {
@@ -187,14 +300,47 @@ export default {
         margin-top: $spacing-med;
     }
 
-    .remove-content {
+    .remove-content,
+    .move-content {
         display: flex;
         align-items: center;
         justify-content: center;
         min-height: 350px;
         width: 50%;
-        background: $danger;
         border-radius: 8px;
+    }
+
+    .move-content {
+        justify-content: left;
+    }
+
+    .remove-content {
+        background: $danger;
+    }
+
+    .move-content {
+        font-size: 2em;
+        .fas {
+            font-size: 2em;
+        }
+    }
+
+    .move-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $accent-main;
+        color: $background;
+        padding: 1em;
+        margin: 1em;
+        border-radius: 50%;
+        width: 4em;
+        height: 4em;
+        cursor: pointer;
+
+        &:hover {
+            background: $accent-hover;
+        }
     }
 
     .confirm-remove {

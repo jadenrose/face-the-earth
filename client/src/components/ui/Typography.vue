@@ -2,7 +2,7 @@
     <h1
         @click="$emit('click')"
         v-if="variant === 'h1'"
-        class="Typography"
+        class="Typography h1"
         :style="{ ...sx }"
     >
         <span>
@@ -12,7 +12,7 @@
     <h2
         @click="$emit('click')"
         v-else-if="variant === 'h2'"
-        class="Typography"
+        class="Typography h2"
         :style="{ ...sx }"
     >
         <span>
@@ -22,7 +22,7 @@
     <h3
         @click="$emit('click')"
         v-else-if="variant === 'h3'"
-        class="Typography"
+        class="Typography h3"
         :style="{ ...sx }"
     >
         <span>
@@ -32,14 +32,14 @@
     <h4
         @click="$emit('click')"
         v-else-if="variant === 'h4'"
-        class="Typography"
+        class="Typography h4"
         :style="{ ...sx }"
     >
         <span>
             <slot />
         </span>
     </h4>
-    <p @click="$emit('click')" v-else class="Typography" :style="{ ...sx }">
+    <p @click="$emit('click')" v-else class="Typography p" :style="{ ...sx }">
         <span>
             <slot />
         </span>
@@ -66,7 +66,6 @@ export default {
     margin: 0;
     letter-spacing: 1px;
     max-width: 80ch;
-    line-height: 1.6;
 
     &[center] {
         text-align: center;
@@ -111,6 +110,15 @@ export default {
         white-space: pre-wrap;
         letter-spacing: inherit;
         line-height: inherit;
+    }
+
+    &.p {
+        line-height: 1.6;
+    }
+
+    &.h1,
+    &.h2 {
+        line-height: 0.9;
     }
 }
 </style>

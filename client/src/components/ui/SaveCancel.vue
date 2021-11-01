@@ -1,7 +1,7 @@
 <template>
     <div class="SaveCancel">
         <SaveButton @save="() => $emit('save')" />
-        <CancelButton @cancel="() => $emit('cancel')" />
+        <CancelButton :confirm="confirm" @cancel="() => $emit('cancel')" />
     </div>
 </template>
 
@@ -11,6 +11,12 @@ import CancelButton from './CancelButton.vue'
 
 export default {
     name: 'SaveCancel',
+    props: {
+        confirm: {
+            type: Boolean,
+            default: false,
+        },
+    },
     emits: ['save', 'cancel'],
     components: {
         SaveButton,

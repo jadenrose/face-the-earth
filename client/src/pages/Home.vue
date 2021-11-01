@@ -1,10 +1,5 @@
 <template>
     <AddButton v-if="token" @click="() => setMode('add')" />
-    <HomeAdd
-        v-if="token && mode === 'add'"
-        @cancel="() => setMode(null)"
-        @close="() => setMode(null)"
-    />
     <section class="Home">
         <div class="hero">
             <HeroLogo />
@@ -21,7 +16,11 @@
     </section>
     <suspense>
         <template #default>
-            <ArticlesList />
+            <ArticlesList
+                :mode="mode"
+                @posted="setMode(null)"
+                @canceled="setMode(null)"
+            />
         </template>
         <template #fallback>
             <Typography variant="h2">loading...</Typography>
@@ -34,14 +33,12 @@ import { reactive, computed } from 'vue'
 
 import store from '../store/store'
 import HeroLogo from '../components/HeroLogo.vue'
-import HomeAdd from './tools/HomeAdd.vue'
 import ArticlesList from '../components/ArticlesList.vue'
 
 export default {
     name: 'Home',
     components: {
         HeroLogo,
-        HomeAdd,
         ArticlesList
     },
     setup () {

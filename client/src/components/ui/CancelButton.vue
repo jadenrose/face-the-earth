@@ -1,6 +1,6 @@
 <template>
     <div class="CancelButton">
-        <div v-if="confirm" class="confirm">
+        <div v-if="showConfirm" class="confirm">
             <div class="buttons">
                 <Button @click="(e) => handleCancel(e)">
                     <Typography>yes</Typography>
@@ -13,7 +13,7 @@
                 >Discard any changes and cancel?</Typography
             >
         </div>
-        <Button v-else @click="(e) => toggleConfirm(e)">
+        <Button v-else @click="(e) => handleClick(e)">
             <Typography>cancel</Typography>
         </Button>
     </div>
@@ -24,15 +24,24 @@ import { reactive, computed } from 'vue'
 export default {
     name: 'CancelButton',
     emits: ['cancel'],
-    setup (_, { emit }) {
+    props: {
+        confirm: Boolean
+    },
+    setup (props, { emit }) {
         const state = reactive({
-            confirm: false
+            showConfirm: false
         })
 
-        const toggleConfirm = (e) => {
+        const toggleConfirm = () => {
+            state.showConfirm = !state.showConfirm
+        }
+
+        const handleClick = (e) => {
             e.preventDefault()
 
-            state.confirm = !state.confirm
+            if (props.confirm) return toggleConfirm()
+
+            return emit('cancel')
         }
 
         const handleCancel = (e) => {
@@ -41,12 +50,13 @@ export default {
             emit('cancel')
         }
 
-        const confirm = computed(() => state.confirm)
+        const showConfirm = computed(() => state.showConfirm)
 
         return {
             toggleConfirm,
+            handleClick,
             handleCancel,
-            confirm
+            showConfirm,
         }
     }
 }

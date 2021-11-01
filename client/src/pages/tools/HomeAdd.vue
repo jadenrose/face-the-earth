@@ -32,6 +32,7 @@
             </FormGroup>
             <FormGroup>
                 <SaveCancel
+                    confirm
                     @save="handleSave"
                     @cancel="() => $emit('cancel')"
                 />

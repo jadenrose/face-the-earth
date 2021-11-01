@@ -49,6 +49,8 @@
     <Button v-if="category === 'submit'">
         <Typography>submit</Typography>
     </Button>
+
+    <Alert v-if="error" severity="danger" :label="error" />
 </template>
 
 <script>
@@ -59,26 +61,22 @@ export default {
             type: String,
             default: 'input'
         },
-
         name: String,
-
         category: {
             type: String,
             default: 'input'
         },
-
         type: {
             type: String,
             default: 'text'
         },
-
         required: Boolean,
-
         options: {
             type: Array,
             default: () => [],
         },
-        modelValue: String
+        modelValue: String,
+        error: String
     },
     computed: {
         labelText: function () {
@@ -92,7 +90,7 @@ export default {
 .FormControl {
     margin-right: 1em;
 
-    &:last-child {
+    &:last-of-type {
         margin-right: 0;
     }
 }
@@ -160,5 +158,9 @@ select {
 
 textarea {
     height: 200px;
+}
+
+.Alert {
+    margin-top: 1em;
 }
 </style>
