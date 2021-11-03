@@ -17,12 +17,12 @@ export default {
         Show
     },
     async setup () {
-        await storeAllShows()
+        if (!store.shows.list.length) await storeAllShows()
 
         const shows = computed(() => store.shows.list)
 
         return {
-            shows
+            shows,
         }
     },
 }

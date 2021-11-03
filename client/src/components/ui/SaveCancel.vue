@@ -31,8 +31,8 @@ export default {
     align-items: flex-start;
     justify-content: space-between;
 
-    .SaveButton {
-        margin-right: $spacing-small;
+    .Button {
+        height: 4em;
     }
 }
 </style>

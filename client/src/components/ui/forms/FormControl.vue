@@ -9,6 +9,7 @@
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
         />
+        <slot />
     </label>
 
     <label v-if="category === 'textarea'" :for="name" class="FormControl">
@@ -20,6 +21,7 @@
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
         />
+        <slot />
     </label>
 
     <label
@@ -44,6 +46,7 @@
 
             <option value="other">other:</option>
         </select>
+        <slot />
     </label>
 
     <Button v-if="category === 'submit'">
@@ -87,14 +90,6 @@ export default {
 </script>
 
 <style lang="scss">
-.FormControl {
-    margin-right: 1em;
-
-    &:last-of-type {
-        margin-right: 0;
-    }
-}
-
 label,
 input,
 select {
@@ -113,10 +108,10 @@ input[type="text"],
 input[type="email"],
 input[type="tel"],
 input[type="password"],
+input[type="date"],
 textarea,
 select {
     display: block;
-    width: 100%;
     border-radius: 4px;
     border: none;
     outline: none;

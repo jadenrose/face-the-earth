@@ -4,27 +4,26 @@ import user from './user'
 import ui from './ui'
 import articles from './articles'
 import shows from './shows'
+import artists from './artists'
+import venues from './venues'
 
 const state = reactive({
-    articles: {
-        status: null,
-        errors: [],
-        list: [],
-    },
-    videos: {
-        status: null,
-        errors: [],
-        list: [],
-    },
-    ui: {
-        mode: null,
-    },
+	videos: {
+		status: null,
+		errors: [],
+		list: [],
+	},
+	ui: {
+		mode: null,
+	},
 })
 
 export default {
-    user,
-    ui,
-    articles,
-    shows,
-    state: readonly(state),
+	user,
+	ui,
+	articles,
+	shows,
+	artists,
+	venues,
+	state: readonly(state),
 }

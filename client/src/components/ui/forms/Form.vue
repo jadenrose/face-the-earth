@@ -16,6 +16,7 @@ export default {
     position: relative;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;

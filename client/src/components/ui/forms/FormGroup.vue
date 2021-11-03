@@ -15,7 +15,7 @@ export default {
     position: relative;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
     cursor: pointer;
     width: 100%;
     margin-bottom: $spacing-small;

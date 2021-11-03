@@ -10,65 +10,67 @@ import Watch from '../pages/Watch'
 import Login from '../pages/Login'
 
 const publicRoutes = [
-    // public routes
-    {
-        path: '/',
-        name: 'Home',
-        component: Home,
-        editable: true,
-    },
-    {
-        path: '/shows',
-        name: 'Shows',
-        component: Shows,
-        editable: true,
-    },
-    {
-        path: '/contact',
-        name: 'Contact',
-        component: Contact,
-        editable: false,
-    },
-    {
-        path: '/watch',
-        name: 'Watch',
-        component: Watch,
-        editable: true,
-    },
-
-    // login page
-    {
-        path: '/login',
-        name: 'Login',
-        component: Login,
-        editable: false,
-    },
+	// public routes
+	{
+		path: '/',
+		name: 'Home',
+		component: Home,
+		editable: true,
+	},
+	{
+		path: '/shows',
+		name: 'Shows',
+		component: Shows,
+		editable: true,
+	},
+	{
+		path: '/contact',
+		name: 'Contact',
+		component: Contact,
+		editable: false,
+	},
+	{
+		path: '/watch',
+		name: 'Watch',
+		component: Watch,
+		editable: true,
+	},
 ]
 
+publicRoutes.push({
+	path: '/adminLogin',
+	alias: publicRoutes.map((route) =>
+		route.path === '/' ? '/login' : `${route.path}/login`
+	),
+	name: 'Login',
+	component: Login,
+	editable: false,
+})
+
 const routes = publicRoutes.map((route) => {
-    const { component: Component, editable } = route
+	const { component: Component, editable } = route
 
-    const Template = () => {
-        if (editable) {
-            return (
-                <Editable>
-                    <Component />
-                </Editable>
-            )
-        }
+	const Template = () => {
+		if (editable) {
+			return (
+				<Editable>
+					<Component />
+				</Editable>
+			)
+		}
 
-        return <Component />
-    }
+		return <Component />
+	}
 
-    return {
-        ...route,
-        component: Template(),
-    }
+	return {
+		...route,
+		component: Template(),
+	}
 })
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
-    routes,
+	history: createWebHistory(process.env.BASE_URL),
+	routes,
 })
 
 export default router

@@ -1,7 +1,5 @@
 <template>
-    <Button class="SaveButton" @click="(e) => handleSave(e)">
-        <Typography>save</Typography>
-    </Button>
+    <Button class="SaveButton" @click="(e) => handleSave(e)" label="save" />
 </template>
 
 <script>

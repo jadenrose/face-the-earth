@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { reactive, readonly } from 'vue'
 
+// import store from './store'
+
 const initialState = {
 	status: null,
 	error: null,
@@ -9,17 +11,13 @@ const initialState = {
 
 const state = reactive(initialState)
 
-const storeAllShows = async () => {
-	state.status = 'pending'
-
+const storeAllArtists = async () => {
 	try {
-		const res = await axios.get('http://localhost:5000/api/shows')
+		const res = await axios.get('http://localhost:5000/api/artists')
 
 		state.status = 'success'
 		state.error = null
 		state.list = res.data
-
-		return res.data
 	} catch (err) {
 		state.status = 'failed'
 		state.error = err
@@ -27,14 +25,6 @@ const storeAllShows = async () => {
 	}
 }
 
-const postShow = async () => {
-	//
-}
-
-const editShow = async () => {
-	//
-}
-
 export default readonly(state)
 
-export { storeAllShows, postShow, editShow }
+export { storeAllArtists }

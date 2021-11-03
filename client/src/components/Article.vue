@@ -41,7 +41,13 @@
                         :error="errors.linkURL"
                     />
                 </FormGroup>
-                <SaveCancel confirm @save="handleSave" @cancel="handleCancel" />
+                <FormGroup>
+                    <SaveCancel
+                        confirm
+                        @save="handleSave"
+                        @cancel="handleCancel"
+                    />
+                </FormGroup>
             </Form>
         </div>
 
@@ -54,8 +60,8 @@
                     >Really remove this article?</Typography
                 >
                 <div class="button-wrapper">
-                    <Button big @click="handleRemove">Yes</Button>
-                    <Button big @click="() => setMode(null)">No</Button>
+                    <Button big @click="handleRemove" label="yes" />
+                    <Button big @click="() => setMode(null)" label="no" />
                 </div>
             </div>
         </div>
@@ -93,9 +99,7 @@
                 :href="article.linkURL"
                 target="_blank"
             >
-                <Button medium class="CTA">
-                    <Typography>{{ article.linkLabel }}</Typography>
-                </Button>
+                <FancyButton medium class="CTA" :label="article.linkLabel" />
             </a>
         </div>
     </article>
@@ -124,8 +128,8 @@ export default {
     },
     emits: ['posted', 'canceled'],
     setup (props, { emit }) {
-        if (props.new) scrollTo('.Article', 0, {
-            easing: 'none',
+        if (props.new) scrollTo('.Article', 100, {
+            easing: 'ease-out',
             offset: -200,
         })
 

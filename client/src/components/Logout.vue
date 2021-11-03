@@ -1,8 +1,6 @@
 <template>
     <div class="Logout">
-        <Button small @click="enableConfirm">
-            <Typography>Logout</Typography>
-        </Button>
+        <Button small @click="enableConfirm" label="Logout" />
         <div
             v-if="state.showConfirm"
             class="backdrop"
@@ -12,12 +10,8 @@
                 <Typography :sx="{ marginBottom: '1em' }"
                     >Are you sure? Any unsaved changes may be lost.</Typography
                 >
-                <Button @click="handleLogout">
-                    <Typography>Yes</Typography>
-                </Button>
-                <Button @click="disableConfirm">
-                    <Typography>No</Typography>
-                </Button>
+                <Button @click="handleLogout" label="yes" />
+                <Button @click="disableConfirm" label="no" />
             </div>
         </div>
     </div>

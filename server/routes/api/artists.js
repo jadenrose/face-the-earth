@@ -7,9 +7,9 @@ const Artist = require('../../models/Artist')
 // @path	GET /api/artists
 // @desc	get all artists
 // @access	public
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
 	try {
-		const artists = await Artist.find().select('-password -loginAttempts')
+		const artists = await Artist.find().lean()
 
 		res.json(artists)
 	} catch (err) {

@@ -8,9 +8,7 @@
                 href="https://open.spotify.com/artist/3B8dM8jspZ4ADCUXvVszi6"
                 target="_blank"
             >
-                <Button big>
-                    <Typography>check out our music</Typography>
-                </Button>
+                <FancyButton big label="check out our music" />
             </a>
         </div>
     </section>

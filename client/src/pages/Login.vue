@@ -26,9 +26,7 @@
                     v-model="passwordValue"
                 />
             </FormGroup>
-            <Button>
-                <Typography>login</Typography>
-            </Button>
+            <Button label="login" />
         </Form>
     </Container>
 </template>
@@ -50,6 +48,12 @@ export default {
         provide('store', store)
 
         const router = useRouter()
+        const currentRoute = router.currentRoute.value.fullPath
+
+        const routeArray = currentRoute.split('/')
+        routeArray.pop()
+        const redirectAfterLogin = routeArray.join('/') || '/'
+
         const emailValue = ref('')
         const passwordValue = ref('')
 
@@ -59,7 +63,7 @@ export default {
             try {
                 await login(emailValue.value, passwordValue.value)
 
-                if (store.user.status === 'success') router.push('/')
+                if (store.user.status === 'success') router.push(redirectAfterLogin)
             } catch (err) {
                 console.error(err)
             }

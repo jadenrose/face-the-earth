@@ -9,17 +9,13 @@ const initialState = {
 
 const state = reactive(initialState)
 
-const storeAllShows = async () => {
-	state.status = 'pending'
-
+const storeAllVenues = async () => {
 	try {
-		const res = await axios.get('http://localhost:5000/api/shows')
+		const res = await axios.get('http://localhost:5000/api/venues')
 
 		state.status = 'success'
 		state.error = null
 		state.list = res.data
-
-		return res.data
 	} catch (err) {
 		state.status = 'failed'
 		state.error = err
@@ -27,14 +23,6 @@ const storeAllShows = async () => {
 	}
 }
 
-const postShow = async () => {
-	//
-}
-
-const editShow = async () => {
-	//
-}
-
 export default readonly(state)
 
-export { storeAllShows, postShow, editShow }
+export { storeAllVenues }
