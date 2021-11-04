@@ -20,8 +20,8 @@ export default {
     margin: 0;
 
     svg {
-        width: 20em;
-        height: 15em;
+        width: 17em;
+        height: 10em;
         margin-bottom: 6em;
     }
 }

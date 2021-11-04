@@ -94,4 +94,8 @@ h2,
 h3 {
     font-weight: $bold;
 }
+
+section {
+    margin-bottom: $spacing-big;
+}
 </style>

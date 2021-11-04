@@ -74,7 +74,7 @@ export default {
 
     &[big] {
         font-size: 1.4rem;
-        padding: 2em 3em;
+        padding: 1.7em 2.7em;
     }
 
     &:hover,

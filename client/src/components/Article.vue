@@ -254,6 +254,10 @@ export default {
     margin-bottom: calc($spacing-big * 2);
     position: relative;
 
+    &:last-child {
+        margin-bottom: 0;
+    }
+
     h2 {
         font-size: 2em;
         margin-bottom: $spacing-small;
@@ -302,6 +306,12 @@ export default {
 
     .CTA {
         margin-top: $spacing-med;
+    }
+
+    .readonly-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     .remove-content,

@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { reactive, readonly } from 'vue'
 
+import store from './store'
+
 const initialState = {
 	status: null,
 	error: null,
@@ -23,6 +25,32 @@ const storeAllVenues = async () => {
 	}
 }
 
+const postVenue = async ({ name, loc }) => {
+	try {
+		const token = store.user.token
+		if (!token) throw 'not authorized'
+
+		let req = { name, loc }
+
+		const res = await axios.post('http://localhost:5000/api/venues', req, {
+			headers: {
+				'x-auth-token': token,
+			},
+		})
+
+		state.status = 'success'
+		state.error = ''
+		state.list.push(res.data)
+
+		return res.data
+	} catch (err) {
+		state.status = 'failed'
+		state.error = err
+
+		return null
+	}
+}
+
 export default readonly(state)
 
-export { storeAllVenues }
+export { storeAllVenues, postVenue }

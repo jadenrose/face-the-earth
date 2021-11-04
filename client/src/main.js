@@ -35,9 +35,12 @@ app.component('AdminTools', AdminTools)
 
 // form components
 import Form from './components/ui/forms/Form.vue'
+import FormSection from './components/ui/forms/FormSection.vue'
 import FormGroup from './components/ui/forms/FormGroup.vue'
 import FormControl from './components/ui/forms/FormControl.vue'
+
 app.component('Form', Form)
+app.component('FormSection', FormSection)
 app.component('FormGroup', FormGroup)
 app.component('FormControl', FormControl)
 

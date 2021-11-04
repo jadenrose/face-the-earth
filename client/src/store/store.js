@@ -6,6 +6,7 @@ import articles from './articles'
 import shows from './shows'
 import artists from './artists'
 import venues from './venues'
+import videos from './videos'
 
 const state = reactive({
 	videos: {
@@ -25,5 +26,6 @@ export default {
 	shows,
 	artists,
 	venues,
+	videos,
 	state: readonly(state),
 }

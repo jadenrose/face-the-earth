@@ -112,6 +112,7 @@ input[type="date"],
 textarea,
 select {
     display: block;
+    width: 100%;
     border-radius: 4px;
     border: none;
     outline: none;
@@ -127,6 +128,10 @@ select {
 
     &:focus {
         box-shadow: 0 0 1px 3px $accent-main inset;
+    }
+
+    option {
+        padding: 1em;
     }
 }
 

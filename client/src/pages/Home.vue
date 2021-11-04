@@ -63,6 +63,7 @@ export default {
     height: 100vh;
     display: flex;
     align-items: center;
+    margin-bottom: 0;
 }
 
 .HomeAdd {

@@ -116,6 +116,22 @@ export default {
         line-height: 1.6;
     }
 
+    &.h1 {
+        font-size: 2.4em;
+    }
+
+    &.h2 {
+        font-size: 2em;
+    }
+
+    &.h3 {
+        font-size: 1.6em;
+    }
+
+    &.h4 {
+        font-size: 1.4em;
+    }
+
     &.h1,
     &.h2 {
         line-height: 0.9;

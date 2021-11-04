@@ -78,7 +78,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $spacing-small 0;
+    padding: $spacing-small 0 0;
     z-index: 888;
 
     .Container {
