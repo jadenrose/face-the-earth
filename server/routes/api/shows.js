@@ -94,9 +94,7 @@ router.patch(
 					return typeof artists === 'object' && artists.length
 				}),
 			check('venue', 'venue is required').optional().notEmpty(),
-			check('date', 'valid date required').optional().isDate({
-				format: 'MM-DD-YYYY',
-			}),
+			check('date', 'valid date required').optional().isDate(),
 		],
 	],
 	async (req, res) => {

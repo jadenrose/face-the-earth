@@ -1,4 +1,6 @@
 const express = require('express')
+const serveStatic = require('serve-static')
+const path = require('path')
 const connectDB = require('./config/db')
 const cors = require('cors')
 
@@ -7,8 +9,8 @@ connectDB()
 const app = express()
 
 if (process.env.NODE_ENV === 'development') {
-    const morgan = require('morgan')
-    app.use(morgan('dev'))
+	const morgan = require('morgan')
+	app.use(morgan('dev'))
 }
 
 app.use(express.json())
@@ -21,8 +23,15 @@ app.use('/api/articles', require('./routes/api/articles'))
 app.use('/api/shows', require('./routes/api/shows'))
 app.use('/api/venues', require('./routes/api/venues'))
 app.use('/api/videos', require('./routes/api/videos'))
+app.use('/api/bookings', require('./routes/api/bookings'))
 
-const PORT = process.env.PORT || 5000
+app.use('/', serveStatic(path.join(__dirname, '/dist')))
+
+app.get(/.*/, (req, res) => {
+	res.sendFile(path.join(__dirname, '/dist/index.html'))
+})
+
+const PORT = process.env.PORT || 8080
 app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`)
+	console.log(`Server started on port ${PORT}`)
 })
