@@ -1,7 +1,7 @@
 const express = require('express')
 const serveStatic = require('serve-static')
 const path = require('path')
-const connectDB = require('./config/db')
+const connectDB = require('./db')
 const cors = require('cors')
 
 connectDB()
@@ -31,7 +31,7 @@ app.get(/.*/, (req, res) => {
 	res.sendFile(path.join(__dirname, '/dist/index.html'))
 })
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
 	console.log(`Server started on port ${PORT}`)
 })

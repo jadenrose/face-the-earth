@@ -1,18 +1,17 @@
 const jwt = require('jsonwebtoken')
-const config = require('config')
 
 module.exports = (req, res, next) => {
-    const user = req.db.user
+	const user = req.db.user
 
-    if (user.password) delete user.password
+	if (user.password) delete user.password
 
-    const token = jwt.sign(user, config.get('jwtSecret'), {
-        expiresIn: config.get('jwtLife'),
-    })
+	const token = jwt.sign(user, process.env.JWT_SECRET, {
+		expiresIn: Number(process.env.JWT_LIFE),
+	})
 
-    res.db = {
-        token,
-    }
+	res.db = {
+		token,
+	}
 
-    next()
+	next()
 }
