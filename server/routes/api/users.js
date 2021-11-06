@@ -3,7 +3,6 @@ const { check, validationResult } = require('express-validator')
 
 const auth = require('../../middleware/auth')
 const hash = require('../../middleware/hash')
-const getToken = require('../../functions/getToken')
 
 const User = require('../../models/User')
 
@@ -65,9 +64,7 @@ router.post(
 
 			await user.save()
 
-			const token = getToken(user)
-
-			res.json(token)
+			res.json(user)
 		} catch (err) {
 			if (err.code === 11000) {
 				return res.status(400).json({
@@ -117,9 +114,7 @@ router.patch(
 					.status(404)
 					.json({ errors: [{ msg: 'user not found' }] })
 
-			const token = getToken(user)
-
-			res.json(token)
+			res.json(user)
 		} catch (err) {
 			if (err.kind === 'ObjectId')
 				return res
