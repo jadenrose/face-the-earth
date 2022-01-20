@@ -1,15 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// import Route from './Route.vue'
-import Editable from './Editable.vue'
-
 import Home from '../pages/Home'
 import Shows from '../pages/Shows'
 import Contact from '../pages/Contact'
 import Watch from '../pages/Watch'
 import Login from '../pages/Login'
+import Success from '../pages/Success'
 
-const publicRoutes = [
+const routes = [
 	// public routes
 	{
 		path: '/',
@@ -37,9 +35,9 @@ const publicRoutes = [
 	},
 ]
 
-publicRoutes.push({
+routes.push({
 	path: '/adminLogin',
-	alias: publicRoutes.map((route) =>
+	alias: routes.map((route) =>
 		route.path === '/' ? '/login' : `${route.path}/login`
 	),
 	name: 'Login',
@@ -47,25 +45,11 @@ publicRoutes.push({
 	editable: false,
 })
 
-const routes = publicRoutes.map((route) => {
-	const { component: Component, editable } = route
-
-	const Template = () => {
-		if (editable) {
-			return (
-				<Editable>
-					<Component />
-				</Editable>
-			)
-		}
-
-		return <Component />
-	}
-
-	return {
-		...route,
-		component: Template(),
-	}
+routes.push({
+	path: '/success',
+	name: 'Success',
+	component: Success,
+	editable: false,
 })
 
 const router = createRouter({

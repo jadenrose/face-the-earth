@@ -90,9 +90,12 @@ export default {
     text-align: center;
 
     .Form {
-        width: 400px;
+        width: 100%;
+        max-width: 400px;
         align-self: stretch;
         justify-self: stretch;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .FTE {
@@ -101,6 +104,10 @@ export default {
 
     h2 {
         margin-bottom: $spacing-small;
+    }
+
+    .Button {
+        margin-top: 2em;
     }
 }
 </style>

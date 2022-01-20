@@ -3,6 +3,8 @@ import { reactive, readonly } from 'vue'
 
 import store from './store'
 
+const BASE_URL = process.env.BACKEND_URI || 'http://localhost:5000'
+
 const initialState = {
 	status: null,
 	error: null,
@@ -13,7 +15,7 @@ const state = reactive(initialState)
 
 const storeAllVenues = async () => {
 	try {
-		const res = await axios.get('http://localhost:5000/api/venues')
+		const res = await axios.get(`${BASE_URL}/api/venues`)
 
 		state.status = 'success'
 		state.error = null
@@ -25,14 +27,14 @@ const storeAllVenues = async () => {
 	}
 }
 
-const postVenue = async ({ name, loc }) => {
+const postVenue = async ({ name, locationName, locationAddress, placeId }) => {
 	try {
 		const token = store.user.token
 		if (!token) throw 'not authorized'
 
-		let req = { name, loc }
+		let req = { name, locationName, locationAddress, placeId }
 
-		const res = await axios.post('http://localhost:5000/api/venues', req, {
+		const res = await axios.post(`${BASE_URL}/api/venues`, req, {
 			headers: {
 				'x-auth-token': token,
 			},
@@ -51,6 +53,54 @@ const postVenue = async ({ name, loc }) => {
 	}
 }
 
+const editVenue = async (
+	venueId,
+	{ name, locationName, locationAddress, placeId }
+) => {
+	try {
+		const token = store.user.token
+		if (!token) throw 'not authorized'
+
+		let req = { name, locationName, locationAddress, placeId }
+
+		const res = await axios.patch(
+			`${BASE_URL}/api/venues/${venueId}`,
+			req,
+			{
+				headers: {
+					'x-auth-token': token,
+				},
+			}
+		)
+
+		const venueIndex = state.list.findIndex(
+			(venue) => venue._id === res.data._id
+		)
+
+		state.list[venueIndex] = res.data
+
+		return res.data
+	} catch (err) {
+		state.status = 'failed'
+		state.error = err
+
+		return null
+	}
+}
+
+const searchPlaces = async (query = 'red deer') => {
+	try {
+		const uri = encodeURI(`${BASE_URL}/api/maps/${query}`)
+
+		const res = await axios.get(uri)
+
+		return res.data
+	} catch (err) {
+		console.error(err)
+		return []
+	}
+}
+
 export default readonly(state)
 
-export { storeAllVenues, postVenue }
+export { storeAllVenues, postVenue, editVenue, searchPlaces }

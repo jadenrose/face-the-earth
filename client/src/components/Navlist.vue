@@ -2,6 +2,7 @@
     <ul class="navlist">
         <li class="navitem" v-for="(item, i) in items" :key="i">
             <router-link
+                @click="$emit('close')"
                 :class="{ linkText: item.label, linkIcon: item.ixcon }"
                 v-if="item.to"
                 :to="item.to"
@@ -12,6 +13,7 @@
                 <AwesomeIcon v-if="item.icon" :icon="item.icon" />
             </router-link>
             <a
+                @click="$emit('close')"
                 :class="{ linkText: item.label, linkIcon: item.icon }"
                 v-if="item.href"
                 :href="item.href"
@@ -30,6 +32,7 @@
 export default {
     name: 'Navbar',
     props: ['items'],
+    emits: ['close']
 }
 </script>
 
@@ -37,9 +40,16 @@ export default {
 .navlist {
     display: flex;
     list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
 }
 
-a {
+.extLinks .navitem:last-child a {
+    padding-right: 0;
+}
+
+.navitem a {
     display: block;
     color: inherit;
     text-decoration: none;
@@ -68,9 +78,5 @@ a {
 
 .fab {
     font-size: 2.5em;
-}
-
-.navitem:last-child a {
-    padding-right: 0;
 }
 </style>

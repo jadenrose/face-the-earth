@@ -1,91 +1,94 @@
 <template>
-    <section class="Contact">
-        <Form @submit.prevent="handleSubmit">
-            <Typography center variant="h1" :sx="{ marginBottom: '2em' }"
-                >book us</Typography
-            >
-            <FormGroup>
-                <FormControl
-                    label="your name"
-                    name="name"
-                    v-model="nameValue"
-                    :error="errors.nameValue"
-                    required
-                />
-            </FormGroup>
-            <FormGroup>
-                <FormControl
-                    label="email address"
-                    name="email"
-                    v-model="emailValue"
-                    :error="errors.emailValue"
-                    required
-                />
-            </FormGroup>
-            <FormGroup>
-                <FormControl
-                    label="venue type"
-                    name="venueType"
-                    v-model="venueTypeValue"
-                    :error="errors.venueTypeValue"
-                    category="select"
-                    :options="[
-                        {
-                            label: 'Restaurant/Bar',
-                            value: 'restaurant',
-                        },
-                        {
-                            label: 'Theatre/Stage',
-                            value: 'theatre',
-                        },
-                        {
-                            label: 'Home/Private Estate',
-                            value: 'home',
-                        },
-                        {
-                            label: 'Wedding',
-                            value: 'wedding',
-                        },
-                    ]"
-                    required
-                />
-            </FormGroup>
-            <FormGroup v-if="venueTypeValue === 'other'">
-                <FormControl
-                    label="custom venue type"
-                    name="otherVenueType"
-                    v-model="otherVenueTypeValue"
-                    :error="errors.otherVenueTypeValue"
-                    required
-                />
-            </FormGroup>
-            <FormGroup>
-                <FormControl
-                    label="estimated date for show"
-                    type="date"
-                    name="date"
-                    v-model="dateValue"
-                    :error="errors.dateValue"
-                    required
-                />
-            </FormGroup>
-            <FormGroup>
-                <FormControl
-                    label="any other important information"
-                    category="textarea"
-                    name="otherInfo"
-                    v-model="otherInfoValue"
-                />
-            </FormGroup>
-            <FormGroup class="button-container">
-                <FancyButton big label="book us now" />
-            </FormGroup>
-        </Form>
-    </section>
+    <Container>
+        <section class="Contact">
+            <Form @submit.prevent="handleSubmit">
+                <Typography center variant="h1" :sx="{ marginBottom: '2em' }"
+                    >book us</Typography
+                >
+                <FormGroup>
+                    <FormControl
+                        label="your name"
+                        name="name"
+                        v-model="nameValue"
+                        :error="errors.nameValue"
+                        required
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <FormControl
+                        label="email address"
+                        name="email"
+                        v-model="emailValue"
+                        :error="errors.emailValue"
+                        required
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <FormControl
+                        label="venue type"
+                        name="venueType"
+                        v-model="venueTypeValue"
+                        :error="errors.venueTypeValue"
+                        category="select"
+                        :options="[
+                            {
+                                label: 'Restaurant/Bar',
+                                value: 'restaurant',
+                            },
+                            {
+                                label: 'Theatre/Stage',
+                                value: 'theatre',
+                            },
+                            {
+                                label: 'Home/Private Estate',
+                                value: 'home',
+                            },
+                            {
+                                label: 'Wedding',
+                                value: 'wedding',
+                            },
+                        ]"
+                        required
+                    />
+                </FormGroup>
+                <FormGroup v-if="venueTypeValue === 'other'">
+                    <FormControl
+                        label="custom venue type"
+                        name="otherVenueType"
+                        v-model="otherVenueTypeValue"
+                        :error="errors.otherVenueTypeValue"
+                        required
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <FormControl
+                        label="estimated date for show"
+                        type="date"
+                        name="date"
+                        v-model="dateValue"
+                        :error="errors.dateValue"
+                        required
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <FormControl
+                        label="any other important information"
+                        category="textarea"
+                        name="otherInfo"
+                        v-model="otherInfoValue"
+                    />
+                </FormGroup>
+                <FormGroup class="button-container">
+                    <FancyButton big label="book us now" />
+                </FormGroup>
+            </Form>
+        </section>
+    </Container>
 </template>
 
 <script>
 import { reactive, ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { isEmail } from 'validator'
 
 import { postBooking } from '../store/bookings'
@@ -93,6 +96,7 @@ import { postBooking } from '../store/bookings'
 export default {
     name: 'Contact',
     setup () {
+        const router = useRouter()
         const nameValue = ref('')
         const emailValue = ref('')
         const venueTypeValue = ref('')
@@ -126,10 +130,11 @@ export default {
                     otherInfo: otherInfoValue.value
                 }
 
-                const booking = await postBooking(req)
+                await postBooking(req)
 
-                console.log(booking)
+                router.push('success')
             } catch (err) {
+                console.error(err)
                 state.errors = { ...err }
             }
 
@@ -152,6 +157,13 @@ export default {
 
 <style lang="scss">
 .Contact {
+    padding: 12em 0;
+
+    .Form {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .FormGroup {
         margin-bottom: $spacing-med;
     }

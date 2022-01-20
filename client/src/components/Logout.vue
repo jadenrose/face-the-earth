@@ -7,7 +7,7 @@
             @click.self="disableConfirm"
         >
             <div class="confirm">
-                <Typography :sx="{ marginBottom: '1em' }"
+                <Typography variant="p" :sx="{ marginBottom: '1em' }"
                     >Are you sure? Any unsaved changes may be lost.</Typography
                 >
                 <Button @click="handleLogout" label="yes" />
@@ -64,7 +64,7 @@ export default {
         position: absolute;
         right: 1em;
         top: 1em;
-        width: 400px;
+        max-width: 400px;
         text-align: center;
         background: $accent-main;
         padding: 1em;

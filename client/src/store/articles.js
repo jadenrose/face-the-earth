@@ -3,6 +3,8 @@ import { reactive, readonly } from 'vue'
 
 import store from './store'
 
+const BASE_URL = process.env.BACKEND_URI || 'http://localhost:5000'
+
 const initialState = {
 	status: null,
 	error: null,
@@ -26,7 +28,7 @@ const sortStoredArticles = () => {
 
 const storeAllArticles = async () => {
 	try {
-		const res = await axios.get('http://localhost:5000/api/articles')
+		const res = await axios.get(`${BASE_URL}/api/articles`)
 
 		state.status = 'success'
 		state.error = null
@@ -56,15 +58,11 @@ const postArticle = async ({ title, body, linkLabel, linkURL }) => {
 		if (linkLabel) req = { ...req, linkLabel }
 		if (linkURL) req = { ...req, linkURL }
 
-		const res = await axios.post(
-			'http://localhost:5000/api/articles/',
-			req,
-			{
-				headers: {
-					'x-auth-token': token,
-				},
-			}
-		)
+		const res = await axios.post(`${BASE_URL}/api/articles/`, req, {
+			headers: {
+				'x-auth-token': token,
+			},
+		})
 
 		state.status = 'success'
 		state.error = null
@@ -74,7 +72,7 @@ const postArticle = async ({ title, body, linkLabel, linkURL }) => {
 			state.list.displayPosition = index
 
 			axios.patch(
-				`http://localhost:5000/api/articles/${article._id}`,
+				`${BASE_URL}/api/articles/${article._id}`,
 				{ displayPosition: index },
 				{
 					headers: {
@@ -105,7 +103,7 @@ const editArticle = async (articleId, { title, body, linkLabel, linkURL }) => {
 		if (linkURL) req = { ...req, linkURL }
 
 		const res = await axios.patch(
-			`http://localhost:5000/api/articles/${articleId}`,
+			`${BASE_URL}/api/articles/${articleId}`,
 			req,
 			{
 				headers: {
@@ -137,7 +135,7 @@ const removeArticle = async (articleId) => {
 		}
 
 	try {
-		await axios.delete(`http://localhost:5000/api/articles/${articleId}`, {
+		await axios.delete(`${BASE_URL}/api/articles/${articleId}`, {
 			headers: {
 				'x-auth-token': token,
 			},
@@ -153,7 +151,7 @@ const removeArticle = async (articleId) => {
 			state.list.displayPosition = index
 
 			axios.patch(
-				`http://localhost:5000/api/articles/${article._id}`,
+				`${BASE_URL}/api/articles/${article._id}`,
 				{ displayPosition: index },
 				{
 					headers: {
@@ -183,7 +181,7 @@ const moveArticle = (displayPosition, direction) => {
 
 	try {
 		axios.patch(
-			`http://localhost:5000/api/articles/${state.list[indexToMove]._id}`,
+			`${BASE_URL}/api/articles/${state.list[indexToMove]._id}`,
 			{
 				displayPosition: displayPosition + direction,
 			},
@@ -195,7 +193,7 @@ const moveArticle = (displayPosition, direction) => {
 		)
 
 		axios.patch(
-			`http://localhost:5000/api/articles/${state.list[otherIndex]._id}`,
+			`${BASE_URL}/api/articles/${state.list[otherIndex]._id}`,
 			{
 				displayPosition,
 			},

@@ -1,16 +1,27 @@
 <template>
     <div v-if="token" class="AdminTools">
-        <div @click="$emit('edit')" class="edit tool" title="edit an item">
+        <div
+            v-if="edit"
+            @click="$emit('edit')"
+            :class="`edit tool${mode === 'edit' ? ' disabled' : ''}`"
+            title="edit an item"
+        >
             <i class="fas fa-edit" />
         </div>
         <div
+            v-if="remove"
             @click="$emit('remove')"
-            class="remove tool"
+            :class="`remove tool${mode === 'remove' ? ' disabled' : ''}`"
             title="remove an item"
         >
             <i class="fa fa-trash" />
         </div>
-        <div @click="$emit('move')" class="move tool" title="re-arrange items">
+        <div
+            v-if="move"
+            @click="$emit('move')"
+            :class="`move tool${mode === 'move' ? ' disabled' : ''}`"
+            title="re-arrange items"
+        >
             <i class="fa fa-arrows" />
         </div>
     </div>
@@ -18,24 +29,32 @@
 
 <script>
 import { provide, computed } from 'vue'
-
-import { setMode } from '../store/ui'
 import store from '../store/store'
 export default {
     name: 'AdminTools',
     emits: ['edit', 'remove', 'move'],
+    props: {
+        edit: {
+            type: Boolean,
+            default: false,
+        },
+        remove: {
+            type: Boolean,
+            default: false,
+        },
+        move: {
+            type: Boolean,
+            default: false,
+        },
+        mode: String
+    },
     setup () {
         provide('store', store)
 
         const token = computed(() => store.user.token)
 
-        const handleClick = (mode) => {
-            setMode(mode)
-        }
-
         return {
             token,
-            handleClick
         }
     }
 }
@@ -51,6 +70,8 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    background: $background-light;
+    border-radius: 12px 0 0 12px;
 
     .tool {
         padding: 1em;
@@ -59,6 +80,15 @@ export default {
 
         &:hover {
             color: $accent-main;
+        }
+    }
+
+    .disabled {
+        opacity: 0.2;
+        cursor: default;
+
+        &:hover {
+            color: $color-main;
         }
     }
 }

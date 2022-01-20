@@ -33,5 +33,10 @@ export default {
     &:last-child {
         margin-right: 0;
     }
+
+    .Typography {
+        margin: 0;
+        padding: 0;
+    }
 }
 </style>

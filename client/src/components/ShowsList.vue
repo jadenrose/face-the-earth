@@ -1,7 +1,17 @@
 <template>
-    <section class="ShowsList">
-        <Show v-for="show in shows" :key="show._id" :show="show" />
-    </section>
+    <Container>
+        <section class="ShowsList">
+            <Show
+                isNew
+                id="new-show"
+                v-if="mode === 'add'"
+                :mode="'edit'"
+                @posted="$emit('posted')"
+                @cancel="$emit('cancel')"
+            />
+            <Show v-for="show in shows" :key="show._id" :show="show" />
+        </section>
+    </Container>
 </template>
 
 <script>
@@ -13,6 +23,10 @@ import Show from './Show.vue'
 
 export default {
     name: 'ShowsList',
+    emits: ['posted', 'cancel'],
+    props: {
+        mode: String
+    },
     components: {
         Show
     },
@@ -27,3 +41,9 @@ export default {
     },
 }
 </script>
+
+<style lang="scss">
+.ShowsList {
+    padding: 12em 0;
+}
+</style>

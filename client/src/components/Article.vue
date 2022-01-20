@@ -1,58 +1,25 @@
 <template>
-    <article :class="`Article${token ? ' edit' : ''}`">
+    <article :class="`Article${store.user.token ? ' edit' : ''}`">
         <AdminTools
-            v-if="token"
+            v-if="store.user.token"
             @edit="() => setMode('edit')"
             @remove="() => setMode('remove')"
             @move="() => setMode('move')"
+            edit
+            remove
+            move
         />
 
-        <div v-if="token && articleMode === 'edit'" class="edit-content">
-            <Form>
-                <FormGroup>
-                    <FormControl
-                        label="title"
-                        name="title"
-                        v-model="titleValue"
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <FormControl
-                        category="textarea"
-                        label="body"
-                        name="body"
-                        v-model="bodyValue"
-                        :error="errors.body"
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <FormControl
-                        label="button label"
-                        name="linkLabel"
-                        v-model="linkLabelValue"
-                        :error="errors.linkLabel"
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <FormControl
-                        label="button link"
-                        name="linkURL"
-                        v-model="linkURLValue"
-                        :error="errors.linkURL"
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <SaveCancel
-                        confirm
-                        @save="handleSave"
-                        @cancel="handleCancel"
-                    />
-                </FormGroup>
-            </Form>
-        </div>
+        <EditArticle
+            :isNew="isNew"
+            v-if="state.mode === 'edit'"
+            :article="article"
+            @posted="handleSave"
+            @cancel="handleCancel"
+        />
 
         <div
-            v-else-if="token && articleMode === 'remove'"
+            v-else-if="store.user.token && state.mode === 'remove'"
             class="remove-content"
         >
             <div class="confirm-remove">
@@ -66,7 +33,10 @@
             </div>
         </div>
 
-        <div v-else-if="token && articleMode === 'move'" class="move-content">
+        <div
+            v-else-if="store.user.token && state.mode === 'move'"
+            class="move-content"
+        >
             <div
                 v-if="article.displayPosition > 0"
                 class="move-button"
@@ -106,17 +76,32 @@
 </template>
 
 <script>
-import { computed, reactive, ref } from 'vue'
-import { isURL } from 'validator'
+import { computed, reactive } from 'vue'
 import { scrollTo } from 'vue-scrollto'
 
 import store from '../store/store'
-import { postArticle, editArticle, removeArticle, moveArticle } from '../store/articles'
+import { removeArticle, moveArticle } from '../store/articles'
+
+import EditArticle from './forms/EditArticle.vue'
 
 export default {
     name: 'Article',
     props: {
-        article: Object,
+        article: {
+            type: Object,
+            default: () => ({
+                _id: '',
+                title: '',
+                body: '',
+                linkLabel: '',
+                linkURL: '',
+                displayPosition: -1,
+            })
+        },
+        isNew: {
+            type: Boolean,
+            default: false
+        },
         mode: {
             type: String,
             default: null
@@ -126,14 +111,15 @@ export default {
             default: false,
         }
     },
-    emits: ['posted', 'canceled'],
+    emits: ['posted', 'cancel'],
+    components: {
+        EditArticle
+    },
     setup (props, { emit }) {
-        if (props.new) scrollTo('.Article', 100, {
+        if (props.isNew) scrollTo('.Article', 100, {
             easing: 'ease-out',
             offset: -200,
         })
-
-        const token = computed(() => store.user.token)
 
         const initialErrors = {
             body: '',
@@ -144,71 +130,20 @@ export default {
         const state = reactive({
             mode: props.mode,
             errors: initialErrors,
-            title: props.article ? props.article.title : '',
-            body: props.article ? props.article.body : '',
-            linkLabel: props.article ? props.article.linkLabel : '',
-            linkURL: props.article ? props.article.linkURL : '',
         })
 
-        const titleValue = ref(state.title)
-        const bodyValue = ref(state.body)
-        const linkLabelValue = ref(state.linkLabel)
-        const linkURLValue = ref(state.linkURL)
-
-        const articleMode = computed(() => state.mode)
-        const errors = computed(() => state.errors)
         const lastIndex = computed(() => store.articles.list.length - 1)
 
         const setMode = (mode) => state.mode = mode
 
-        const handleSave = async () => {
-            try {
-                const errors = {}
-
-                if (!bodyValue.value) errors.body = 'body cannot be empty'
-                if (linkLabelValue.value && !linkURLValue.value) errors.linkURL = 'button must have a URL if a label is included'
-                if (linkURLValue.value && !isURL(linkURLValue.value)) errors.linkURL = 'must be a valid URL'
-
-                if (Object.entries(errors).length) throw errors
-
-                if (props.new) {
-                    await postArticle({
-                        title: titleValue.value,
-                        body: bodyValue.value,
-                        linkLabel: linkLabelValue.value,
-                        linkURL: linkURLValue.value,
-                    })
-
-                    emit('posted')
-                } else {
-                    await editArticle(props.article._id, {
-                        title: titleValue.value,
-                        body: bodyValue.value,
-                        linkLabel: linkLabelValue.value,
-                        linkURL: linkURLValue.value
-                    })
-                }
-
-                state.errors = initialErrors
-
-                setMode(null)
-            } catch (err) {
-                console.log(err)
-                state.errors = { ...state.errors, ...err }
-            }
+        const handleSave = () => {
+            setMode(null)
+            emit('posted')
         }
 
         const handleCancel = () => {
-            state.errors = initialErrors
-
-            if (props.new) emit('canceled')
-
-            titleValue.value = state.title
-            bodyValue.value = state.body
-            linkLabelValue.value = state.linkLabel
-            linkURLValue.value = state.linkURL
-
             setMode(null)
+            emit('cancel')
         }
 
         const handleRemove = async () => {
@@ -230,17 +165,12 @@ export default {
         }
 
         return {
-            titleValue,
-            bodyValue,
-            linkLabelValue,
-            linkURLValue,
-            token,
+            store,
+            state,
             setMode,
-            articleMode,
-            errors,
-            lastIndex,
             handleSave,
             handleCancel,
+            lastIndex,
             handleRemove,
             moveUp,
             moveDown
@@ -253,6 +183,7 @@ export default {
 .Article {
     margin-bottom: calc($spacing-big * 2);
     position: relative;
+    min-height: calc($spacing-big * 3);
 
     &:last-child {
         margin-bottom: 0;

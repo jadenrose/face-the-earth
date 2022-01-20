@@ -34,6 +34,8 @@ export default {
     border-radius: 15em;
     font-weight: $bold;
     overflow: hidden;
+    margin-bottom: 0.5em;
+    cursor: pointer;
 
     .remove {
         position: absolute;

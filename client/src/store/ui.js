@@ -1,40 +1,40 @@
 import { reactive, readonly } from 'vue'
 
 const initialState = {
-    mode: null,
+	screenSize: 'small',
+	showMobileMenu: false,
 }
 
 const state = reactive(initialState)
 
-const setMode = (mode = 'readonly') => {
-    switch (mode) {
-        case 'readonly': {
-            state.mode = 'readonly'
-            break
-        }
-        case 'edit': {
-            state.mode = 'edit'
-            break
-        }
-        case 'add': {
-            state.mode = 'add'
-            break
-        }
-        case 'remove': {
-            state.mode = 'remove'
-            break
-        }
-        case 'move': {
-            state.mode = 'move'
-            break
-        }
-        default: {
-            state.mode = 'readonly'
-            break
-        }
-    }
+const setScreenSize = (size) => {
+	switch (size) {
+		case 'small': {
+			state.screenSize = 'small'
+			break
+		}
+		case 'medium': {
+			state.screenSize = 'medium'
+			break
+		}
+		case 'large': {
+			state.screenSize = 'large'
+			break
+		}
+		default: {
+			state.screenSize = 'small'
+		}
+	}
+}
+
+const openMobileMenu = () => {
+	state.showMobileMenu = true
+}
+
+const closeMobileMenu = () => {
+	state.showMobileMenu = false
 }
 
 export default readonly(state)
 
-export { setMode }
+export { setScreenSize, openMobileMenu, closeMobileMenu }

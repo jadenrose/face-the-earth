@@ -3,6 +3,8 @@ import { reactive, readonly } from 'vue'
 
 import store from './store'
 
+const BASE_URL = process.env.BACKEND_URI || 'http://localhost:5000'
+
 const initialState = {
 	status: null,
 	error: null,
@@ -13,7 +15,7 @@ const state = reactive(initialState)
 
 const storeAllArtists = async () => {
 	try {
-		const res = await axios.get('http://localhost:5000/api/artists')
+		const res = await axios.get(`${BASE_URL}/api/artists`)
 
 		state.status = 'success'
 		state.error = null
@@ -33,7 +35,7 @@ const postArtist = async ({ name, link }) => {
 		let req = { name }
 		if (link) req = { ...req, link }
 
-		const res = await axios.post('http://localhost:5000/api/artists', req, {
+		const res = await axios.post(`${BASE_URL}/api/artists`, req, {
 			headers: {
 				'x-auth-token': token,
 			},

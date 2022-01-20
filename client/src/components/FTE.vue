@@ -1,8 +1,10 @@
 <template>
     <router-link class="FTE" to="/" :style="sx">
-        <svg alt="face the earth logo" aria-label="face the earth logo">
+        <!-- <svg alt="face the earth logo" aria-label="face the earth logo">
             <use href="@/assets/img/fte.svg#img"></use>
-        </svg>
+        </svg> -->
+
+        <img src="@/assets/img/Symbol.png" alt="FTE Logo" />
     </router-link>
 </template>
 
@@ -22,10 +24,10 @@ export default {
 .FTE {
     cursor: pointer;
 
-    svg {
+    img {
         color: $color-main;
         width: 6em;
-        height: 4em;
+        height: auto;
     }
 }
 </style>

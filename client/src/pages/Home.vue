@@ -1,23 +1,35 @@
 <template>
-    <AddButton v-if="token" @click="() => setMode('add')" />
+    <AddButton v-if="store.user.token" @click="() => setMode('add')" />
     <section class="Home">
-        <div class="hero">
-            <HeroLogo />
-
-            <a
-                href="https://open.spotify.com/artist/3B8dM8jspZ4ADCUXvVszi6"
-                target="_blank"
-            >
-                <FancyButton big label="check out our music" />
-            </a>
-        </div>
+        <Container>
+            <div class="hero">
+                <HeroLogo />
+                <a
+                    href="https://open.spotify.com/artist/3B8dM8jspZ4ADCUXvVszi6"
+                    target="_blank"
+                >
+                    <FancyButton big label="check out our music" />
+                </a>
+            </div>
+        </Container>
+        <!-- <div class="video-container">
+            <video autoplay :muted="state.muted" loop>
+                <source src="@/assets/video/bos.mp4" type="video/mp4" />
+            </video>
+        </div> -->
+        <i
+            @click="toggleVolume"
+            :class="`fas ${
+                state.muted ? 'fa-volume-mute' : 'fa-volume-up'
+            } volume-button`"
+        ></i>
     </section>
     <suspense>
         <template #default>
             <ArticlesList
-                :mode="mode"
+                :mode="state.mode"
                 @posted="setMode(null)"
-                @canceled="setMode(null)"
+                @cancel="setMode(null)"
             />
         </template>
         <template #fallback>
@@ -27,7 +39,7 @@
 </template>
 
 <script>
-import { reactive, computed } from 'vue'
+import { reactive } from 'vue'
 
 import store from '../store/store'
 import HeroLogo from '../components/HeroLogo.vue'
@@ -41,18 +53,19 @@ export default {
     },
     setup () {
         const state = reactive({
-            mode: null
+            mode: null,
+            muted: true,
         })
 
         const setMode = (mode) => state.mode = mode
 
-        const token = computed(() => store.user.token)
-        const mode = computed(() => state.mode)
+        const toggleVolume = () => state.muted = !state.muted
 
         return {
+            store,
+            state,
             setMode,
-            token,
-            mode,
+            toggleVolume
         }
     }
 }
@@ -62,8 +75,49 @@ export default {
 .Home {
     height: 100vh;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     margin-bottom: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+
+    video {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+        opacity: 0.2;
+    }
+}
+
+.volume-button {
+    color: $color-main;
+    font-size: 2.4rem;
+    position: absolute;
+    bottom: 5vw;
+    right: 5vw;
+    cursor: pointer;
+    padding: 0.6em;
+    background: $background;
+    border-radius: 50%;
+    opacity: 0.6;
+
+    &:hover {
+        color: $accent-main;
+    }
+
+    &:active {
+        color: $color-main;
+    }
 }
 
 .HomeAdd {

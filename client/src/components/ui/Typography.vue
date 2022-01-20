@@ -39,11 +39,19 @@
             <slot />
         </span>
     </h4>
-    <p @click="$emit('click')" v-else class="Typography p" :style="{ ...sx }">
+    <p
+        @click="$emit('click')"
+        v-else-if="variant === 'p'"
+        class="Typography p"
+        :style="{ ...sx }"
+    >
         <span>
             <slot />
         </span>
     </p>
+    <span @click="$emit('click')" v-else class="Typography" :style="{ ...sx }">
+        <slot />
+    </span>
 </template>
 
 <script>

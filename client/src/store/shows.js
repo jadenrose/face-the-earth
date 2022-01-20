@@ -3,6 +3,8 @@ import { reactive, readonly } from 'vue'
 
 import store from './store'
 
+const BASE_URL = process.env.BACKEND_URI || 'http://localhost:5000'
+
 const initialState = {
 	status: null,
 	error: null,
@@ -15,7 +17,7 @@ const storeAllShows = async () => {
 	state.status = 'pending'
 
 	try {
-		const res = await axios.get('http://localhost:5000/api/shows')
+		const res = await axios.get(`${BASE_URL}/api/shows`)
 
 		state.status = 'success'
 		state.error = null
@@ -29,21 +31,21 @@ const storeAllShows = async () => {
 	}
 }
 
-const postShow = async ({ title, artists, date, venue }) => {
+const postShow = async ({ title, artists, date, venue, images }) => {
 	try {
 		const token = store.user.token
 
 		if (!token) throw 'not authorized'
 
-		let req = { title, artists, date, venue }
+		let req = { title, artists, date, venue, images }
 
-		const res = await axios.post('http://localhost:5000/api/shows', req, {
+		const res = await axios.post(`${BASE_URL}/api/shows`, req, {
 			headers: {
 				'x-auth-token': token,
 			},
 		})
 
-		state.list = [res.data, ...state.list]
+		state.list = [...state.list, res.data]
 
 		return res.data
 	} catch (err) {
@@ -54,23 +56,19 @@ const postShow = async ({ title, artists, date, venue }) => {
 	}
 }
 
-const editShow = async (showId, { title, artists, date, venue }) => {
+const editShow = async (showId, { title, artists, date, venue, images }) => {
 	try {
 		const token = store.user.token
 
 		if (!token) throw 'not authorized'
 
-		let req = { title, artists, date, venue }
+		let req = { title, artists, date, venue, images }
 
-		const res = await axios.patch(
-			`http://localhost:5000/api/shows/${showId}`,
-			req,
-			{
-				headers: {
-					'x-auth-token': token,
-				},
-			}
-		)
+		const res = await axios.patch(`${BASE_URL}/api/shows/${showId}`, req, {
+			headers: {
+				'x-auth-token': token,
+			},
+		})
 
 		const showIndex = state.list.findIndex(
 			(show) => show._id === res.data._id
@@ -87,6 +85,30 @@ const editShow = async (showId, { title, artists, date, venue }) => {
 	}
 }
 
+const removeShow = async (showId) => {
+	const token = store.user.token
+
+	if (!token)
+		return {
+			show: {},
+			error: 'not authorized',
+		}
+
+	try {
+		await axios.delete(`${BASE_URL}/api/shows/${showId}`, {
+			headers: {
+				'x-auth-token': token,
+			},
+		})
+
+		const showIndex = state.list.findIndex((show) => show._id === showId)
+
+		state.list.splice(showIndex, 1)
+	} catch (err) {
+		return console.error('could not delete article')
+	}
+}
+
 export default readonly(state)
 
-export { storeAllShows, postShow, editShow }
+export { storeAllShows, postShow, editShow, removeShow }

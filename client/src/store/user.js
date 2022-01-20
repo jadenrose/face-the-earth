@@ -1,77 +1,73 @@
 import axios from 'axios'
 import { reactive, readonly } from 'vue'
 
-import { setMode } from './ui'
+const BASE_URL = process.env.BACKEND_URI || 'http://localhost:5000'
 
 const initialState = {
-    status: null,
-    error: null,
-    token: null,
+	status: null,
+	error: null,
+	token: null,
 }
 
 const state = reactive(initialState)
 
 const login = async (email, password) => {
-    try {
-        const res = await axios.get('http://localhost:5000/api/auth', {
-            headers: {
-                email,
-                password,
-            },
-        })
+	try {
+		const res = await axios.get(`${BASE_URL}/api/auth`, {
+			headers: {
+				email,
+				password,
+			},
+		})
 
-        const token = res.data
+		const token = res.data
 
-        if (!token) throw 'login failed'
+		if (!token) throw 'login failed'
 
-        state.status = 'success'
-        state.error = null
-        state.token = token
+		state.status = 'success'
+		state.error = null
+		state.token = token
 
-        localStorage.setItem('user', token)
-
-        setMode('readonly')
-    } catch (err) {
-        state.status = 'failed'
-        state.error = err
-        state.token = null
-    }
+		localStorage.setItem('user', token)
+	} catch (err) {
+		state.status = 'failed'
+		state.error = err
+		state.token = null
+	}
 }
 
 const logout = () => {
-    state.status = null
-    state.error = null
-    state.token = null
+	state.status = null
+	state.error = null
+	state.token = null
 
-    localStorage.removeItem('user')
+	localStorage.removeItem('user')
 }
 
 const refreshToken = async () => {
-    try {
-        const storedToken = localStorage.getItem('user')
+	try {
+		const storedToken = localStorage.getItem('user')
 
-        if (!storedToken) throw 'no token'
+		if (!storedToken) throw 'no token'
 
-        const res = await axios.get('http://localhost:5000/api/auth/token', {
-            headers: {
-                'x-auth-token': storedToken,
-            },
-        })
+		const res = await axios.get(`${BASE_URL}/api/auth/token`, {
+			headers: {
+				'x-auth-token': storedToken,
+			},
+		})
 
-        const token = res.data
+		const token = res.data
 
-        state.status = 'success'
-        state.error = null
-        state.token = token
+		state.status = 'success'
+		state.error = null
+		state.token = token
+	} catch (err) {
+		state.status = null
+		state.errors = null
+		state.token = null
 
-        setMode('readonly')
-    } catch (err) {
-        state.status = null
-        state.errors = null
-        state.token = null
-
-        localStorage.removeItem('user')
-    }
+		localStorage.removeItem('user')
+	}
 }
 
 export default readonly(state)

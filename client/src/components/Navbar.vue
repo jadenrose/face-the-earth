@@ -3,26 +3,46 @@
         <Container>
             <FTE />
             <Nav>
-                <Navlist class="routerLinks" :items="routerLinks" />
-                <Navlist class="extLinks" :items="extLinks" />
+                <Navlist
+                    v-if="screenSize === 'large'"
+                    class="routerLinks"
+                    :items="routerLinks"
+                />
+                <OpenMobileMenu v-else />
+                <Navlist
+                    v-if="screenSize !== 'small'"
+                    class="extLinks"
+                    :items="extLinks"
+                />
             </Nav>
+            <MobileMenu
+                v-if="showMobileMenu"
+                :routerLinks="routerLinks"
+                :extLinks="extLinks"
+            />
         </Container>
     </header>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+
+import store from '../store/store'
 
 import FTE from '../components/FTE.vue'
 import Nav from '../components/Nav.vue'
 import Navlist from '../components/Navlist.vue'
+import OpenMobileMenu from '../components/OpenMobileMenu.vue'
+import MobileMenu from '../components/MobileMenu.vue'
 
 export default {
     name: 'Navbar',
     components: {
         FTE,
         Nav,
-        Navlist
+        Navlist,
+        OpenMobileMenu,
+        MobileMenu
     },
     setup () {
         const routerLinks = ref([
@@ -63,14 +83,16 @@ export default {
             },
         ])
 
-        return { routerLinks, extLinks }
+        const screenSize = computed(() => store.ui.screenSize)
+        const showMobileMenu = computed(() => store.ui.showMobileMenu)
+
+        return { routerLinks, extLinks, screenSize, showMobileMenu }
     }
 }
 </script>
 
 <style lang="scss">
 .Navbar {
-    background: $background;
     position: fixed;
     top: 0;
     left: 0;
@@ -78,14 +100,33 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $spacing-small 0 0;
     z-index: 888;
+    padding: 3em 0;
+    background: rgb(0, 0, 0);
+    background: linear-gradient(
+        180deg,
+        rgba($background, 0.8) 0%,
+        rgba($background, 0.6) 70%,
+        rgba($background, 0) 100%
+    );
 
     .Container {
         display: flex;
         align-items: center;
         justify-content: space-between;
         max-width: none;
+    }
+
+    .routerlinks {
+        order: 1;
+    }
+
+    .extLinks {
+        order: 2;
+    }
+
+    .OpenMobileMenu {
+        order: 3;
     }
 }
 </style>

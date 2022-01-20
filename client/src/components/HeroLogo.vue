@@ -1,8 +1,6 @@
 <template>
     <h1 class="HeroLogo" aria-label="Face the Earth">
-        <svg alt="Face the Earth" aria-label="Face the Earth">
-            <use href="@/assets/img/logo-big.svg#img"></use>
-        </svg>
+        <img src="@/assets/img/Font.png" alt="Face the Earth Logo" />
     </h1>
 </template>
 
@@ -19,10 +17,14 @@ export default {
 .HeroLogo {
     margin: 0;
 
-    svg {
-        width: 17em;
-        height: 10em;
-        margin-bottom: 6em;
+    img {
+        display: block;
+        margin: 0;
+        padding: 0;
+        width: 22em;
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 4em;
     }
 }
 </style>
