@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = process.env.BACKEND_URI || 'http://localhost:5000'
+const BASE_URL = process.env.VUE_APP_BACKEND_URI || 'http://localhost:5000'
 
 const postBooking = async ({ name, email, venueType, date, otherInfo }) => {
 	try {

@@ -146,7 +146,7 @@ export default {
             }
         })
 
-        const BASE_URL = process.env.BACKEND_URI || 'http://localhost:5000'
+        const BASE_URL = process.env.VUE_APP_BACKEND_URI || 'http://localhost:5000'
 
         const toggleShowMap = () => state.showMap = !state.showMap
         const setMode = (mode) => state.mode = mode

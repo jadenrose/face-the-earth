@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import store from './store'
 
-const BASE_URL = process.env.BACKEND_URI || 'http://localhost:5000'
+const BASE_URL = process.env.VUE_APP_BACKEND_URI || 'http://localhost:5000'
 
 export const postImages = async (files) => {
 	try {
