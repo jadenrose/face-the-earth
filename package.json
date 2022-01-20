@@ -7,7 +7,7 @@
 		"dev": "concurrently \"nodemon -r dotenv/config server.js\" \"cd client && npm start\"",
 		"prod": "node server.js",
 		"seed": "node seeders/seed.js",
-		"start": "node server.js"
+		"local": "node -r dotenv/config server"
 	},
 	"keywords": [],
 	"author": "",
