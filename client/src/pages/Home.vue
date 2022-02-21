@@ -73,13 +73,23 @@ export default {
 
 <style lang="scss">
 .Home {
-    height: 100vh;
+    margin-top: 6em;
+    padding: 8em 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin-bottom: 0;
     position: relative;
     overflow: hidden;
+}
+
+.hero {
+    max-width: 70vw;
+    margin: 0 auto;
+
+    @include tablet {
+        margin: 0;
+    }
 }
 
 .video-container {

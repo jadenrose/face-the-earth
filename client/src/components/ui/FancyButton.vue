@@ -1,5 +1,5 @@
 <template>
-    <button class="Button" :style="styleVars">
+    <button class="FancyButton" :style="styleVars">
         <Typography>
             {{ label }}
         </Typography>
@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style lang="scss">
-.Button {
+.FancyButton {
     appearance: none;
     border: none;
     background: $accent-main;
@@ -68,13 +68,13 @@ export default {
     }
 
     &[medium] {
-        font-size: 1.2rem;
-        padding: 1.5em 2.5em;
+        font-size: 1rem;
+        padding: 1.5em 2em;
     }
 
     &[big] {
-        font-size: 1.4rem;
-        padding: 1.7em 2.7em;
+        font-size: 1.2rem;
+        padding: 1.6em 2.2em;
     }
 
     &:hover,

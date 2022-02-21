@@ -23,7 +23,6 @@ export default {
         padding: 0;
         width: 22em;
         max-width: 100%;
-        height: auto;
         margin-bottom: 4em;
     }
 }

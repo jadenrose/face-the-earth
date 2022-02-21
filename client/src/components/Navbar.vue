@@ -66,19 +66,19 @@ export default {
 
         const extLinks = ref([
             {
-                icon: 'fab fa-facebook',
+                img: 'facebook.png',
                 href: 'https://www.facebook.com/FacetheEarth'
             },
             {
-                icon: 'fab fa-instagram',
+                img: 'insta.png',
                 href: 'https://www.instagram.com/facetheearth'
             },
             {
-                icon: 'fab fa-youtube',
+                img: 'youtube.png',
                 href: 'https://www.youtube.com/channel/UCynYkCrwJCfNNLc7Z03yhKA/featured'
             },
             {
-                icon: 'fab fa-spotify',
+                img: 'spotify.png',
                 href: 'https://open.spotify.com/artist/3B8dM8jspZ4ADCUXvVszi6'
             },
         ])
@@ -101,12 +101,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     z-index: 888;
-    padding: 3em 0;
+    padding: 2em 0;
     background: rgb(0, 0, 0);
     background: linear-gradient(
         180deg,
         rgba($background, 0.8) 0%,
-        rgba($background, 0.6) 70%,
+        rgba($background, 0.4) 85%,
         rgba($background, 0) 100%
     );
 
