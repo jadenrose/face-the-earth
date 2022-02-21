@@ -118,6 +118,7 @@ select {
 }
 
 label {
+    text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: $bold;
     cursor: pointer;

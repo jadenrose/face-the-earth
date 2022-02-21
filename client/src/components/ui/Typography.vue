@@ -124,6 +124,15 @@ export default {
         line-height: 1.6;
     }
 
+    &.h1,
+    &.h2,
+    &.h3,
+    &.h4,
+    &.h5,
+    &.h6 {
+        text-transform: uppercase;
+    }
+
     &.h1 {
         font-size: 2.4em;
     }

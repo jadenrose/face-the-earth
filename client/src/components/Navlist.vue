@@ -85,6 +85,7 @@ export default {
 
     &.linkText {
         padding: 1.3em;
+        text-transform: uppercase;
     }
 
     &.linkIcon {
