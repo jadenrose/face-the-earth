@@ -1,30 +1,44 @@
 <template>
-    <Container>
-        <AddButton v-if="store.user.token" @click="() => setMode('add')" />
+    <AddButton v-if="store.user.token" @click="() => setMode('add')" />
 
-        <section class="ShowsList">
+    <section class="Shows">
+        <div class="upcoming-shows">
             <Container>
-                <suspense>
-                    <template #default>
-                        <ShowsList
-                            :mode="mode"
-                            @posted="() => setMode(null)"
-                            @cancel="() => setMode(null)"
-                        />
-                    </template>
-                    <template #fallback>
-                        <Typography variant="h2">loading...</Typography>
-                    </template>
-                </suspense>
+                <Typography variant="h2">upcoming shows</Typography>
+
+                <div class="shows-list-container">
+                    <ShowsList
+                        :mode="mode"
+                        :shows="upcomingShows"
+                        @posted="() => setMode(null)"
+                        @cancel="() => setMode(null)"
+                    />
+                </div>
             </Container>
-        </section>
-    </Container>
+        </div>
+
+        <div class="past-shows">
+            <Container>
+                <Typography variant="h2">past shows</Typography>
+
+                <div class="shows-list-container">
+                    <ShowsList
+                        :mode="mode"
+                        :shows="pastShows"
+                        @posted="() => setMode(null)"
+                        @cancel="() => setMode(null)"
+                    />
+                </div>
+            </Container>
+        </div>
+    </section>
 </template>
 
 <script>
 import { reactive, computed } from '@vue/reactivity'
 
 import store from '../store/store'
+import { storeAllShows } from '../store/shows'
 
 import ShowsList from '../components/ShowsList.vue'
 
@@ -33,7 +47,7 @@ export default {
     components: {
         ShowsList
     },
-    setup () {
+    async setup () {
         const state = reactive({
             mode: null
         })
@@ -41,7 +55,14 @@ export default {
         const setMode = (mode) => state.mode = mode
         const mode = computed(() => state.mode)
 
+        if (!store.shows.list.length) await storeAllShows()
+
+        const upcomingShows = computed(() => store.shows.upcomingShows)
+        const pastShows = computed(() => store.shows.pastShows)
+
         return {
+            upcomingShows,
+            pastShows,
             store,
             setMode,
             mode,
@@ -49,3 +70,15 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.Shows {
+    h2 {
+        margin-bottom: 1em;
+    }
+}
+
+.upcoming-shows {
+    margin-bottom: 8em;
+}
+</style>

@@ -4,7 +4,9 @@
         <Navbar />
     </header>
     <main>
-        <router-view />
+        <suspense>
+            <router-view />
+        </suspense>
     </main>
 </template>
 

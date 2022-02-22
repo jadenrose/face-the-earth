@@ -201,13 +201,12 @@ export default {
             setMode(null)
         }
 
-        const showDate = new Date(`${props.show.date} 14:00:00`)
-        const showMonth = monthNames[showDate.getMonth()]
-        const showDay = showDate.getDate()
+        const showMonth = monthNames[props.show.date.getMonth()]
+        const showDay = props.show.date.getDate()
 
         const canBuyTickets =
             computed(() => {
-                if (new Date() > showDate) return false
+                if (new Date() > props.show.date) return false
 
                 if (!props.show?.link?.length) return false
 
@@ -278,9 +277,9 @@ export default {
         max-width: unset;
     }
 
-    @include desktop {
-        flex-basis: 31%;
-    }
+    // @include desktop {
+    //     flex-basis: 31%;
+    // }
 
     .content {
         height: 100%;

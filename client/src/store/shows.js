@@ -9,6 +9,8 @@ const initialState = {
 	status: null,
 	error: null,
 	list: [],
+	upcomingShows: [],
+	pastShows: [],
 }
 
 const state = reactive(initialState)
@@ -21,13 +23,29 @@ const storeAllShows = async () => {
 
 		state.status = 'success'
 		state.error = null
-		state.list = res.data.sort((a, b) =>
-			new Date(a.date) > new Date(b.date)
-				? -1
-				: new Date(a.date) < new Date(b.date)
-				? 1
-				: 0
+
+		state.list = res.data
+			.sort((a, b) =>
+				new Date(a.date) > new Date(b.date)
+					? -1
+					: new Date(a.date) < new Date(b.date)
+					? 1
+					: 0
+			)
+			.map((show) => ({
+				...show,
+				date: new Date(`${show.date} 14:00:00`),
+			}))
+
+		const splitIndex = state.list.findIndex(
+			(show) => new Date() > show.date
 		)
+
+		state.upcomingShows = state.list.slice(0, splitIndex)
+		state.pastShows = state.list.slice(splitIndex)
+
+		console.log(state.upcomingShows)
+		console.log(state.pastShows)
 
 		return res.data
 	} catch (err) {
