@@ -73,7 +73,14 @@
                             />
                         </Typography>
                     </a>
-                    <a v-if="!inPast" class="buy-tickets">tickets</a>
+                    <a
+                        v-if="canBuyTickets"
+                        class="buy-tickets"
+                        :href="show.link"
+                        target="_blank"
+                    >
+                        tickets
+                    </a>
                 </div>
             </div>
             <div v-if="state.currentImage" class="image-container">
@@ -88,6 +95,7 @@
 
 <script>
 import { reactive } from '@vue/reactivity'
+import { computed } from 'vue'
 
 import store from '../store/store'
 import { removeShow } from '../store/shows'
@@ -95,7 +103,7 @@ import { removeShow } from '../store/shows'
 import EditShow from './forms/EditShow.vue'
 import ArtistList from './ArtistList.vue'
 import { onMounted, onUnmounted } from '@vue/runtime-core'
-
+import isURL from 'validator/lib/isURL'
 export default {
     name: 'Show',
     props: {
@@ -130,6 +138,7 @@ export default {
         ArtistList,
     },
     setup (props, { emit }) {
+
 
         const state = reactive({
             mode: props.mode,
@@ -195,7 +204,15 @@ export default {
         const showDate = new Date(`${props.show.date} 14:00:00`)
         const showMonth = monthNames[showDate.getMonth()]
         const showDay = showDate.getDate()
-        const inPast = new Date() > showDate
+
+        const canBuyTickets =
+            computed(() => {
+                if (new Date() > showDate) return false
+
+                if (!props.show?.link?.length) return false
+
+                return isURL(props.show?.link)
+            })
 
         return {
             BASE_URL,
@@ -203,7 +220,7 @@ export default {
             state,
             showMonth,
             showDay,
-            inPast,
+            canBuyTickets,
             toggleShowMap,
             setMode,
             handleSave,
