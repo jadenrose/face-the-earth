@@ -201,12 +201,12 @@ export default {
             setMode(null)
         }
 
-        const showMonth = monthNames[props.show.date.getMonth()]
-        const showDay = props.show.date.getDate()
+        const showMonth = monthNames[props.show.dateObj.getMonth()]
+        const showDay = props.show.dateObj.getDate()
 
         const canBuyTickets =
             computed(() => {
-                if (new Date() > props.show.date) return false
+                if (new Date() > props.show.dateObj) return false
 
                 if (!props.show?.link?.length) return false
 

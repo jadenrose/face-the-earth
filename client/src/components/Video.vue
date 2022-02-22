@@ -132,7 +132,6 @@ export default {
         }
 
         const handleSave = () => {
-            console.log('Video.vue')
             setMode(null)
             emit('posted')
         }

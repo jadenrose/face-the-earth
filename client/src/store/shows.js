@@ -32,10 +32,14 @@ const storeAllShows = async () => {
 					? 1
 					: 0
 			)
-			.map((show) => ({
-				...show,
-				date: new Date(`${show.date} 14:00:00`),
-			}))
+			.map((show) => {
+				const dateArr = show.date.split('-')
+
+				return {
+					...show,
+					dateObj: new Date(dateArr[0], dateArr[1] - 1, dateArr[2]),
+				}
+			})
 
 		const splitIndex = state.list.findIndex(
 			(show) => new Date() > show.date
@@ -43,9 +47,6 @@ const storeAllShows = async () => {
 
 		state.upcomingShows = state.list.slice(0, splitIndex)
 		state.pastShows = state.list.slice(splitIndex)
-
-		console.log(state.upcomingShows)
-		console.log(state.pastShows)
 
 		return res.data
 	} catch (err) {
@@ -90,8 +91,6 @@ const editShow = async (
 		if (!token) throw 'not authorized'
 
 		let req = { title, artists, date, venue, link, images }
-
-		console.log(req)
 
 		const res = await axios.patch(`${BASE_URL}/api/shows/${showId}`, req, {
 			headers: {
