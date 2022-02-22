@@ -28,6 +28,7 @@ const ShowSchema = new Schema({
 			message: 'must be a valid URL',
 		},
 	},
+	category: String,
 	desc: {
 		type: String,
 	},

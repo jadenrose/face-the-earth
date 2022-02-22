@@ -33,11 +33,17 @@ const storeAllShows = async () => {
 					: 0
 			)
 			.map((show) => {
-				const dateArr = show.date.split('-')
+				const dateArr = show.date.split(/[- :]/)
 
 				return {
 					...show,
-					dateObj: new Date(dateArr[0], dateArr[1] - 1, dateArr[2]),
+					dateObj: new Date(
+						dateArr[0],
+						dateArr[1] - 1,
+						dateArr[2],
+						23,
+						59
+					),
 				}
 			})
 
