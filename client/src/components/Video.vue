@@ -1,5 +1,10 @@
 <template>
-    <Card class="Video">
+    <Card
+        :class="{
+            Video: true,
+            editing: state.mode === 'edit',
+        }"
+    >
         <AdminTools
             @edit="() => setMode('edit')"
             @remove="() => setMode('remove')"
@@ -53,22 +58,17 @@
             </div>
         </div>
 
-        <div v-else class="readonly-content">
-            <div class="loading-text">
-                <Typography center>loading video...</Typography>
-            </div>
-            <div class="VideoBody">
-                <iframe
-                    class="youtube-embed"
-                    :src="`https://www.youtube-nocookie.com/embed/${video.url
-                        .split('/')
-                        .pop()}`"
-                    :title="`${video.title} (Youtube)`"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                />
-            </div>
+        <div v-else class="content readonly-content">
+            <iframe
+                class="youtube-embed"
+                :src="`https://www.youtube-nocookie.com/embed/${video.url
+                    .split('/')
+                    .pop()}`"
+                :title="`${video.title} (Youtube)`"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+            />
         </div>
     </Card>
 </template>
@@ -158,30 +158,57 @@ export default {
 
 <style lang="scss">
 .Video {
-    margin: 0 auto $spacing-med;
-    width: 100%;
-    max-width: 800px;
+    $width-mobile: 70;
+    $width-tablet: 40;
+    $width-desktop: 28;
+
     min-width: 0;
     position: relative;
     z-index: 0;
+    width: #{$width-mobile}vw;
+    height: #{math.div($width-mobile * 9, 16)}vw;
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
 
-    .loading-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translatex(-50%);
-        z-index: -1;
+    &.editing {
+        position: fixed;
+        z-index: 999;
+        top: 4em;
+        left: 4em;
+        height: unset;
+        padding: 2em;
+        overflow: visible;
+        width: 70vw;
+
+        &:after {
+            transform: unset;
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: rgba($background, 0.8);
+        }
     }
 
-    .VideoBody {
-        height: 50vw;
-        max-height: 35em;
+    @include tablet {
+        width: #{$width-tablet}vw;
+        height: #{math.div($width-tablet * 9, 16)}vw;
+        margin-left: 0;
+        margin-right: 1em;
     }
 
+    @include desktop {
+        width: #{$width-desktop}vw;
+        height: #{math.div($width-desktop * 9, 16)}vw;
+    }
+
+    .content,
     .youtube-embed {
         display: block;
-        border-radius: 6px;
-        z-index: 2;
         width: 100%;
         height: 100%;
     }
@@ -193,7 +220,6 @@ export default {
         justify-content: center;
         min-height: 350px;
         width: 80%;
-        border-radius: 8px;
     }
 
     .move-content {

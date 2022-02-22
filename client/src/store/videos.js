@@ -9,6 +9,10 @@ const initialState = {
 	status: null,
 	error: null,
 	list: [],
+	musicVideos: [],
+	livePerformances: [],
+	lyricVideos: [],
+	otherVideos: [],
 }
 
 const state = reactive(initialState)
@@ -20,6 +24,24 @@ const sortStoredVideos = () => {
 			: a.displayPosition > b.displayPosition
 			? 1
 			: 0
+	)
+
+	state.list.forEach((video) => {
+		if (video.category === 'musicVideos') state.musicVideos.push(video)
+		else if (video.category === 'livePerformances')
+			state.livePerformances.push(video)
+		else if (video.category === 'lyricVideos') state.lyricVideos.push(video)
+		else state.otherVideos.push(video)
+	})
+
+	state.musicVideos = state.list.filter(
+		(video) => video.category === 'musicVideos'
+	)
+	state.livePerformances = state.list.filter(
+		(video) => video.category === 'livePerformances'
+	)
+	state.lyricVideos = state.list.filter(
+		(video) => video.category === 'lyricVideos'
 	)
 }
 
@@ -41,7 +63,7 @@ const storeAllVideos = async () => {
 	}
 }
 
-const postVideo = async ({ title, desc, url }) => {
+const postVideo = async ({ title, desc, url, category }) => {
 	const token = store.user.token
 
 	if (!token)
@@ -55,6 +77,7 @@ const postVideo = async ({ title, desc, url }) => {
 			title,
 			desc,
 			url,
+			category,
 			displayPosition: 0,
 		}
 
@@ -87,7 +110,7 @@ const postVideo = async ({ title, desc, url }) => {
 	}
 }
 
-const editVideo = async (videoId, { title, desc, url }) => {
+const editVideo = async (videoId, { title, desc, url, category }) => {
 	const token = store.user.token
 
 	if (!token)
@@ -101,6 +124,7 @@ const editVideo = async (videoId, { title, desc, url }) => {
 			title,
 			desc,
 			url,
+			category,
 		}
 
 		const res = await axios.patch(

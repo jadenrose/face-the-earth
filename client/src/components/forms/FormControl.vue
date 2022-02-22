@@ -46,7 +46,7 @@
                 {{ option.label }}
             </option>
 
-            <option value="other">other:</option>
+            <option v-if="!blockOther" value="other">other:</option>
         </select>
         <slot />
     </label>
@@ -95,6 +95,10 @@ export default {
         options: {
             type: Array,
             default: () => [],
+        },
+        blockOther: {
+            type: Boolean,
+            default: false
         },
         modelValue: [String, Array],
         error: String

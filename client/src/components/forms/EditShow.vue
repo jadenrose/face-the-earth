@@ -270,16 +270,6 @@ export default {
 </script>
 
 <style lang="scss">
-.edit-show-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: 888;
-    background: rgba($background, 0.8);
-}
-
 .ShowForm,
 .EditVenue {
     margin: 0;

@@ -76,6 +76,19 @@ export default {
     h2 {
         margin-bottom: 1em;
     }
+    margin-top: 6em;
+    padding: 8em 0;
+
+    .shows-list-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        flex-direction: column;
+
+        @include tablet {
+            flex-direction: row;
+        }
+    }
 }
 
 .upcoming-shows {

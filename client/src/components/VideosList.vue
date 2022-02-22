@@ -8,41 +8,22 @@
         @cancel="$emit('cancel')"
     />
     <Video v-for="video in videos" :key="video._id" :video="video" />
+    <Typography v-if="videos.length === 0">coming soon!</Typography>
 </template>
 
 <script>
-import { computed } from 'vue'
 
-import store from '../store/store'
-import { storeAllVideos } from '../store/videos'
 import Video from './Video.vue'
 
 export default {
     name: 'VideosList',
     emits: ['posted', 'cancel'],
     props: {
+        videos: Array,
         mode: String,
     },
     components: {
         Video
     },
-    async setup () {
-        if (!store.videos.list.length) await storeAllVideos()
-
-        const videos = computed(() => store.videos.list)
-
-        return {
-            videos
-        }
-    }
 }
 </script>
-
-<style>
-.VideosList {
-    padding: 12em 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-</style>

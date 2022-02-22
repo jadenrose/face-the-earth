@@ -18,6 +18,20 @@
             />
         </FormGroup>
         <FormGroup>
+            <FormControl
+                v-model="categoryValue"
+                label="video category"
+                :error="state.errors.category"
+                category="select"
+                :options="[
+                    { label: 'music videos', value: 'musicVideos' },
+                    { label: 'live performances', value: 'livePerformances' },
+                    { label: 'lyric videos', value: 'lyricVideos' },
+                ]"
+                blockOther
+            />
+        </FormGroup>
+        <FormGroup>
             <SaveCancel confirm @save="handleSave" @cancel="$emit('cancel')" />
         </FormGroup>
     </Form>
@@ -39,6 +53,7 @@ export default {
         const titleValue = ref(props.video.title)
         const descValue = ref(props.video.desc)
         const urlValue = ref(props.video.url)
+        const categoryValue = ref(props.video.category)
 
         const initialErrors = {
             url: null
@@ -53,7 +68,8 @@ export default {
             const showObj = {
                 title: titleValue.value,
                 desc: descValue.value,
-                url: urlValue.value
+                url: urlValue.value,
+                category: categoryValue.value
             }
 
             if (!isURL(showObj.url)) errors.url = 'must be a valid url'
@@ -73,6 +89,7 @@ export default {
             titleValue,
             descValue,
             urlValue,
+            categoryValue,
             handleSave
         }
     }
