@@ -51,7 +51,11 @@ export default {
     flex-wrap: wrap;
 
     .artist-list-item {
-        margin-right: 1.6em;
+        margin-right: 1em;
+
+        &:last-child {
+            margin-right: 0;
+        }
     }
 }
 </style>

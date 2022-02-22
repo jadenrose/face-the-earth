@@ -39,6 +39,26 @@
             <slot />
         </span>
     </h4>
+    <h5
+        @click="$emit('click')"
+        v-else-if="variant === 'h5'"
+        class="Typography h5"
+        :style="{ ...sx }"
+    >
+        <span>
+            <slot />
+        </span>
+    </h5>
+    <h6
+        @click="$emit('click')"
+        v-else-if="variant === 'h6'"
+        class="Typography h6"
+        :style="{ ...sx }"
+    >
+        <span>
+            <slot />
+        </span>
+    </h6>
     <p
         @click="$emit('click')"
         v-else-if="variant === 'p'"
@@ -72,7 +92,7 @@ export default {
 <style lang="scss">
 .Typography {
     margin: 0;
-    letter-spacing: 1px;
+    // letter-spacing: 1px;
     max-width: 80ch;
 
     &[center] {
@@ -147,6 +167,14 @@ export default {
 
     &.h4 {
         font-size: 1.4em;
+    }
+
+    &.h5 {
+        font-size: 1em;
+    }
+
+    &.h6 {
+        font-size: 0.8em;
     }
 
     &.h1,

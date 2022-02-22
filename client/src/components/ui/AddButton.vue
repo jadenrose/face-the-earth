@@ -13,8 +13,8 @@ export default {
 <style lang="scss">
 .AddButton {
     position: fixed;
-    right: 1em;
-    top: 25%;
+    top: 3em;
+    right: 2em;
     font-size: 3em;
     background: $accent-main;
     color: $background;

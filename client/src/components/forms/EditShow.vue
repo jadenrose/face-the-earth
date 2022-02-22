@@ -95,6 +95,13 @@
         </FormGroup>
         <FormGroup>
             <FormControl
+                label="eventbrite link"
+                name="link"
+                v-model="linkValue"
+            />
+        </FormGroup>
+        <FormGroup>
+            <FormControl
                 category="dropzone"
                 label="add image(s)"
                 v-model="imagesValue"
@@ -109,7 +116,8 @@
 
 <script>
 import { reactive, ref } from '@vue/reactivity'
-import { isDate } from 'validator'
+import { default as isDate } from 'validator/lib/isDate'
+import { default as isURL } from 'validator/lib/isURL'
 
 import store from '../../store/store'
 import { postShow, editShow } from '../../store/shows'
@@ -140,6 +148,7 @@ export default {
             title: null,
             artists: null,
             date: null,
+            link: null,
             venue: null
         }
 
@@ -158,6 +167,7 @@ export default {
         const artistsValue = ref(props.show.artists)
         const dateValue = ref(props.show.date)
         const venueValue = ref(props.show.venue)
+        const linkValue = ref(props.show.link)
         const imagesValue = ref(props.show.images)
         const searchValue = ref(venueValue.value.name)
 
@@ -194,12 +204,13 @@ export default {
             const errors = initialErrors
 
             const {
-                title, artists, date, venue
+                title, artists, date, venue, link
             } = {
                 title: titleValue.value,
                 artists: artistsValue.value,
                 date: dateValue.value,
-                venue: venueValue.value._id
+                venue: venueValue.value._id,
+                link: linkValue.value,
             }
 
             if (!title) errors.title = 'title is required'
@@ -207,6 +218,7 @@ export default {
             if (!date) errors.date = 'date is required'
             if (!isDate(date)) errors.date = 'invalid date'
             if (!venue) errors.venue = 'venue is required'
+            if (!isURL(link)) errors.date = 'invalid URL'
 
             if (Object.entries(errors).find(([key, value]) => value ? key : false))
                 return state.errors = { ...errors }
@@ -221,6 +233,7 @@ export default {
                 artists,
                 date,
                 venue,
+                link,
                 images
             }
 
@@ -244,6 +257,7 @@ export default {
             artistsValue,
             dateValue,
             venueValue,
+            linkValue,
             imagesValue,
             searchValue,
             handleRemoveArtist,
@@ -256,6 +270,16 @@ export default {
 </script>
 
 <style lang="scss">
+.edit-show-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 888;
+    background: rgba($background, 0.8);
+}
+
 .ShowForm,
 .EditVenue {
     margin: 0;

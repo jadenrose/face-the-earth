@@ -30,12 +30,18 @@ export default {
     position: relative;
     background: $accent-main;
     color: $background;
-    padding: 0.7em 1em;
-    border-radius: 15em;
+    padding: 0.6em 0.8em;
+    border-radius: 6px;
     font-weight: $bold;
     overflow: hidden;
-    margin-bottom: 0.5em;
+    margin: 1em 0;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    .Typography {
+        display: block;
+    }
 
     .remove {
         position: absolute;

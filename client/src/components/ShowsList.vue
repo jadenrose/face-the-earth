@@ -1,17 +1,13 @@
 <template>
-    <Container>
-        <section class="ShowsList">
-            <Show
-                isNew
-                id="new-show"
-                v-if="mode === 'add'"
-                :mode="'edit'"
-                @posted="$emit('posted')"
-                @cancel="$emit('cancel')"
-            />
-            <Show v-for="show in shows" :key="show._id" :show="show" />
-        </section>
-    </Container>
+    <Show
+        isNew
+        id="new-show"
+        v-if="mode === 'add'"
+        :mode="'edit'"
+        @posted="$emit('posted')"
+        @cancel="$emit('cancel')"
+    />
+    <Show v-for="show in shows" :key="show._id" :show="show" />
 </template>
 
 <script>
@@ -44,6 +40,18 @@ export default {
 
 <style lang="scss">
 .ShowsList {
-    padding: 12em 0;
+    margin-top: 6em;
+    padding: 8em 0;
+
+    .Container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        flex-direction: column;
+
+        @include tablet {
+            flex-direction: row;
+        }
+    }
 }
 </style>

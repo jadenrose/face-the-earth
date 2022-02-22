@@ -74,7 +74,7 @@ export default {
     border-radius: 12px 0 0 12px;
 
     .tool {
-        padding: 1em;
+        padding: 0.6em;
         cursor: pointer;
         text-align: center;
 

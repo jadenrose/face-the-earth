@@ -1,18 +1,23 @@
 <template>
     <Container>
         <AddButton v-if="store.user.token" @click="() => setMode('add')" />
-        <suspense>
-            <template #default>
-                <ShowsList
-                    :mode="mode"
-                    @posted="() => setMode(null)"
-                    @cancel="() => setMode(null)"
-                />
-            </template>
-            <template #fallback>
-                <Typography variant="h2">loading...</Typography>
-            </template>
-        </suspense>
+
+        <section class="ShowsList">
+            <Container>
+                <suspense>
+                    <template #default>
+                        <ShowsList
+                            :mode="mode"
+                            @posted="() => setMode(null)"
+                            @cancel="() => setMode(null)"
+                        />
+                    </template>
+                    <template #fallback>
+                        <Typography variant="h2">loading...</Typography>
+                    </template>
+                </suspense>
+            </Container>
+        </section>
     </Container>
 </template>
 

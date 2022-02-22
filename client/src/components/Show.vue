@@ -1,5 +1,10 @@
 <template>
-    <Card class="Show">
+    <Card
+        :class="{
+            Show: true,
+            editing: state.mode === 'edit',
+        }"
+    >
         <AdminTools
             v-if="store.user.token"
             @edit="() => setMode('edit')"
@@ -34,7 +39,7 @@
         <div v-else class="readonly-content content">
             <div class="card-top">
                 <div class="show-info">
-                    <Typography variant="h3" :sx="{ margin: '0 0 1em' }">
+                    <Typography variant="h5">
                         {{ show.title }}
                     </Typography>
                     <ArtistList :artists="show.artists" />
@@ -42,31 +47,34 @@
             </div>
 
             <div class="card-bottom">
-                <Typography variant="h4" :sx="{ margin: '0' }">
-                    {{ show.date }}
-                </Typography>
-                <Typography
-                    color="accent"
-                    variant="h4"
-                    :sx="{ margin: '0 0.4em' }"
-                    >@</Typography
-                >
-                <a
-                    :href="
-                        encodeURI(
-                            `https://www.google.com/maps/search/?api=1&query=${show.venue.locationAddress}&query_place_id=${show.venue.placeId}`
-                        )
-                    "
-                    target="_blank"
-                >
-                    <Typography link variant="h4" :sx="{ margin: '0' }">
-                        {{ show.venue.name }}
-                        <AwesomeIcon
-                            className="text-decoration"
-                            icon="fa fa-map-marker"
-                        />
+                <div class="show-date">
+                    <Typography variant="h5">
+                        {{ showMonth }}
                     </Typography>
-                </a>
+                    <Typography variant="h5">
+                        {{ showDay }}
+                    </Typography>
+                </div>
+                <div class="venue-info">
+                    <a
+                        :href="
+                            encodeURI(
+                                `https://www.google.com/maps/search/?api=1&query=${show.venue.locationAddress}&query_place_id=${show.venue.placeId}`
+                            )
+                        "
+                        target="_blank"
+                        class="map-link"
+                    >
+                        <Typography link variant="h6">
+                            {{ show.venue.name }}
+                            <AwesomeIcon
+                                className="text-decoration"
+                                icon="fa fa-map-marker"
+                            />
+                        </Typography>
+                    </a>
+                    <a v-if="!inPast" class="buy-tickets">tickets</a>
+                </div>
             </div>
             <div v-if="state.currentImage" class="image-container">
                 <img
@@ -104,6 +112,7 @@ export default {
                     locationAddress: '',
                     placeId: '',
                 },
+                link: '',
                 images: [],
             })
         },
@@ -121,6 +130,7 @@ export default {
         ArtistList,
     },
     setup (props, { emit }) {
+
         const state = reactive({
             mode: props.mode,
             showMap: false,
@@ -128,6 +138,21 @@ export default {
             currentImageIndex: 0,
             currentImage: props.show.images[0]
         })
+
+        const monthNames = [
+            'jan',
+            'feb',
+            'mar',
+            'apr',
+            'may',
+            'jun',
+            'jul',
+            'aug',
+            'sep',
+            'oct',
+            'nov',
+            'dec',
+        ]
 
         onMounted(() => {
             if (!state.imageTimer) setInterval(() => {
@@ -167,10 +192,18 @@ export default {
             setMode(null)
         }
 
+        const showDate = new Date(`${props.show.date} 14:00:00`)
+        const showMonth = monthNames[showDate.getMonth()]
+        const showDay = showDate.getDate()
+        const inPast = new Date() > showDate
+
         return {
             BASE_URL,
             store,
             state,
+            showMonth,
+            showDay,
+            inPast,
             toggleShowMap,
             setMode,
             handleSave,
@@ -187,20 +220,53 @@ export default {
     overflow: hidden;
     z-index: 0;
     margin-bottom: 4em;
+    // padding: 2em;
+    align-self: stretch;
+    text-align: left;
+    flex-grow: 0;
+    flex-shrink: 1;
+    height: 250px;
 
-    max-width: 750px;
+    &.editing {
+        position: fixed;
+        z-index: 999;
+        top: 4em;
+        left: 4em;
+        height: unset;
+        padding: 2em;
+        overflow: visible;
+
+        &:after {
+            transform: unset;
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: rgba($background, 0.8);
+        }
+    }
+
+    width: 80vw;
+    max-width: 400px;
     margin-left: auto;
     margin-right: auto;
-    padding: 3em;
 
-    text-align: left;
+    @include tablet {
+        flex-basis: 48%;
+        margin-left: unset;
+        margin-right: unset;
+        max-width: unset;
+    }
+
+    @include desktop {
+        flex-basis: 31%;
+    }
 
     .content {
-        min-height: 20em;
-
-        @include tablet {
-            min-height: 25em;
-        }
+        height: 100%;
     }
 
     .readonly-content {
@@ -209,6 +275,10 @@ export default {
         flex-direction: column;
         justify-content: space-between;
         z-index: 2;
+    }
+
+    .Typography {
+        margin: 0;
     }
 
     .image-container {
@@ -232,8 +302,58 @@ export default {
     .card-top,
     .card-bottom {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
+    }
+
+    .show-info {
+        padding: 1em;
+    }
+
+    .card-bottom {
+        background: $color-main;
+        color: $background;
+    }
+
+    .show-date {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: $accent-main;
+        text-align: center;
+        padding: 0.5em 1em;
+        align-self: stretch;
+        margin-right: 1em;
+    }
+
+    .venue-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        width: 100%;
+
+        .buy-tickets {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            background: $accent-main;
+            border-radius: 2px;
+            align-self: stretch;
+            padding: 0 1.3em;
+            text-transform: uppercase;
+            font-weight: $bold;
+
+            &:hover {
+                background: $accent-hover;
+            }
+        }
+    }
+
+    .map-link {
+        display: flex;
+        align-items: center;
+        flex: 1 1 60%;
     }
 
     .text-decoration {

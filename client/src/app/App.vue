@@ -133,9 +133,5 @@ a {
     color: inherit;
     text-decoration: none;
     text-decoration-thickness: 2px;
-
-    &:hover {
-        color: $accent-main;
-    }
 }
 </style>

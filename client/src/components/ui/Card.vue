@@ -16,7 +16,7 @@ export default {
 <style lang="scss">
 .Card {
     background: $background-light;
-    border-radius: 8px;
+    border-radius: 2px;
 
     &[clickable]:hover {
         background: $background-hover;

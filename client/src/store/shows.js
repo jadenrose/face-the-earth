@@ -21,7 +21,13 @@ const storeAllShows = async () => {
 
 		state.status = 'success'
 		state.error = null
-		state.list = res.data
+		state.list = res.data.sort((a, b) =>
+			new Date(a.date) > new Date(b.date)
+				? -1
+				: new Date(a.date) < new Date(b.date)
+				? 1
+				: 0
+		)
 
 		return res.data
 	} catch (err) {
@@ -31,13 +37,13 @@ const storeAllShows = async () => {
 	}
 }
 
-const postShow = async ({ title, artists, date, venue, images }) => {
+const postShow = async ({ title, artists, date, venue, link, images }) => {
 	try {
 		const token = store.user.token
 
 		if (!token) throw 'not authorized'
 
-		let req = { title, artists, date, venue, images }
+		let req = { title, artists, date, venue, link, images }
 
 		const res = await axios.post(`${BASE_URL}/api/shows`, req, {
 			headers: {
@@ -56,13 +62,18 @@ const postShow = async ({ title, artists, date, venue, images }) => {
 	}
 }
 
-const editShow = async (showId, { title, artists, date, venue, images }) => {
+const editShow = async (
+	showId,
+	{ title, artists, date, venue, link, images }
+) => {
 	try {
 		const token = store.user.token
 
 		if (!token) throw 'not authorized'
 
-		let req = { title, artists, date, venue, images }
+		let req = { title, artists, date, venue, link, images }
+
+		console.log(req)
 
 		const res = await axios.patch(`${BASE_URL}/api/shows/${showId}`, req, {
 			headers: {

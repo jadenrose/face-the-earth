@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose')
-const { isDate } = require('validator')
+const { default: isDate } = require('validator/lib/isDate')
+const { default: isURL } = require('validator/lib/isURL')
 
 const ShowSchema = new Schema({
 	title: {
@@ -19,6 +20,13 @@ const ShowSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'venue',
 		required: true,
+	},
+	link: {
+		type: String,
+		validate: {
+			validator: isURL,
+			message: 'must be a valid URL',
+		},
 	},
 	desc: {
 		type: String,

@@ -1,15 +1,13 @@
 <template>
-    <section class="VideosList">
-        <Video
-            isNew
-            id="new-video"
-            v-if="mode === 'add'"
-            :mode="'edit'"
-            @posted="$emit('posted')"
-            @cancel="$emit('cancel')"
-        />
-        <Video v-for="video in videos" :key="video._id" :video="video" />
-    </section>
+    <Video
+        isNew
+        id="new-video"
+        v-if="mode === 'add'"
+        :mode="'edit'"
+        @posted="$emit('posted')"
+        @cancel="$emit('cancel')"
+    />
+    <Video v-for="video in videos" :key="video._id" :video="video" />
 </template>
 
 <script>

@@ -97,7 +97,7 @@ export default {
     }
 
     &:hover {
-        color: $accent-main;
+        filter: brightness(80%) saturate(350%);
     }
 
     &.router-link-exact-active {
@@ -106,6 +106,7 @@ export default {
 
         &:hover {
             color: $color-deact;
+            filter: unset;
         }
     }
 }

@@ -20,13 +20,18 @@ export default {
 
 <style lang="scss">
 .Button {
-    display: inline-block;
+    display: block;
     margin: 0;
     padding: 0;
     appearance: none;
     border: none;
     outline: none;
-    padding: 1em 2em;
+    padding: 0.8em 2em;
+    font-family: inherit;
+    background: $accent-main;
+    color: $background;
+    font-weight: $bold;
+    border-radius: 6px;
 
     margin-right: 2em;
 
