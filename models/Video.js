@@ -14,9 +14,8 @@ const VideoSchema = new Schema({
 			unique: true,
 		},
 	},
-	desc: {
-		type: String,
-	},
+	desc: String,
+	category: String,
 	displayPosition: {
 		type: Number,
 		required: true,
