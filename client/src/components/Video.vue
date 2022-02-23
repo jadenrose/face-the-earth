@@ -167,6 +167,8 @@ export default {
     z-index: 0;
     width: #{$width-mobile}vw;
     height: #{math.div($width-mobile * 9, 16)}vw;
+    max-width: 380px;
+    max-height: #{math.div(380 * 9, 16)}px;
     margin-bottom: 1em;
     margin-left: auto;
     margin-right: auto;
