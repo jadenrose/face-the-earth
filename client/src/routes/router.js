@@ -6,6 +6,8 @@ import Contact from '../pages/Contact'
 import Watch from '../pages/Watch'
 import Login from '../pages/Login'
 import Success from '../pages/Success'
+import Terms from '../pages/Terms'
+import Privacy from '../pages/Privacy'
 
 const routes = [
 	// public routes
@@ -33,6 +35,18 @@ const routes = [
 		component: Watch,
 		editable: true,
 	},
+	{
+		path: '/terms',
+		name: 'Terms',
+		component: Terms,
+		editable: false,
+	},
+	{
+		path: '/privacy',
+		name: 'Privacy',
+		component: Privacy,
+		editable: false,
+	},
 ]
 
 routes.push({
@@ -55,6 +69,9 @@ routes.push({
 const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
 	routes,
+	scrollBehavior() {
+		return { top: 0 }
+	},
 })
 
 export default router

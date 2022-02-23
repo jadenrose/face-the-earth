@@ -16,3 +16,9 @@ mixins
 		@content;
 	}
 }
+
+@mixin hoverEffect {
+	&:hover {
+		filter: brightness(80%) saturate(350%);
+	}
+}

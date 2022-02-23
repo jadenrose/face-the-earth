@@ -110,4 +110,8 @@ export default {
         }
     }
 }
+
+.SocialLinks.mobile img {
+    width: 2em;
+}
 </style>

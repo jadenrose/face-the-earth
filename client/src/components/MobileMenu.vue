@@ -1,16 +1,8 @@
 <template>
     <div class="MobileMenu">
         <div>
-            <Navlist
-                class="mobile routerLinks"
-                :items="routerLinks"
-                @close="handleClose"
-            />
-            <Navlist
-                class="mobile extLinks"
-                :items="extLinks"
-                @close="handleClose"
-            />
+            <RouterLinks class="mobile" @close="handleClose" />
+            <SocialLinks class="mobile" @close="handleClose" />
         </div>
         <svg @click="handleClose" class="close">
             <use href="@/assets/img/x.svg#img"></use>
@@ -21,22 +13,14 @@
 <script>
 import { closeMobileMenu } from '../store/ui'
 
-import Navlist from './Navlist.vue'
+import RouterLinks from './RouterLinks.vue'
+import SocialLinks from './SocialLinks.vue'
 
 export default {
     name: 'MobileMenu',
-    props: {
-        routerLinks: {
-            type: Array,
-            default: () => [],
-        },
-        extLinks: {
-            type: Array,
-            default: () => [],
-        },
-    },
     components: {
-        Navlist
+        RouterLinks,
+        SocialLinks
     },
     setup () {
         const handleClose = () => closeMobileMenu()
@@ -67,7 +51,7 @@ export default {
         padding: 0;
     }
 
-    .routerLinks {
+    .RouterLinks.mobile {
         flex-direction: column;
         margin-bottom: 3em;
 
@@ -76,7 +60,7 @@ export default {
         }
     }
 
-    .extLinks {
+    .ExtLinks.mobile {
         width: 100%;
         display: flex;
         justify-content: center;

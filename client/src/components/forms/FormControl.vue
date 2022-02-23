@@ -1,6 +1,6 @@
 <template>
     <label v-if="category === 'input'" :for="name" class="FormControl">
-        <Typography :sx="{ marginBottom: '1em' }">
+        <Typography v-if="labelText" :sx="{ marginBottom: '1em' }">
             {{ labelText }}
         </Typography>
         <input
@@ -78,10 +78,7 @@ export default {
         DropZone
     },
     props: {
-        label: {
-            type: String,
-            default: 'input'
-        },
+        label: String,
         name: String,
         category: {
             type: String,
@@ -104,7 +101,9 @@ export default {
         error: String
     },
     setup (props, { emit }) {
-        const labelText = computed(() => `${props.label}${props.required ? ' *' : ''}`)
+        const labelText = computed(() => props.label ?
+            `${props.label}${props.required ? ' *' : ''}` : null
+        )
 
         const handleFiles = (files) => emit('update:modelValue', files)
 

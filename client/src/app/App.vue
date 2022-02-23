@@ -3,11 +3,14 @@
         <AdminBar v-if="user" :user="user" />
         <Navbar />
     </header>
+
     <main>
         <suspense>
             <router-view />
         </suspense>
     </main>
+
+    <Footer />
 </template>
 
 <script>
@@ -20,13 +23,14 @@ import { refreshToken } from '../store/user'
 import { setScreenSize } from '../store/ui'
 import Navbar from '../components/Navbar.vue'
 import AdminBar from '../components/AdminBar.vue'
-
+import Footer from '../components/Footer.vue'
 
 export default {
     name: 'App',
     components: {
         Navbar,
         AdminBar,
+        Footer
     },
     setup () {
         provide('store', store)
@@ -66,6 +70,7 @@ export default {
         const showMobileMenu = computed(() => store.ui.showMobileMenu)
 
         return {
+            store,
             user,
             route,
             showMobileMenu
