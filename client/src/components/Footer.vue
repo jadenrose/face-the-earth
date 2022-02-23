@@ -4,7 +4,6 @@
             <div class="footer-top">
                 <div class="footer-logo-wrapper">
                     <FTE />
-                    <Typography variant="h2">Face the Earth</Typography>
                 </div>
                 <SocialLinks />
             </div>
@@ -193,7 +192,8 @@ export default {
 
     .signup {
         flex: 0 1 35%;
-        max-width: 50vw;
+        width: 50vw;
+        max-width: 350px;
         margin: 0 auto;
         text-align: left;
 
@@ -209,7 +209,6 @@ export default {
     .FormGroup {
         justify-content: center;
         align-self: flex-start;
-        max-width: 300px;
     }
 
     label {
