@@ -1,5 +1,10 @@
 <template>
-    <i :class="`AwesomeIcon${className ? className.padStart(className.length + 1) : ''}${icon ? icon.padStart(icon.length + 1) : ''}`" @click="$emit('click')"></i>
+    <i
+        :class="`AwesomeIcon${
+            className ? className.padStart(className.length + 1) : ''
+        }${icon ? icon.padStart(icon.length + 1) : ''}`"
+        @click="$emit('click')"
+    ></i>
 </template>
 
 <script>

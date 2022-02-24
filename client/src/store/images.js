@@ -21,3 +21,18 @@ export const postImages = async (files) => {
 		console.error(err)
 	}
 }
+
+export const deleteImage = async (imageId) => {
+	try {
+		await axios.delete(`${BASE_URL}/api/images/${imageId}`, {
+			headers: {
+				'x-auth-token': store.user.token,
+			},
+		})
+
+		return null
+	} catch (err) {
+		console.error(err)
+		return err
+	}
+}

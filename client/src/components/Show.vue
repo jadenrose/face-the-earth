@@ -86,7 +86,7 @@
             <div v-if="state.currentImage" class="image-container">
                 <img
                     :src="`${BASE_URL}/api/images/${state.currentImage}`"
-                    alt="image here"
+                    alt=""
                 />
             </div>
         </div>
@@ -236,7 +236,6 @@ export default {
     overflow: hidden;
     z-index: 0;
     margin-bottom: 4em;
-    // padding: 2em;
     align-self: stretch;
     text-align: left;
     flex-grow: 0;
@@ -244,25 +243,8 @@ export default {
     height: 250px;
 
     &.editing {
-        position: fixed;
-        z-index: 999;
-        top: 4em;
-        left: 4em;
         height: unset;
         padding: 2em;
-        overflow: visible;
-
-        &:after {
-            transform: unset;
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            background: rgba($background, 0.8);
-        }
     }
 
     width: 80vw;
@@ -276,10 +258,6 @@ export default {
         margin-right: unset;
         max-width: unset;
     }
-
-    // @include desktop {
-    //     flex-basis: 31%;
-    // }
 
     .content {
         height: 100%;

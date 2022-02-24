@@ -174,26 +174,12 @@ export default {
     margin-right: auto;
 
     &.editing {
-        position: fixed;
-        z-index: 999;
-        top: 4em;
-        left: 4em;
+        width: 50vw;
         height: unset;
+        max-height: unset;
+        max-width: 450px;
         padding: 2em;
         overflow: visible;
-        width: 70vw;
-
-        &:after {
-            transform: unset;
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            background: rgba($background, 0.8);
-        }
     }
 
     @include tablet {

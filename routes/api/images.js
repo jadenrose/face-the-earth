@@ -122,4 +122,14 @@ router.get('/:image_id', ({ params: { image_id } }, res) => {
 	})
 })
 
+router.delete('/:image_id', auth, ({ params: { image_id } }, res) => {
+	try {
+		deleteImage(image_id)
+
+		res.send(image_id)
+	} catch (err) {
+		res.sendStatus(500)
+	}
+})
+
 module.exports = router

@@ -2,6 +2,7 @@
     <button class="Button">
         <Typography>
             {{ label }}
+            <slot />
         </Typography>
     </button>
 </template>
@@ -10,17 +11,14 @@
 export default {
     name: 'Button',
     props: {
-        label: {
-            type: String,
-            default: 'submit'
-        }
+        label: String
     }
 }
 </script>
 
 <style lang="scss">
 .Button {
-    display: block;
+    display: inline-block;
     margin: 0;
     padding: 0;
     appearance: none;
@@ -32,6 +30,7 @@ export default {
     color: $background;
     font-weight: $bold;
     border-radius: 6px;
+    cursor: pointer;
 
     margin-right: 2em;
 
@@ -42,6 +41,10 @@ export default {
     .Typography {
         margin: 0;
         padding: 0;
+    }
+
+    &:hover {
+        background: $accent-hover;
     }
 }
 </style>

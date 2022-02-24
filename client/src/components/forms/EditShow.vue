@@ -109,6 +109,53 @@
             />
         </FormGroup>
         <FormGroup>
+            <div class="existing-images">
+                <div
+                    v-for="image in show.images"
+                    class="existing-image"
+                    :key="image"
+                >
+                    <div
+                        :class="{
+                            'remove-image': true,
+                            'confirm-remove': state.confirmRemove[image],
+                        }"
+                    >
+                        <div
+                            v-if="state.confirmRemove[image]"
+                            class="confirm-remove-image"
+                        >
+                            <Typography>remove?</Typography>
+                            <div class="buttons">
+                                <Button
+                                    @click.prevent="
+                                        () => handleRemoveExistingImage(image)
+                                    "
+                                >
+                                    <AwesomeIcon icon="fas fa-check" />
+                                </Button>
+                                <Button
+                                    @click="() => deleteConfirmRemove(image)"
+                                >
+                                    <AwesomeIcon icon="fas fa-times" />
+                                </Button>
+                            </div>
+                        </div>
+                        <AwesomeIcon
+                            v-else
+                            icon="fas fa-trash"
+                            @click="() => addConfirmRemove(image)"
+                        />
+                    </div>
+                    <img
+                        class="existing-image-thumbnail"
+                        :src="`${BASE_URL}/api/images/${image}`"
+                        alt=""
+                    />
+                </div>
+            </div>
+        </FormGroup>
+        <FormGroup>
             <SaveCancel confirm @save="handleSave" @cancel="$emit('cancel')" />
         </FormGroup>
     </Form>
@@ -121,7 +168,7 @@ import { default as isURL } from 'validator/lib/isURL'
 
 import store from '../../store/store'
 import { postShow, editShow } from '../../store/shows'
-import { postImages } from '../../store/images'
+import { postImages, deleteImage } from '../../store/images'
 import { storeAllArtists } from '../../store/artists'
 import { storeAllVenues } from '../../store/venues'
 
@@ -144,6 +191,8 @@ export default {
         show: Object
     },
     async setup (props, { emit }) {
+        const BASE_URL = process.env.VUE_APP_BACKEND_URI || 'http://localhost:5000'
+
         const initialErrors = {
             title: null,
             artists: null,
@@ -159,6 +208,7 @@ export default {
             showAddVenue: false,
             showEditVenue: false,
             venueToEdit: null,
+            confirmRemove: {},
             filesChanged: false,
         })
 
@@ -181,6 +231,20 @@ export default {
             state.showEditVenue = !state.showEditVenue
         }
         const filesChanged = () => state.filesChanged = true
+
+        const addConfirmRemove = (key) => state.confirmRemove[key] = key
+        const deleteConfirmRemove = (key) => delete state.confirmRemove[key]
+        const handleRemoveExistingImage = async (image) => {
+            deleteConfirmRemove(image)
+            const initialImages = imagesValue.value
+            editShow(props.show._id, { ...props.show, images: imagesValue.value.filter((item) => item !== image) })
+
+            const error = await deleteImage(image)
+
+            if (error) {
+                editShow(props.show._id, { ...props.show, images: initialImages })
+            }
+        }
 
         if (!store.artists.list.length) storeAllArtists()
         if (!store.venues.list.length) storeAllVenues()
@@ -218,7 +282,7 @@ export default {
             if (!date) errors.date = 'date is required'
             if (!isDate(date)) errors.date = 'invalid date'
             if (!venue) errors.venue = 'venue is required'
-            if (!isURL(link)) errors.date = 'invalid URL'
+            if (link && !isURL(link)) errors.date = 'invalid URL'
 
             if (Object.entries(errors).find(([key, value]) => value ? key : false))
                 return state.errors = { ...errors }
@@ -244,6 +308,7 @@ export default {
         }
 
         return {
+            BASE_URL,
             store,
             state,
             clearSearch,
@@ -252,6 +317,9 @@ export default {
             toggleAddVenue,
             toggleEditVenue,
             filesChanged,
+            addConfirmRemove,
+            deleteConfirmRemove,
+            handleRemoveExistingImage,
             titleValue,
             artistValue,
             artistsValue,
@@ -273,7 +341,7 @@ export default {
 .ShowForm,
 .EditVenue {
     margin: 0;
-    width: 80%;
+    width: 90%;
 
     .FormGroup .ArtistList {
         margin-top: 1em;
@@ -338,5 +406,79 @@ export default {
             background: $color-hover;
         }
     }
+}
+
+.existing-images {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+}
+
+.existing-image {
+    position: relative;
+    flex: 0 1 23%;
+    margin-right: 0.5em;
+
+    .remove-image {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba($background, 0.8);
+        align-items: center;
+        justify-content: center;
+
+        .confirm-remove-image {
+            color: $color-main;
+            text-align: center;
+            width: 100%;
+            padding: 0.6em;
+
+            & > .Typography {
+                font-size: 0.8rem;
+                display: block;
+                margin: 0 auto 0.5em;
+            }
+
+            .buttons {
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .Button {
+                font-size: 0.8rem;
+                margin: 0;
+                padding: 0.5em 0;
+                flex: 0 1 47%;
+            }
+        }
+    }
+
+    @mixin visible {
+        display: flex;
+
+        .fa-trash {
+            font-size: 2rem;
+            cursor: pointer;
+            @include hoverEffect;
+        }
+    }
+
+    .remove-image.confirm-remove {
+        @include visible;
+    }
+
+    &:hover {
+        .remove-image {
+            @include visible;
+        }
+    }
+}
+
+.existing-image-thumbnail {
+    width: 100%;
 }
 </style>

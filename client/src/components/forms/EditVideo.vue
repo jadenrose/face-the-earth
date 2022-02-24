@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss">
 .EditVideo {
-    width: 80%;
+    width: 90%;
     min-height: 300px;
 }
 </style>

@@ -62,7 +62,7 @@ export default {
 
 <style lang="scss">
 .AdminTools {
-    font-size: 2em;
+    font-size: 1.2em;
     position: absolute;
     right: 0;
     top: 50%;
@@ -74,7 +74,7 @@ export default {
     border-radius: 12px 0 0 12px;
 
     .tool {
-        padding: 0.6em;
+        padding: 0.8em 0.5em;
         cursor: pointer;
         text-align: center;
 
