@@ -9,17 +9,6 @@ import venues from './venues'
 import videos from './videos'
 
 const state = reactive({
-	videos: {
-		status: null,
-		errors: [],
-		list: [],
-	},
-	ui: {
-		mode: null,
-	},
-})
-
-export default {
 	user,
 	ui,
 	articles,
@@ -27,5 +16,8 @@ export default {
 	artists,
 	venues,
 	videos,
-	state: readonly(state),
-}
+})
+
+export default readonly({
+	...state,
+})

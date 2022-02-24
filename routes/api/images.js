@@ -108,6 +108,15 @@ const deleteImage = (id) => {
 	})
 }
 
+router.get('/', auth, (req, res) => {
+	gfs.find().toArray((err, files) => {
+		if (!files || !files.length)
+			return res.status(400).json({ error: 'no files found' })
+
+		res.json(files)
+	})
+})
+
 router.get('/:image_id', ({ params: { image_id } }, res) => {
 	if (!image_id || image_id === 'undefined')
 		return res.status(400).json({ errors: [{ msg: 'no image id' }] })

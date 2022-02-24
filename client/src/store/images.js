@@ -1,8 +1,31 @@
 import axios from 'axios'
+import { readonly, reactive } from '@vue/reactivity'
 
 import store from './store'
 
 const BASE_URL = process.env.VUE_APP_BACKEND_URI || 'http://localhost:5000'
+
+const initialState = {
+	status: null,
+	error: null,
+	list: [],
+}
+
+const state = reactive(initialState)
+
+export const storeAllImages = async () => {
+	try {
+		const { data: images } = await axios.get(`${BASE_URL}/api/images`, {
+			headers: {
+				'x-auth-token': store.user.token,
+			},
+		})
+
+		return images
+	} catch (err) {
+		console.error(err)
+	}
+}
 
 export const postImages = async (files) => {
 	try {
@@ -36,3 +59,5 @@ export const deleteImage = async (imageId) => {
 		return err
 	}
 }
+
+export default readonly(state)

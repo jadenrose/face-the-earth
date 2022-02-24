@@ -100,13 +100,28 @@
                 v-model="linkValue"
             />
         </FormGroup>
-        <FormGroup>
+        <FormGroup class="dropzone">
+            <ManageImages
+                v-if="state.chooseExisting"
+                class="choose-existing-image"
+            />
+
             <FormControl
+                v-else
                 category="dropzone"
                 label="add image(s)"
                 v-model="imagesValue"
                 @update:modelValue="filesChanged"
             />
+        </FormGroup>
+        <FormGroup class="choose-existing">
+            <Typography @click="toggleChooseExisting">
+                {{
+                    state.chooseExisting
+                        ? "upload image(s)"
+                        : "choose existing image(s)"
+                }}
+            </Typography>
         </FormGroup>
         <FormGroup>
             <div class="existing-images">
@@ -176,6 +191,7 @@ import ArtistList from '../ArtistList.vue'
 import AddNewArtist from './AddNewArtist.vue'
 import AddNewVenue from './AddNewVenue.vue'
 import EditVenue from './EditVenue.vue'
+import ManageImages from './ManageImages.vue'
 
 export default {
     name: 'EditShow',
@@ -185,6 +201,7 @@ export default {
         AddNewArtist,
         AddNewVenue,
         EditVenue,
+        ManageImages
     },
     props: {
         isNew: Boolean,
@@ -208,6 +225,7 @@ export default {
             showAddVenue: false,
             showEditVenue: false,
             venueToEdit: null,
+            chooseExisting: false,
             confirmRemove: {},
             filesChanged: false,
         })
@@ -231,6 +249,8 @@ export default {
             state.showEditVenue = !state.showEditVenue
         }
         const filesChanged = () => state.filesChanged = true
+
+        const toggleChooseExisting = () => state.chooseExisting = !state.chooseExisting
 
         const addConfirmRemove = (key) => state.confirmRemove[key] = key
         const deleteConfirmRemove = (key) => delete state.confirmRemove[key]
@@ -317,6 +337,7 @@ export default {
             toggleAddVenue,
             toggleEditVenue,
             filesChanged,
+            toggleChooseExisting,
             addConfirmRemove,
             deleteConfirmRemove,
             handleRemoveExistingImage,
@@ -405,6 +426,21 @@ export default {
         &:hover {
             background: $color-hover;
         }
+    }
+}
+
+.FormGroup.choose-existing,
+.FormGroup.dropzone {
+    margin-bottom: 0.5em;
+    padding: 0;
+}
+
+.FormGroup.choose-existing {
+    .Typography {
+        text-decoration: underline;
+        cursor: pointer;
+
+        @include hoverEffect;
     }
 }
 
