@@ -20,6 +20,7 @@ import CloseButton from './components/ui/CloseButton.vue'
 import AwesomeIcon from './components/ui/AwesomeIcon.vue'
 import Alert from './components/ui/Alert.vue'
 import AdminTools from './components/AdminTools.vue'
+import Loading from './components/Loading.vue'
 
 app.component('Container', Container)
 app.component('Card', Card)
@@ -34,6 +35,7 @@ app.component('CloseButton', CloseButton)
 app.component('AwesomeIcon', AwesomeIcon)
 app.component('Alert', Alert)
 app.component('AdminTools', AdminTools)
+app.component('Loading', Loading)
 
 // form components
 import Form from './components/forms/Form.vue'

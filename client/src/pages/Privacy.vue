@@ -173,9 +173,6 @@
                         >info@facetheearth.ca</a
                     >
                 </Typography>
-                <Typography variant="p">
-                    <a href="tel:+14038720129">(403) 872-0129</a>
-                </Typography>
             </article>
             <article class="opt-out">
                 <Typography variant="h2"
@@ -220,9 +217,6 @@
                     <a href="mailto:info@facetheearth.ca"
                         >info@facetheearth.ca</a
                     >
-                </Typography>
-                <Typography variant="p">
-                    <a href="tel:+14038720129">(403) 872-0129</a>
                 </Typography>
             </article>
         </Container>

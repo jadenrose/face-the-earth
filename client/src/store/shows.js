@@ -47,12 +47,12 @@ const storeAllShows = async () => {
 				}
 			})
 
-		const splitIndex = state.list.findIndex(
-			(show) => new Date() > show.date
-		)
+		const today = new Date()
 
-		state.upcomingShows = state.list.slice(0, splitIndex)
-		state.pastShows = state.list.slice(splitIndex)
+		state.list.forEach((show) => {
+			if (show.dateObj > today) state.upcomingShows.push(show)
+			else state.pastShows.push(show)
+		})
 
 		return res.data
 	} catch (err) {

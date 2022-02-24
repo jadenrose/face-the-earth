@@ -8,7 +8,9 @@
         @cancel="$emit('cancel')"
     />
     <Video v-for="video in videos" :key="video._id" :video="video" />
-    <Typography v-if="videos.length === 0">coming soon!</Typography>
+    <Typography v-if="videos.length === 0" variant="h5"
+        >coming soon!</Typography
+    >
 </template>
 
 <script>

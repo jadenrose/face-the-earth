@@ -1,12 +1,6 @@
 <template>
     <footer class="Footer">
         <Container>
-            <div class="footer-top">
-                <div class="footer-logo-wrapper">
-                    <FTE />
-                </div>
-                <SocialLinks />
-            </div>
             <div class="footer-middle">
                 <div class="left">
                     <div class="quick-links">
@@ -30,6 +24,7 @@
                                 </a>
                             </li>
                         </ul>
+                        <SocialLinks />
                     </div>
                 </div>
 
@@ -70,14 +65,12 @@
 <script>
 import { computed } from 'vue'
 
-import FTE from './FTE.vue'
 import SocialLinks from './SocialLinks.vue'
 import RouterLinks from './RouterLinks.vue'
 
 export default {
     name: "Footer",
     components: {
-        FTE,
         SocialLinks,
         RouterLinks
     },
@@ -92,14 +85,11 @@ export default {
 <style lang="scss">
 .Footer {
     background: $background-light;
-    padding: 4em 0;
+    padding: 3em 0;
+    font-size: 0.8rem;
 
     .Container {
         max-width: unset;
-    }
-
-    .quick-links {
-        text-align: left;
     }
 
     .RouterLinks {
@@ -108,7 +98,7 @@ export default {
         padding: 0;
 
         a {
-            padding: 0.5em 0;
+            padding: 0.3em 0;
             display: inline-block;
 
             .Typography {
@@ -116,10 +106,6 @@ export default {
                 text-transform: lowercase;
             }
         }
-    }
-
-    .SocialLinks {
-        margin: 0;
     }
 
     cite {
@@ -132,7 +118,6 @@ export default {
     }
 }
 
-.footer-top,
 .footer-middle,
 .footer-bottom {
     width: 100%;
@@ -147,9 +132,8 @@ export default {
     }
 }
 
-.footer-top,
 .footer-middle {
-    margin-bottom: 4em;
+    margin-bottom: 2em;
 }
 
 .footer-middle {
@@ -164,19 +148,36 @@ export default {
     .left {
         display: flex;
         justify-content: space-between;
-        flex: 0 1 40%;
-        margin-bottom: 4em;
+        flex: 1 1 50%;
+        margin-bottom: 2em;
 
         .quick-links {
-            margin-right: 4em;
+            text-align: left;
+            margin-right: 2em;
+            flex: 0 1 50%;
+        }
+
+        .SocialLinks {
+            margin: 0;
+            transform: translateX(-5px);
+            justify-content: left;
+
+            .linkImg {
+                padding: 0.2em;
+            }
+
+            img {
+                width: 2em;
+            }
         }
     }
 
     .info {
         text-align: left;
+        flex: 0 1 50%;
 
         ul {
-            margin: 0;
+            margin: 0 0 1em;
             padding: 0;
             list-style: none;
         }
@@ -196,10 +197,6 @@ export default {
         max-width: 350px;
         margin: 0 auto;
         text-align: left;
-
-        p {
-            margin-bottom: 2em;
-        }
 
         @include tablet {
             margin: 0;
@@ -230,6 +227,10 @@ export default {
     padding: 0;
     list-style: none;
     display: flex;
+
+    span {
+        transform: translateY(-2px);
+    }
 
     a {
         display: flex;

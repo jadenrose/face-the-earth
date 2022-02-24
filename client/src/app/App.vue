@@ -5,9 +5,18 @@
     </header>
 
     <main>
-        <suspense>
-            <router-view />
-        </suspense>
+        <router-view v-slot="{ Component }">
+            <Suspense timeout="0">
+                <template #default>
+                    <div>
+                        <component :is="Component" />
+                    </div>
+                </template>
+                <template #fallback>
+                    <Loading />
+                </template>
+            </Suspense>
+        </router-view>
     </main>
 
     <Footer />
@@ -30,7 +39,7 @@ export default {
     components: {
         Navbar,
         AdminBar,
-        Footer
+        Footer,
     },
     setup () {
         provide('store', store)
@@ -116,6 +125,10 @@ body {
     @include tablet {
         text-align: left;
     }
+}
+
+main {
+    min-height: 100vh;
 }
 
 .hero-section {

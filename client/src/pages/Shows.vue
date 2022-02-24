@@ -1,11 +1,9 @@
 <template>
     <AddButton v-if="store.user.token" @click="() => setMode('add')" />
-
     <section class="Shows">
         <div class="upcoming-shows">
             <Container>
                 <Typography variant="h2">upcoming shows</Typography>
-
                 <div class="shows-list-container">
                     <ShowsList
                         :mode="mode"
@@ -16,11 +14,9 @@
                 </div>
             </Container>
         </div>
-
         <div class="past-shows">
             <Container>
                 <Typography variant="h2">past shows</Typography>
-
                 <div class="shows-list-container">
                     <ShowsList
                         :mode="mode"
