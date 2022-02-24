@@ -4,6 +4,7 @@ import user from './user'
 import ui from './ui'
 import articles from './articles'
 import shows from './shows'
+import images from './images'
 import artists from './artists'
 import venues from './venues'
 import videos from './videos'
@@ -13,6 +14,7 @@ const state = reactive({
 	ui,
 	articles,
 	shows,
+	images,
 	artists,
 	venues,
 	videos,

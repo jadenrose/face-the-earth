@@ -227,6 +227,7 @@ export default {
     padding: 0;
     list-style: none;
     display: flex;
+    transform: translateX(0.5em);
 
     span {
         transform: translateY(-2px);

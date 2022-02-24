@@ -21,9 +21,12 @@ export const storeAllImages = async () => {
 			},
 		})
 
-		return images
+		state.list = images.map((image) => image._id)
+
+		return null
 	} catch (err) {
 		console.error(err)
+		return err
 	}
 }
 

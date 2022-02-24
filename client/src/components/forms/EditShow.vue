@@ -104,6 +104,9 @@
             <ManageImages
                 v-if="state.chooseExisting"
                 class="choose-existing-image"
+                @select="handleSelectExisting"
+                @deselect="handleDeselectExisting"
+                :selected="state.selectedImages"
             />
 
             <FormControl
@@ -226,6 +229,7 @@ export default {
             showEditVenue: false,
             venueToEdit: null,
             chooseExisting: false,
+            selectedImages: {},
             confirmRemove: {},
             filesChanged: false,
         })
@@ -251,6 +255,8 @@ export default {
         const filesChanged = () => state.filesChanged = true
 
         const toggleChooseExisting = () => state.chooseExisting = !state.chooseExisting
+        const handleSelectExisting = (image) => state.selectedImages[image] = image
+        const handleDeselectExisting = (image) => delete state.selectedImages[image]
 
         const addConfirmRemove = (key) => state.confirmRemove[key] = key
         const deleteConfirmRemove = (key) => delete state.confirmRemove[key]
@@ -338,6 +344,8 @@ export default {
             toggleEditVenue,
             filesChanged,
             toggleChooseExisting,
+            handleSelectExisting,
+            handleDeselectExisting,
             addConfirmRemove,
             deleteConfirmRemove,
             handleRemoveExistingImage,
