@@ -62,9 +62,10 @@ const uploadMiddleware = (req, res, next) => {
 	const upload = store.array('image')
 
 	upload(req, res, (err) => {
-		if (err instanceof multer.MulterError)
+		if (err instanceof multer.MulterError) {
+			console.error(err)
 			return res.status(400).json({ errors: [{ msg: 'file too large' }] })
-		else if (err) {
+		} else if (err) {
 			if (err === 'filetype')
 				return res
 					.status(400)

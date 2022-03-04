@@ -12,11 +12,14 @@
                 </a>
             </div>
         </Container>
-        <!-- <div class="video-container">
+        <div class="video-container">
             <video autoplay :muted="state.muted" loop>
-                <source src="@/assets/video/bos.mp4" type="video/mp4" />
+                <source
+                    :src="`${BASE_URL}/api/images/6222708f33e2c59f965674df`"
+                    type="video/mp4"
+                />
             </video>
-        </div> -->
+        </div>
         <i
             @click="toggleVolume"
             :class="`fas ${
@@ -52,6 +55,8 @@ export default {
         ArticlesList
     },
     setup () {
+        const BASE_URL = process.env.VUE_APP_BACKEND_URI || 'http://localhost:5000'
+
         const state = reactive({
             mode: null,
             muted: true,
@@ -62,6 +67,7 @@ export default {
         const toggleVolume = () => state.muted = !state.muted
 
         return {
+            BASE_URL,
             store,
             state,
             setMode,
@@ -96,8 +102,9 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 75vw;
+    min-height: 100%;
     z-index: -1;
     overflow: hidden;
 
