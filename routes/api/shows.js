@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const { default: isDate } = require('validator/lib/isDate')
 const { check, validationResult } = require('express-validator')
 const path = require('path')
 
@@ -52,7 +53,9 @@ router.post(
 				return typeof artists === 'object' && artists.length
 			}),
 			check('venue', 'venue is required').notEmpty(),
-			check('date', 'valid date required').optional().isDate(),
+			check('date', 'valid date required').custom(
+				(date) => !date.length || isDate(date)
+			),
 		],
 	],
 	async (req, res) => {
