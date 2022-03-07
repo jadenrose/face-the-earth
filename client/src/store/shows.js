@@ -27,9 +27,9 @@ const storeAllShows = async () => {
 		state.list = res.data
 			.sort((a, b) =>
 				new Date(a.date) > new Date(b.date)
-					? -1
-					: new Date(a.date) < new Date(b.date)
 					? 1
+					: new Date(a.date) < new Date(b.date)
+					? -1
 					: 0
 			)
 			.map((show) => {
@@ -49,10 +49,15 @@ const storeAllShows = async () => {
 
 		const today = new Date()
 
+		state.upcomingShows = []
+		state.pastShows = []
+
 		state.list.forEach((show) => {
 			if (show.dateObj > today) state.upcomingShows.push(show)
-			else state.pastShows.push(show)
+			else state.pastShows.unshift(show)
 		})
+
+		state.status = 'success'
 
 		return res.data
 	} catch (err) {
@@ -78,7 +83,7 @@ const postShow = async ({ title, artists, date, venue, link, images }) => {
 
 		state.list = [...state.list, res.data]
 
-		return res.data
+		storeAllShows()
 	} catch (err) {
 		state.status = 'failed'
 		state.error = err
@@ -98,19 +103,13 @@ const editShow = async (
 
 		let req = { title, artists, date, venue, link, images }
 
-		const res = await axios.patch(`${BASE_URL}/api/shows/${showId}`, req, {
+		await axios.patch(`${BASE_URL}/api/shows/${showId}`, req, {
 			headers: {
 				'x-auth-token': token,
 			},
 		})
 
-		const showIndex = state.list.findIndex(
-			(show) => show._id === res.data._id
-		)
-
-		state.list[showIndex] = res.data
-
-		return res.data
+		storeAllShows()
 	} catch (err) {
 		state.status = 'failed'
 		state.error = err
@@ -135,9 +134,7 @@ const removeShow = async (showId) => {
 			},
 		})
 
-		const showIndex = state.list.findIndex((show) => show._id === showId)
-
-		state.list.splice(showIndex, 1)
+		storeAllShows()
 	} catch (err) {
 		return console.error('could not delete article')
 	}

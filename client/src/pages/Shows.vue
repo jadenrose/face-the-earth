@@ -6,7 +6,7 @@
                 <Typography variant="h2">upcoming shows</Typography>
                 <div class="shows-list-container">
                     <ShowsList
-                        :mode="mode"
+                        :mode="state.mode"
                         :shows="upcomingShows"
                         @posted="() => setMode(null)"
                         @cancel="() => setMode(null)"
@@ -19,7 +19,7 @@
                 <Typography variant="h2">past shows</Typography>
                 <div class="shows-list-container">
                     <ShowsList
-                        :mode="mode"
+                        :mode="state.mode"
                         :shows="pastShows"
                         @posted="() => setMode(null)"
                         @cancel="() => setMode(null)"
@@ -45,23 +45,19 @@ export default {
     },
     async setup () {
         const state = reactive({
-            mode: null
+            mode: null,
         })
 
         const setMode = (mode) => state.mode = mode
-        const mode = computed(() => state.mode)
 
         if (!store.shows.list.length) await storeAllShows()
 
-        const upcomingShows = computed(() => store.shows.upcomingShows)
-        const pastShows = computed(() => store.shows.pastShows)
-
         return {
-            upcomingShows,
-            pastShows,
             store,
             setMode,
-            mode,
+            state,
+            upcomingShows: computed(() => store.shows.upcomingShows),
+            pastShows: computed(() => store.shows.pastShows),
         }
     }
 }

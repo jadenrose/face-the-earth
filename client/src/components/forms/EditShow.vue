@@ -17,10 +17,20 @@
     />
     <Form v-else class="EditShow ShowForm">
         <FormGroup>
-            <FormControl label="show title" name="title" v-model="titleValue" />
+            <FormControl
+                label="show title"
+                name="title"
+                v-model="titleValue"
+                :error="state.errors.title"
+            />
         </FormGroup>
         <FormGroup>
-            <FormControl label="add artist" name="artist" v-model="artistValue">
+            <FormControl
+                label="add artist"
+                name="artist"
+                v-model="artistValue"
+                :error="state.errors.artists"
+            >
                 <div class="dropdown">
                     <ul class="artists-dropdown">
                         <li
@@ -57,6 +67,7 @@
                 type="date"
                 name="date"
                 v-model="dateValue"
+                :error="state.errors.date"
             />
         </FormGroup>
         <FormGroup>
@@ -65,6 +76,7 @@
                 name="venue"
                 v-model="searchValue"
                 @focus="clearSearch"
+                :error="state.errors.venue"
             >
                 <div class="dropdown">
                     <ul class="venues-dropdown">
@@ -98,6 +110,7 @@
                 label="eventbrite link"
                 name="link"
                 v-model="linkValue"
+                :error="state.errors.link"
             />
         </FormGroup>
         <FormGroup class="dropzone">
@@ -217,8 +230,8 @@ export default {
             title: null,
             artists: null,
             date: null,
+            venue: null,
             link: null,
-            venue: null
         }
 
         const state = reactive({
@@ -291,7 +304,8 @@ export default {
         }
 
         const handleSave = async () => {
-            const errors = initialErrors
+            const errors = { ...initialErrors }
+            state.errors = { ...errors }
 
             const {
                 title, artists, date, venue, link
@@ -305,10 +319,9 @@ export default {
 
             if (!title) errors.title = 'title is required'
             if (!artists.length) errors.artists = 'must include at least one artist'
-            if (!date) errors.date = 'date is required'
-            if (!isDate(date)) errors.date = 'invalid date'
+            if (date.length && !isDate(date)) errors.date = 'invalid date'
             if (!venue) errors.venue = 'venue is required'
-            if (link && !isURL(link)) errors.date = 'invalid URL'
+            if (link.length && !isURL(link)) errors.link = 'invalid URL'
 
             if (Object.entries(errors).find(([key, value]) => value ? key : false))
                 return state.errors = { ...errors }

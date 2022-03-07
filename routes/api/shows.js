@@ -52,7 +52,7 @@ router.post(
 				return typeof artists === 'object' && artists.length
 			}),
 			check('venue', 'venue is required').notEmpty(),
-			check('date', 'valid date required').isDate(),
+			check('date', 'valid date required').optional().isDate(),
 		],
 	],
 	async (req, res) => {
