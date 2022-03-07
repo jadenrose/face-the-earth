@@ -40,7 +40,7 @@ const storage = new GridFsStorage({
 })
 
 const checkFileType = (file, cb) => {
-	const filetypes = /jpeg|jpg|png|gif/
+	const filetypes = /jpeg|jpg|png|gif|mp4/
 	const extname = filetypes.test(
 		path.extname(file.originalname).toLowerCase()
 	)
@@ -58,18 +58,40 @@ const store = multer({
 	},
 })
 
+const videoStore = multer({
+	storage,
+	limits: { fileSize: Number.MAX_SAFE_INTEGER },
+	fileFilter: (req, file, cb) => {
+		checkFileType(file, cb)
+	},
+})
+
 const uploadMiddleware = (req, res, next) => {
 	const upload = store.array('image')
 
 	upload(req, res, (err) => {
 		if (err instanceof multer.MulterError) {
-			console.error(err)
 			return res.status(400).json({ errors: [{ msg: 'file too large' }] })
 		} else if (err) {
 			if (err === 'filetype')
 				return res
 					.status(400)
 					.json({ errors: [{ msg: 'image files only' }] })
+			return res.sendStatus(500)
+		}
+
+		next()
+	})
+}
+
+const videoUploadMiddleware = (req, res, next) => {
+	const upload = videoStore.single('video')
+
+	upload(req, res, (err) => {
+		if (err instanceof multer.MulterError) {
+			return res.status(400).json(err)
+		} else if (err) {
+			if (err === 'filetype') return res.status(400).json('MP4s only')
 			return res.sendStatus(500)
 		}
 
@@ -98,16 +120,14 @@ router.post('/', [auth, uploadMiddleware], (req, res) => {
 	return res.json(fileIds)
 })
 
-const deleteImage = (id) => {
-	if (!id || id === 'undefined')
-		return res.status(400).json({ errors: [{ msg: 'no image id' }] })
+router.post('/videos', [auth, videoUploadMiddleware], (req, res) => {
+	console.log(req)
+	const { video } = req
 
-	const _id = new mongoose.Types.ObjectId(id)
+	console.log('uploaded video', video)
 
-	gfs.delete(_id, (err) => {
-		if (err) return res.status(500).send('image deletion error')
-	})
-}
+	res.json(video.id)
+})
 
 router.get('/', auth, (req, res) => {
 	gfs.find().toArray((err, files) => {
@@ -134,10 +154,23 @@ router.get('/:image_id', ({ params: { image_id } }, res) => {
 
 router.delete('/:image_id', auth, ({ params: { image_id } }, res) => {
 	try {
-		deleteImage(image_id)
+		if (!image_id || image_id === 'undefined')
+			res.status(400).send('no image id')
 
-		res.send(image_id)
+		const _id = new mongoose.Types.ObjectId(image_id)
+
+		gfs.delete(_id, (err) => {
+			if (err) {
+				if (err.message.includes('File not found'))
+					return res.sendStatus(404)
+
+				return res.status(400).send(err)
+			}
+
+			res.sendStatus(204)
+		})
 	} catch (err) {
+		console.log(err)
 		res.sendStatus(500)
 	}
 })

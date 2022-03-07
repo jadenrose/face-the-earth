@@ -15,7 +15,7 @@
         <div class="video-container">
             <video autoplay :muted="state.muted" loop>
                 <source
-                    :src="`${BASE_URL}/api/images/6222708f33e2c59f965674df`"
+                    :src="`${BASE_URL}/api/images/6226667a7717e1dec9f4f371`"
                     type="video/mp4"
                 />
             </video>

@@ -201,8 +201,8 @@ export default {
             setMode(null)
         }
 
-        const showMonth = monthNames[props.show.dateObj.getMonth()]
-        const showDay = props.show.dateObj.getDate()
+        const showMonth = monthNames[props?.show?.dateObj?.getMonth()]
+        const showDay = props?.show?.dateObj?.getDate()
 
         const canBuyTickets =
             computed(() => {

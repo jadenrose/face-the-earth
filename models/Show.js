@@ -24,7 +24,7 @@ const ShowSchema = new Schema({
 	link: {
 		type: String,
 		validate: {
-			validator: isURL,
+			validator: (val) => !val.length || isURL(val),
 			message: 'must be a valid URL',
 		},
 	},
@@ -34,10 +34,9 @@ const ShowSchema = new Schema({
 	date: {
 		type: String,
 		validate: {
-			validator: isDate,
+			validator: (val) => !val.length || isDate(val),
 			message: 'must be a valid date',
 		},
-		required: true,
 	},
 	images: [
 		{
