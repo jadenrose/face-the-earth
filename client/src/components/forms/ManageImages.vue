@@ -37,7 +37,7 @@
                 </div>
                 <div v-else class="buttons">
                     <Button
-                        v-if="selected[image]"
+                        v-if="selected.includes(image)"
                         @click.prevent="() => handleDeselect(image)"
                     >
                         <AwesomeIcon icon="fas fa-minus" />

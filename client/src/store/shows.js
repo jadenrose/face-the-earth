@@ -15,7 +15,22 @@ const initialState = {
 
 const state = reactive(initialState)
 
-const storeAllShows = async () => {
+const oragnizeShows = () => {
+	const today = new Date()
+
+	state.upcomingShows = []
+	state.pastShows = []
+
+	state.list.forEach((show) => {
+		if (show.dateObj > today) {
+			state.upcomingShows.push(show)
+		} else if (show.dateObj.toString() === 'Invalid Date') {
+			state.upcomingShows.unshift(show)
+		} else state.pastShows.unshift(show)
+	})
+}
+
+export const storeAllShows = async () => {
 	state.status = 'pending'
 
 	try {
@@ -47,18 +62,7 @@ const storeAllShows = async () => {
 				}
 			})
 
-		const today = new Date()
-
-		state.upcomingShows = []
-		state.pastShows = []
-
-		state.list.forEach((show) => {
-			if (show.dateObj > today) {
-				state.upcomingShows.push(show)
-			} else if (show.dateObj.toString() === 'Invalid Date') {
-				state.upcomingShows.unshift(show)
-			} else state.pastShows.unshift(show)
-		})
+		oragnizeShows()
 
 		state.status = 'success'
 
@@ -70,7 +74,14 @@ const storeAllShows = async () => {
 	}
 }
 
-const postShow = async ({ title, artists, date, venue, link, images }) => {
+export const postShow = async ({
+	title,
+	artists,
+	date,
+	venue,
+	link,
+	images,
+}) => {
 	try {
 		const token = store.user.token
 
@@ -95,7 +106,7 @@ const postShow = async ({ title, artists, date, venue, link, images }) => {
 	}
 }
 
-const editShow = async (
+export const editShow = async (
 	showId,
 	{ title, artists, date, venue, link, images }
 ) => {
@@ -121,7 +132,7 @@ const editShow = async (
 	}
 }
 
-const removeShow = async (showId) => {
+export const removeShow = async (showId) => {
 	const token = store.user.token
 
 	if (!token)
@@ -143,6 +154,16 @@ const removeShow = async (showId) => {
 	}
 }
 
-export default readonly(state)
+export const setSelectedImages = (showId, images) => {
+	const index = state.list.findIndex((show) => show._id === showId)
 
-export { storeAllShows, postShow, editShow, removeShow }
+	state.list = [
+		...state.list.slice(0, index),
+		{ ...state.list[index], images },
+		...state.list.slice(index + 1),
+	]
+
+	oragnizeShows()
+}
+
+export default readonly(state)

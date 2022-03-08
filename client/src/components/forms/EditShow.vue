@@ -198,7 +198,7 @@ import { default as isDate } from 'validator/lib/isDate'
 import { default as isURL } from 'validator/lib/isURL'
 
 import store from '../../store/store'
-import { postShow, editShow } from '../../store/shows'
+import { postShow, editShow, setSelectedImages } from '../../store/shows'
 import { postImages, deleteImage } from '../../store/images'
 import { storeAllArtists } from '../../store/artists'
 import { storeAllVenues } from '../../store/venues'
@@ -242,8 +242,8 @@ export default {
             showEditVenue: false,
             venueToEdit: null,
             chooseExisting: false,
-            selectedImages: {},
-            confirmRemove: {},
+            selectedImages: props.show.images || [],
+            confirmRemove: [],
             filesChanged: false,
         })
 
@@ -268,8 +268,15 @@ export default {
         const filesChanged = () => state.filesChanged = true
 
         const toggleChooseExisting = () => state.chooseExisting = !state.chooseExisting
-        const handleSelectExisting = (image) => state.selectedImages[image] = image
-        const handleDeselectExisting = (image) => delete state.selectedImages[image]
+
+        const handleSelectExisting = (image) => {
+            state.selectedImages = [...state.selectedImages, image]
+            setSelectedImages(props.show._id, state.selectedImages)
+        }
+        const handleDeselectExisting = (image) => {
+            state.selectedImages = state.selectedImages.filter((img) => img !== image)
+            setSelectedImages(props.show._id, state.selectedImages)
+        }
 
         const addConfirmRemove = (key) => state.confirmRemove[key] = key
         const deleteConfirmRemove = (key) => delete state.confirmRemove[key]
@@ -319,9 +326,9 @@ export default {
 
             if (!title) errors.title = 'title is required'
             if (!artists.length) errors.artists = 'must include at least one artist'
-            if (date.length && !isDate(date)) errors.date = 'invalid date'
+            if (date?.length && !isDate(date)) errors.date = 'invalid date'
             if (!venue) errors.venue = 'venue is required'
-            if (link.length && !isURL(link)) errors.link = 'invalid URL'
+            if (link?.length && !isURL(link)) errors.link = 'invalid URL'
 
             if (Object.entries(errors).find(([key, value]) => value ? key : false))
                 return state.errors = { ...errors }
