@@ -49,10 +49,10 @@
             <div class="card-bottom">
                 <div class="show-date">
                     <Typography variant="h5">
-                        {{ showMonth }}
+                        {{ showMonth || "DATE" }}
                     </Typography>
                     <Typography variant="h5">
-                        {{ showDay }}
+                        {{ showDay || "TBA" }}
                     </Typography>
                 </div>
                 <div class="venue-info">

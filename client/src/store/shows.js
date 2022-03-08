@@ -53,8 +53,11 @@ const storeAllShows = async () => {
 		state.pastShows = []
 
 		state.list.forEach((show) => {
-			if (show.dateObj > today) state.upcomingShows.push(show)
-			else state.pastShows.unshift(show)
+			if (show.dateObj > today) {
+				state.upcomingShows.push(show)
+			} else if (show.dateObj.toString() === 'Invalid Date') {
+				state.upcomingShows.unshift(show)
+			} else state.pastShows.unshift(show)
 		})
 
 		state.status = 'success'
