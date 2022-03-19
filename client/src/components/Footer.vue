@@ -33,9 +33,18 @@
                         Sign up for our monthly newsletter and you'll be the
                         first to know about new music releases and merch drops!
                     </Typography>
-                    <Form>
+                    <div v-if="state.submitted" class="submit-message">
+                        <Typography variant="p">
+                            {{ state.message }}
+                        </Typography>
+                    </div>
+                    <Form v-else @submit.prevent="handleSubmit">
                         <FormGroup>
-                            <FormControl type="email" label="email address" />
+                            <FormControl
+                                type="email"
+                                label="email address"
+                                v-model="emailValue"
+                            />
                         </FormGroup>
                         <FormGroup>
                             <Button label="sign up" />
@@ -63,7 +72,9 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, reactive, ref } from 'vue'
+import { isEmail } from 'validator'
+import axios from 'axios'
 
 import SocialLinks from './SocialLinks.vue'
 import RouterLinks from './RouterLinks.vue'
@@ -75,9 +86,28 @@ export default {
         RouterLinks
     },
     setup () {
+        const BASE_URL = process.env.VUE_APP_BACKEND_URI || 'http://localhost:5000'
         const year = computed(() => new Date().getFullYear())
+        const emailValue = ref('')
+        const state = reactive({
+            message: '',
+            submitted: false
+        })
 
-        return { year }
+        const handleSubmit = async () => {
+            if (isEmail(emailValue.value)) {
+                try {
+                    await axios.post(`${BASE_URL}/api/subscribe`, { email: emailValue.value })
+                    state.message = 'Thank you! You\'ve been added to our mailing list!'
+                } catch (err) {
+                    state.message = 'Sorry, there was a problem adding you to our mailing list.'
+                } finally {
+                    state.submitted = true
+                }
+            }
+        }
+
+        return { year, emailValue, handleSubmit, state }
     }
 }
 </script>
@@ -213,7 +243,8 @@ export default {
     }
 
     input[type="email"] {
-        padding: 0.6em;
+        font-size: 0.8rem;
+        padding: 1em;
     }
 
     .Button {
@@ -262,5 +293,10 @@ export default {
         width: 4em;
         margin-right: 2ch;
     }
+}
+
+.submit-message {
+    margin: 2em 0;
+    font-weight: 700;
 }
 </style>

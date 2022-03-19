@@ -1,5 +1,5 @@
 <template>
-    <div class="Success">
+    <Container class="Success">
         <h1>Thank you!</h1>
         <p>
             We appreciate your business! Someone should be in contact very soon
@@ -11,7 +11,7 @@
                 ><strong>go back to the home page</strong></router-link
             >
         </p>
-    </div>
+    </Container>
 </template>
 
 <script>

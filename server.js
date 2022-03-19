@@ -26,6 +26,10 @@ app.use('/api/shows', require(path.join(__dirname, './routes/api/shows')))
 app.use('/api/venues', require(path.join(__dirname, './routes/api/venues')))
 app.use('/api/videos', require(path.join(__dirname, './routes/api/videos')))
 app.use('/api/bookings', require(path.join(__dirname, './routes/api/bookings')))
+app.use(
+	'/api/subscribe',
+	require(path.join(__dirname, './routes/api/subscribe'))
+)
 app.use('/api/maps', require(path.join(__dirname, './routes/api/maps')))
 app.use('/api/images', require(path.join(__dirname, './routes/api/images')))
 
